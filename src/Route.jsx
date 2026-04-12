@@ -9,6 +9,9 @@ import ProductDetail from "./pages/ProductDetail";  // Import the ProductDetail 
 import Contact from "./pages/Contact";
 import Brands from "./pages/Brands";
 import About from "./pages/About";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Chackout";
+import OrderSuccess from "./pages/OrderSuccess";
 
 const AppRouter = () => {
     return (
@@ -20,6 +23,9 @@ const AppRouter = () => {
                 <Route path="/product/:id" element={<ProductDetail />} />  {/* Dynamic route for product details */}
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/brands" element={<Brands />} />   
+                <Route path="/cart" element={<Cart />} />   
+                <Route path="/order-success" element={<OrderSuccess />} />   
+                <Route path="/checkout" element={<Checkout />} />   
                 <Route path="/about" element={<About />} />
             </Routes>
             <Footer />

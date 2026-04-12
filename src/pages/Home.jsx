@@ -1,634 +1,731 @@
 // components/Home.js
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import data from '../data/data.json';
+import { Gem, Box, Headset, RotateCcw } from 'lucide-react';
 
-const SectionHeading = ({ title, subtitle }) => (
-  <div className="mb-12 text-center">
-    <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">{title}</h2>
-    {subtitle && <p className="text-gray-600 max-w-2xl mx-auto">{subtitle}</p>}
-  </div>
-);
+/* ─────────────────────────────────────────────
+   GLOBAL STYLES - Light Theme with Gradient & Glass
+───────────────────────────────────────────── */
+const GLOBAL_CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-// Horizontal scrollable product section component with side buttons
-const ScrollableProductSection = ({ title, products, bgColor = "bg-white", icon = "👁️" }) => {
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -400 : 400;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  if (!products || products.length === 0) {
-    return null;
+  :root {
+    --glass-white: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --ink: #1a1a2e;
+    --ink-light: #2d2d44;
+    --gold: #c9a84c;
+    --gold-light: #e0c268;
+    --accent: #4a6fa5;
+    --text-muted: #5a5a72;
+    --ff-display: 'Playfair Display', Georgia, serif;
+    --ff-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --ease: cubic-bezier(0.2, 0.9, 0.4, 1.1);
   }
 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--ff-body);
+    background: linear-gradient(135deg, #f8f9ff 0%, #eef2fa 50%, #e8edf5 100%);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* Glass base styles */
+  .glass-card {
+    background: var(--glass-white);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow: var(--glass-shadow);
+    transition: all 0.3s var(--ease);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Simple reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  }
+
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Horizontal scroll */
+  .h-scroll-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .h-scroll-track::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .h-scroll-track::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  .h-scroll-track::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--ink);
+    color: white;
+    padding: 0.85rem 2rem;
+    border-radius: 48px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    font-family: var(--ff-body);
+  }
+
+  .btn-primary:hover {
+    background: var(--ink-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.85rem 2rem;
+    border-radius: 48px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    font-family: var(--ff-body);
+  }
+
+  .btn-gold:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(201, 168, 76, 0.3);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    padding: 0.8rem 2rem;
+    border-radius: 48px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+  }
+
+  .btn-outline:hover {
+    background: var(--ink);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Tag pill */
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.9rem;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+  }
+
+  /* Category circle */
+  .cat-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--gold);
+    padding: 3px;
+    transition: transform 0.2s var(--ease);
+  }
+
+  .cat-circle:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Product card overrides */
+  .product-glass {
+    background: var(--glass-white);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 1rem;
+    transition: all 0.2s var(--ease);
+  }
+
+  /* WhatsApp floating */
+  @keyframes waPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+    50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+  }
+  .wa-btn {
+    animation: waPulse 2s infinite;
+  }
+`;
+
+function useGlobalStyles() {
+  useEffect(() => {
+    const id = 'light-glass-styles';
+    if (!document.getElementById(id)) {
+      const style = document.createElement('style');
+      style.id = id;
+      style.textContent = GLOBAL_CSS;
+      document.head.appendChild(style);
+    }
+  }, []);
+}
+
+function useScrollReveal() {
+  useEffect(() => {
+    const elements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('in');
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
+    );
+    elements.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+}
+
+/* ─────────────────────────────────────────────
+   SIMPLE HERO - Light & Gradient
+───────────────────────────────────────────── */
+const Hero = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    {
+      image: './ban1.jpeg', // Replace with your image paths
+      title: '',
+      subtitle: '',
+      tagline: ''
+    },
+    {
+      image: './ban2.jpeg',
+      title: '',
+      subtitle: '',
+      tagline: ''
+    }
+  ];
+
+  // Auto-slide logic
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    }, 5000); // Change slide every 5 seconds
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
   return (
-    <div className={`py-16 ${bgColor}`}>
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              {icon} {title}
-            </h2>
-            <p className="text-gray-500 mt-2">Scroll to explore our collection →</p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => scroll('left')}
-              className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-              aria-label="Scroll left"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-              aria-label="Scroll right"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
+    <section style={{
+      height: '90vh',
+      position: 'relative',
+      overflow: 'hidden',
+      backgroundColor: '#f5f5f5' // Fallback color
+    }}>
+      {/* Background Images / Carousel */}
+      {slides.map((slide, index) => (
         <div
-          ref={scrollRef}
-          className="flex overflow-x-auto gap-6 pb-8 scrollbar-hide"
+          key={index}
           style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url(${slide.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            opacity: currentSlide === index ? 1 : 0,
+            transition: 'opacity 1s ease-in-out',
+            zIndex: 1
           }}
-        >
-          {products.map((product, idx) => (
-            <div
-              key={product.id}
-              className="min-w-[280px] md:min-w-[320px] flex-shrink-0 animate-fade-in"
-              style={{ animationDelay: `${idx * 50}ms` }}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+        />
+      ))}
+
+      {/* Content Overlay */}
+      <div style={{
+        position: 'relative',
+        zIndex: 2,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingLeft: '10%', // Aligns text to the left like the image
+        color: '#fff', // Change to #000 if your images are light
+        textShadow: '0 2px 10px rgba(0,0,0,0.1)'
+      }}>
+        <h1 style={{
+          fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+          fontWeight: 400,
+          letterSpacing: '0.05em',
+          margin: 0,
+          lineHeight: 1.1,
+          textTransform: 'uppercase'
+        }}>
+          {slides[currentSlide].title}<br />
+          <span style={{ fontWeight: 700 }}>{slides[currentSlide].subtitle}</span>
+        </h1>
+        
+        <div style={{
+          width: '60px',
+          height: '2px',
+          backgroundColor: '#fff',
+          margin: '2rem 0'
+        }} />
+
+        <p style={{
+          fontSize: '1rem',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          fontWeight: 500
+        }}>
+          {slides[currentSlide].tagline}
+        </p>
       </div>
-      
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-    </div>
+
+      {/* Carousel Indicators (The dots at the bottom) */}
+      <div style={{
+        position: 'absolute',
+        bottom: '30px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: '12px',
+        zIndex: 3
+      }}>
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              border: 'none',
+              backgroundColor: currentSlide === i ? '#fff' : 'rgba(255,255,255,0.4)',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 
-const Home = () => {
-  // Assuming your products have categories in the JSON data
-  // If not, you can add a category field to each product in your data.json
-  const contactLensProducts = data.products.filter(p => p.category === 'contact-lenses');
-  const menProducts = data.products.filter(p => p.category === 'men');
-  const womenProducts = data.products.filter(p => p.category === 'women');
-  const kidsProducts = data.products.filter(p => p.category === 'kids');
-
-  // Sample fallback data if your JSON doesn't have categories yet
-  // You can remove this once you add categories to your actual data
-  const sampleProducts = {
-    contactLenses: [
-      {
-        id: 101,
-        name: "Premium Daily Contact Lenses",
-        discount: "20%",
-        madeInTaiwan: true,
-        originalPrice: 4999,
-        discountPrice: 3999,
-        reviews: 128,
-        variants: [
-          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" },
-          { colorName: "Blue", hex: "#4A90E2", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" },
-          { colorName: "Green", hex: "#50E3C2", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
-        ]
-      },
-      {
-        id: 102,
-        name: "Monthly Bio-Compatibility Lenses",
-        discount: "15%",
-        madeInTaiwan: true,
-        originalPrice: 5999,
-        discountPrice: 5099,
-        reviews: 94,
-        variants: [
-          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
-        ]
-      },
-      {
-        id: 103,
-        name: "ColorVue - Hazel Brown",
-        discount: "25%",
-        madeInTaiwan: false,
-        originalPrice: 4499,
-        discountPrice: 3374,
-        reviews: 256,
-        variants: [
-          { colorName: "Hazel", hex: "#8B7355", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" },
-          { colorName: "Gray", hex: "#708090", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
-        ]
-      },
-      {
-        id: 104,
-        name: "Astigmatism Pro Lenses",
-        discount: "10%",
-        madeInTaiwan: true,
-        originalPrice: 6999,
-        discountPrice: 6299,
-        reviews: 67,
-        variants: [
-          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
-        ]
-      },
-      {
-        id: 105,
-        name: "Daily Disposable Aqua",
-        discount: "30%",
-        madeInTaiwan: false,
-        originalPrice: 3999,
-        discountPrice: 2799,
-        reviews: 312,
-        variants: [
-          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
-        ]
-      }
-    ],
-    men: [
-      {
-        id: 201,
-        name: "Aviator Classic Gold",
-        discount: "20%",
-        madeInTaiwan: true,
-        originalPrice: 12999,
-        discountPrice: 10399,
-        reviews: 89,
-        variants: [
-          { colorName: "Gold", hex: "#FFD700", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
-          { colorName: "Silver", hex: "#C0C0C0", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
-        ]
-      },
-      {
-        id: 202,
-        name: "Wayfarer Classic Black",
-        discount: "15%",
-        madeInTaiwan: false,
-        originalPrice: 9999,
-        discountPrice: 8499,
-        reviews: 156,
-        variants: [
-          { colorName: "Black", hex: "#000000", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
-          { colorName: "Tortoise", hex: "#8B5A2B", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
-        ]
-      },
-      {
-        id: 203,
-        name: "Round Metal Frame",
-        discount: "25%",
-        madeInTaiwan: true,
-        originalPrice: 11999,
-        discountPrice: 8999,
-        reviews: 234,
-        variants: [
-          { colorName: "Silver", hex: "#C0C0C0", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
-          { colorName: "Gold", hex: "#FFD700", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
-        ]
-      },
-      {
-        id: 204,
-        name: "Sport Performance",
-        discount: "10%",
-        madeInTaiwan: true,
-        originalPrice: 14999,
-        discountPrice: 13499,
-        reviews: 45,
-        variants: [
-          { colorName: "Matte Black", hex: "#1a1a1a", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
-          { colorName: "Blue", hex: "#0066CC", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
-        ]
-      }
-    ],
-    women: [
-      {
-        id: 301,
-        name: "Cat Eye Elegance",
-        discount: "20%",
-        madeInTaiwan: true,
-        originalPrice: 13999,
-        discountPrice: 11199,
-        reviews: 178,
-        variants: [
-          { colorName: "Rose Gold", hex: "#B76E79", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" },
-          { colorName: "Black", hex: "#000000", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" }
-        ]
-      },
-      {
-        id: 302,
-        name: "Oversized Round Frame",
-        discount: "15%",
-        madeInTaiwan: false,
-        originalPrice: 15999,
-        discountPrice: 13599,
-        reviews: 267,
-        variants: [
-          { colorName: "Tortoise", hex: "#8B5A2B", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" },
-          { colorName: "Transparent", hex: "#E0E0E0", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" }
-        ]
-      },
-      {
-        id: 303,
-        name: "Geometric Chic",
-        discount: "25%",
-        madeInTaiwan: true,
-        originalPrice: 12999,
-        discountPrice: 9749,
-        reviews: 143,
-        variants: [
-          { colorName: "Gold", hex: "#FFD700", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" },
-          { colorName: "Silver", hex: "#C0C0C0", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" }
-        ]
-      }
-    ],
-    kids: [
-      {
-        id: 401,
-        name: "Blue Light Shield Kids",
-        discount: "20%",
-        madeInTaiwan: true,
-        originalPrice: 6999,
-        discountPrice: 5599,
-        reviews: 89,
-        variants: [
-          { colorName: "Blue", hex: "#4A90E2", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" },
-          { colorName: "Pink", hex: "#FF69B4", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" }
-        ]
-      },
-      {
-        id: 402,
-        name: "Flexible Silicone Frames",
-        discount: "15%",
-        madeInTaiwan: false,
-        originalPrice: 5999,
-        discountPrice: 5099,
-        reviews: 156,
-        variants: [
-          { colorName: "Red", hex: "#FF4444", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" },
-          { colorName: "Green", hex: "#44FF44", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" }
-        ]
-      },
-      {
-        id: 403,
-        name: "Impact-Resistant Sports",
-        discount: "25%",
-        madeInTaiwan: true,
-        originalPrice: 7999,
-        discountPrice: 5999,
-        reviews: 67,
-        variants: [
-          { colorName: "Yellow", hex: "#FFD700", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" },
-          { colorName: "Orange", hex: "#FFA500", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" }
-        ]
-      }
-    ]
-  };
-
-  // Use filtered data from JSON if available, otherwise use sample data
-  const contactLenses = contactLensProducts.length > 0 ? contactLensProducts : sampleProducts.contactLenses;
-  const men = menProducts.length > 0 ? menProducts : sampleProducts.men;
-  const women = womenProducts.length > 0 ? womenProducts : sampleProducts.women;
-  const kids = kidsProducts.length > 0 ? kidsProducts : sampleProducts.kids;
-
-  // Intersection Observer for scroll animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    );
-
-    const sections = document.querySelectorAll('.animate-on-scroll');
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, []);
+/* ─────────────────────────────────────────────
+   CATEGORY CIRCLES (Glass)
+───────────────────────────────────────────── */
+const TopCategories = () => {
+  const cats = [
+    { name: "Men's Eyeglasses", img: './cat1.jpeg' },
+    { name: "Men's Sunglasses", img: './cat2.jpeg' },
+    { name: "Women's Eyeglasses", img: './cat3.jpeg' },
+    { name: "Women's Sunglasses", img: './cat4.jpeg' },
+    { name: 'Color Contact Lenses', img: './cat5.jpeg' },
+    { name: 'Clear Contact Lenses', img: './cat6.jpeg' },
+  ];
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
-      </div>
-
-      {/* Hero Banner */}
-      <section className="relative w-full h-[85vh] overflow-hidden flex items-center animate-on-scroll">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1511499767350-a153568a5705?auto=format&fit=crop&q=80&w=2000"
-            className="w-full h-full object-cover"
-            alt="Hero Background"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/60 to-transparent"></div>
+    <section className="categories-section">
+      <div className="container">
+        <h2 className="section-title">Top Categories</h2>
+        
+        <div className="categories-grid">
+          {cats.map((cat, i) => (
+            <div key={i} className="category-card">
+              <div className="image-wrapper">
+                <img src={cat.img} alt={cat.name} />
+              </div>
+              <p className="category-name">{cat.name}</p>
+            </div>
+          ))}
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-xl">
-            <span className="text-blue-600 font-bold tracking-[0.3em] uppercase text-sm mb-4 block animate-slide-up">
-              New Collection 2026
-            </span>
-            <h1 className="text-6xl md:text-8xl font-black leading-none mb-6 animate-slide-up animation-delay-100">
-              SEE THE <br />
-              <span className="italic text-gray-400">FUTURE.</span>
-            </h1>
-            <p className="text-xl text-gray-700 mb-8 animate-slide-up animation-delay-200">
-              Precision engineered frames that blend Italian craftsmanship with modern clarity.
+      </div>
+    </section>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   FEATURE CARDS (Glass)
+───────────────────────────────────────────── */
+const Features = () => {
+  const features = [
+    { 
+      icon: <Gem size={40} strokeWidth={1} />, 
+      title: 'PREMIUM QUALITY', 
+      desc: 'Premium Quality Frames & Lenses' 
+    },
+    { 
+      icon: <Box size={40} strokeWidth={1} />, 
+      title: 'DELIVERING WORLDWIDE', 
+      desc: 'Order now and get your deliveries worldwide' 
+    },
+    { 
+      icon: <Headset size={40} strokeWidth={1} />, 
+      title: 'SUPPORT 24/7', 
+      desc: "Contact us! We're available 24/7" 
+    },
+    { 
+      icon: <RotateCcw size={40} strokeWidth={1} />, 
+      title: 'RETURN & EXCHANGE', 
+      desc: 'Easy 7 Days Exchange Policy' 
+    },
+  ];
+
+  return (
+    <section style={{ padding: '4rem 1rem', backgroundColor: '#fff' }}>
+      <div style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto', 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+        gap: '2rem' 
+      }}>
+        {features.map((f, i) => (
+          <div key={i} style={{ textAlign: 'center', color: '#1a1a1a' }}>
+            {/* Icon Container */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              marginBottom: '1.5rem',
+              color: '#333'
+            }}>
+              {f.icon}
+            </div>
+
+            {/* Title - Uppercase and Bold */}
+            <h4 style={{ 
+              fontSize: '1.1rem', 
+              fontWeight: '600', 
+              letterSpacing: '1px',
+              textTransform: 'uppercase',
+              margin: '0 0 0.75rem 0' 
+            }}>
+              {f.title}
+            </h4>
+
+            {/* Description - Lighter and Muted */}
+            <p style={{ 
+              fontSize: '0.95rem', 
+              color: '#777', 
+              fontWeight: '300',
+              lineHeight: '1.4',
+              margin: 0 
+            }}>
+              {f.desc}
             </p>
-            <div className="flex gap-4 animate-slide-up animation-delay-300">
-              <button className="bg-black text-white px-10 py-5 rounded-full font-bold text-lg hover:px-12 transition-all">
-                Shop Now
-              </button>
-              <button className="bg-white border-2 border-black text-black px-10 py-5 rounded-full font-bold text-lg hover:bg-gray-50 transition-all">
-                Explore Frames
-              </button>
-            </div>
           </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   PRODUCT SECTION with Horizontal Scroll
+───────────────────────────────────────────── */
+const ProductSection = ({ title, products }) => {
+  const trackRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (trackRef.current) {
+      // Logic to scroll by roughly one card width
+      const scrollAmount = direction === 'left' ? -340 : 340;
+      trackRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  if (!products?.length) return null;
+
+  return (
+    <section className="min-h-screen w-full py-16 bg-white flex items-center justify-center">
+      {/* Main container - centered both horizontally and vertically */}
+      <div className="w-full max-w-[1320px] mx-auto px-4 md:px-6 relative">
+        
+        {/* Header - centered text on mobile, left-aligned on larger screens */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 text-center md:text-left">
+            {title}
+          </h2>
+          {/* View All button - centered on mobile, right-aligned on desktop */}
+          <button className="text-sm font-semibold text-gray-600 hover:text-black transition-colors underline underline-offset-4">
+            View All
+          </button>
         </div>
-      </section>
 
-      {/* 1. Contact Lenses */}
-      <ScrollableProductSection 
-        title="Contact Lenses" 
-        products={contactLenses}
-        bgColor="bg-gradient-to-r from-blue-50/50 to-transparent"
-        icon="👁️"
-      />
-
-      {/* 2. Men's Collection */}
-      <ScrollableProductSection 
-        title="Men's Collection" 
-        products={men}
-        bgColor="bg-white"
-        icon="👔"
-      />
-
-      {/* 3. Women's Collection */}
-      <ScrollableProductSection 
-        title="Women's Collection" 
-        products={women}
-        bgColor="bg-gradient-to-r from-pink-50/50 to-transparent"
-        icon="💃"
-      />
-
-      {/* 4. Kids' Collection */}
-      <ScrollableProductSection 
-        title="Kids' Collection" 
-        products={kids}
-        bgColor="bg-white"
-        icon="🧸"
-      />
-
-      {/* Product Categories Grid */}
-      <section className="py-24 px-6 max-w-7xl mx-auto animate-on-scroll">
-        <SectionHeading 
-          title="Browse by Style" 
-          subtitle="From vintage classics to modern minimalism, find the perfect shape for your face." 
-        />
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
-          {[
-            { name: 'Men', img: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=500' },
-            { name: 'Women', img: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500' },
-            { name: 'Kids', img: 'https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=500' },
-            { name: 'Blue Light', img: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=500' }
-          ].map((item, idx) => (
-            <div 
-              key={item.name} 
-              className="group relative h-80 overflow-hidden rounded-3xl cursor-pointer animate-fade-in shadow-sm"
-              style={{ animationDelay: `${idx * 100}ms` }}
+        {/* 2. Navigation Arrows: Centered with the carousel */}
+        <div className="relative">
+          <div className="hidden md:block">
+            <button 
+              onClick={() => scroll('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
+              aria-label="Scroll Left"
             >
-              <img src={item.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={item.name} />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/50 transition-colors flex items-center justify-center">
-                <h3 className="text-white text-3xl font-black uppercase tracking-tighter">{item.name}</h3>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+              <span className="text-2xl">‹</span>
+            </button>
 
-      {/* Featured Products Section (Original) */}
-      <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading title="Featured Products" subtitle="Our most loved styles this season" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {data.products.slice(0, 4).map(p => <ProductCard key={p.id} product={p} />)}
-        </div>
-      </div>
+            <button 
+              onClick={() => scroll('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
+              aria-label="Scroll Right"
+            >
+              <span className="text-2xl">›</span>
+            </button>
+          </div>
 
-      {/* Virtual Try-On & Store Locator */}
-      <section className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-10 animate-on-scroll">
-        <div className="bg-blue-600 rounded-[40px] p-12 text-white flex flex-col justify-center transform transition-transform hover:scale-[1.02] duration-300">
-          <h3 className="text-4xl font-bold mb-6">Virtual Try-On</h3>
-          <p className="mb-8 text-blue-100">Not sure if they fit? Use our AI-powered tool to see exactly how these frames look on your face from any angle.</p>
-          <button className="bg-white text-blue-600 px-8 py-4 rounded-full font-bold w-max">Launch Camera</button>
-        </div>
-        <div className="bg-gray-900 rounded-[40px] p-12 text-white flex flex-col justify-center transform transition-transform hover:scale-[1.02] duration-300">
-          <h3 className="text-4xl font-bold mb-6">In-Store Eye Test</h3>
-          <p className="mb-8 text-gray-400">Need a fresh prescription? Visit one of our 50+ locations for a professional eye exam by certified optometrists.</p>
-          <button className="bg-blue-500 text-white px-8 py-4 rounded-full font-bold w-max">Book Appointment</button>
-        </div>
-      </section>
-
-      {/* Lens Technology */}
-      <section className="bg-white py-24 border-y border-gray-100 animate-on-scroll">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <SectionHeading title="Advanced Lens Tech" subtitle="Beyond just frames. Customize your vision with our specialized coating technology." />
-          <div className="grid md:grid-cols-3 gap-12 mt-16">
-            {[
-              { icon: "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12", title: "One-Click Upload", desc: "Just snap a photo of your prescription and we'll handle the rest.", color: "blue" },
-              { icon: "M13 10V3L4 14h7v7l9-11h-7z", title: "Blue Light Block", desc: "Protect your eyes from digital strain with our Ultra-Shield coating.", color: "purple" },
-              { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", title: "Anti-Reflective", desc: "Reduce glare from headlights and screens for crystal clear night vision.", color: "green" }
-            ].map((item, idx) => (
-              <div key={idx} className="p-8 border border-gray-100 rounded-3xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
-                <div className={`w-16 h-16 bg-${item.color}-100 rounded-full flex items-center justify-center mx-auto mb-6 text-${item.color}-600`}>
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
-                  </svg>
-                </div>
-                <h4 className="font-bold text-xl mb-4">{item.title}</h4>
-                <p className="text-gray-500">{item.desc}</p>
+          {/* 3. Horizontal Scroll Track with centered items */}
+          <div 
+            ref={trackRef}
+            className="flex overflow-x-auto gap-6 no-scrollbar pb-8 snap-x snap-mandatory justify-center"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none' 
+            }}
+          >
+            {products.map((product) => (
+              <div 
+                key={product.id} 
+                className="min-w-[280px] md:min-w-[310px] flex-shrink-0 snap-start"
+              >
+                <ProductCard product={product} />
               </div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-24 bg-gray-50 overflow-hidden animate-on-scroll">
-        <div className="max-w-7xl mx-auto px-6">
-          <SectionHeading title="What Our Customers Say" />
-          <div className="flex gap-8 animate-scroll">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="min-w-[350px] bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex gap-1 text-yellow-400 mb-4">
-                  {[...Array(5)].map((_, j) => (
-                    <svg key={j} className="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-700 italic mb-6">"The virtual try-on was so accurate! I've never bought glasses online before, but this was easier than going to the mall."</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                  <div>
-                    <p className="font-bold">Sarah Jenkins</p>
-                    <p className="text-xs text-gray-500">Verified Buyer</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Brand Showcase */}
-      <section className="py-16 bg-white border-b animate-on-scroll">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-wrap justify-between items-center opacity-40 grayscale gap-8">
-            <span className="text-3xl font-serif italic">RAY·BAN</span>
-            <span className="text-3xl font-sans font-black">OAKLEY</span>
-            <span className="text-3xl font-serif uppercase">Prada</span>
-            <span className="text-3xl font-sans font-light tracking-tighter uppercase">Gucci</span>
-            <span className="text-3xl font-serif">Vogue</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Blog / Magazine */}
-      <section className="py-24 max-w-7xl mx-auto px-6 animate-on-scroll">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h2 className="text-4xl font-bold mb-4">Magazine</h2>
-            <p className="text-gray-500">Tips from our experts on eye care and fashion trends.</p>
-          </div>
-          <button className="text-blue-600 font-bold border-b-2 border-blue-600">View All Articles</button>
-        </div>
-        <div className="grid md:grid-cols-3 gap-10">
-          {[
-            { t: "Choosing the Right Shape", c: "Fashion" },
-            { t: "Does Blue Light Really Matter?", c: "Health" },
-            { t: "Trend Alert: Transparent Frames", c: "Fashion" }
-          ].map((post, i) => (
-            <div key={i} className="group cursor-pointer transform transition-transform hover:-translate-y-2 duration-300">
-              <div className="h-64 bg-gray-200 rounded-3xl mb-6 overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 group-hover:scale-105 transition-transform duration-500"></div>
-              </div>
-              <span className="text-blue-600 text-xs font-bold uppercase">{post.c}</span>
-              <h4 className="text-2xl font-bold mt-2 group-hover:text-blue-600 transition-colors">{post.t}</h4>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Floating WhatsApp Button */}
-      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
-        <button className="bg-green-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" className="w-6 h-6" alt="WhatsApp" />
-        </button>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+      {/* Global CSS for the custom scrollbar behavior */}
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
         }
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -30px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        @keyframes floatDelayed {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-30px, 30px) scale(1.1); }
-          66% { transform: translate(20px, -20px) scale(0.9); }
-        }
-        @keyframes fadeSlideUp {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes pulseSlow {
-          0%, 100% { opacity: 0.2; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(1.05); }
-        }
-        
-        .animate-scroll {
-          display: flex;
-          width: 200%;
-          animation: scroll 30s linear infinite;
-        }
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-        .animate-float {
-          animation: float 20s ease-in-out infinite;
-        }
-        .animate-float-delayed {
-          animation: floatDelayed 25s ease-in-out infinite;
-        }
-        .animate-pulse-slow {
-          animation: pulseSlow 15s ease-in-out infinite;
-        }
-        .animate-slide-up {
-          animation: fadeSlideUp 0.8s ease-out forwards;
-          opacity: 0;
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.6s ease-out forwards;
-          opacity: 0;
-        }
-        .animation-delay-100 {
-          animation-delay: 100ms;
-        }
-        .animation-delay-200 {
-          animation-delay: 200ms;
-        }
-        .animation-delay-300 {
-          animation-delay: 300ms;
-        }
-        
-        /* Scroll reveal animation */
-        .animate-on-scroll {
-          opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .animate-on-scroll.animate-in {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      `}} />
+      `}</style>
+    </section>
+  );
+};
+/* ─────────────────────────────────────────────
+   SIMPLE CALL TO ACTION - Glass Style
+───────────────────────────────────────────── */
+const CTASection = () => (
+  <section style={{ padding: '5rem 2rem' }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+      <div className="glass-card reveal" style={{ padding: '3rem', textAlign: 'center' }}>
+        <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', marginBottom: '1rem' }}>
+          Virtual Try-On
+        </h2>
+        <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.5rem' }}>
+          See how frames look on your face — from any angle — using our AI-powered tool.
+        </p>
+        <button className="btn-gold">Try Now →</button>
+      </div>
     </div>
+  </section>
+);
+
+/* ─────────────────────────────────────────────
+   TESTIMONIALS (Glass Cards)
+───────────────────────────────────────────── */
+const Testimonials = () => {
+  const reviews = [
+    { name: 'Ayesha Khan', text: 'The virtual try-on was so accurate! My frames arrived in perfect condition.', rating: 5 },
+    { name: 'Hassan Malik', text: 'Best collection in Pakistan. The blue light glasses have reduced my screen fatigue.', rating: 5 },
+    { name: 'Sana Ahmed', text: 'Excellent quality at fair prices. Customer service was extremely helpful.', rating: 5 },
+  ];
+  return (
+    <section style={{ padding: '5rem 2rem' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <span className="tag">Testimonials</span>
+          <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', marginTop: '0.75rem' }}>
+            What Customers <span style={{ color: 'var(--gold)' }}>Say</span>
+          </h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          {reviews.map((r, i) => (
+            <div key={i} className={`glass-card reveal d${i + 1}`} style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', gap: 2, marginBottom: '1rem' }}>
+                {[...Array(r.rating)].map((_, j) => <span key={j} style={{ color: 'var(--gold)' }}>★</span>)}
+              </div>
+              <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', color: 'var(--ink)' }}>"{r.text}"</p>
+              <p style={{ fontWeight: 700 }}>{r.name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   NEWSLETTER - Glass
+───────────────────────────────────────────── */
+const Newsletter = () => {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  return (
+    <section style={{ padding: '5rem 2rem' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        <div className="glass-card reveal" style={{ padding: '3rem', textAlign: 'center' }}>
+          <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: '1.8rem', marginBottom: '0.5rem' }}>Get Exclusive Offers</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Join 50,000+ members for early access to sales.</p>
+          {subscribed ? (
+            <p style={{ fontWeight: 600, color: 'var(--gold)' }}>🎉 You're in! Check your inbox.</p>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Your email"
+                style={{ flex: 1, minWidth: 200, padding: '0.8rem 1.2rem', borderRadius: '48px', border: '1px solid rgba(0,0,0,0.1)', background: 'white', fontFamily: 'var(--ff-body)' }}
+              />
+              <button className="btn-primary" onClick={() => email && setSubscribed(true)}>Subscribe →</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   FLOATING WHATSAPP
+───────────────────────────────────────────── */
+const FloatingWA = () => (
+  <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer"
+    className="wa-btn"
+    style={{
+      position: 'fixed',
+      bottom: '2rem',
+      right: '2rem',
+      zIndex: 999,
+      width: 54,
+      height: 54,
+      borderRadius: '50%',
+      background: '#25d366',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+      transition: 'transform 0.2s'
+    }}
+    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
+    onMouseLeave={e => e.currentTarget.style.transform = ''}>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style={{ width: 28, height: 28 }} />
+  </a>
+);
+
+/* ─────────────────────────────────────────────
+   SAMPLE DATA FALLBACK
+───────────────────────────────────────────── */
+const SAMPLE = {
+  contactLenses: [
+    { id: 101, name: 'Premium Daily Contact Lenses', discount: '20%', madeInTaiwan: true, originalPrice: 4999, discountPrice: 3999, reviews: 128, variants: [{ colorName: 'Clear', hex: '#E8F4F8', image: 'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400' }] },
+    { id: 102, name: 'Monthly Bio Lenses', discount: '15%', madeInTaiwan: true, originalPrice: 5999, discountPrice: 5099, reviews: 94, variants: [{ colorName: 'Clear', hex: '#E8F4F8', image: 'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400' }] },
+  ],
+  men: [
+    { id: 201, name: 'Aviator Classic Gold', discount: '20%', madeInTaiwan: true, originalPrice: 12999, discountPrice: 10399, reviews: 89, variants: [{ colorName: 'Gold', hex: '#FFD700', image: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400' }] },
+    { id: 202, name: 'Wayfarer Classic Black', discount: '15%', madeInTaiwan: false, originalPrice: 9999, discountPrice: 8499, reviews: 156, variants: [{ colorName: 'Black', hex: '#000000', image: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400' }] },
+  ],
+  women: [
+    { id: 301, name: 'Cat Eye Elegance', discount: '20%', madeInTaiwan: true, originalPrice: 13999, discountPrice: 11199, reviews: 178, variants: [{ colorName: 'Rose Gold', hex: '#B76E79', image: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400' }] },
+  ],
+  kids: [
+    { id: 401, name: 'Blue Light Shield Kids', discount: '20%', madeInTaiwan: true, originalPrice: 6999, discountPrice: 5599, reviews: 89, variants: [{ colorName: 'Blue', hex: '#4A90E2', image: 'https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400' }] },
+  ],
+};
+
+/* ─────────────────────────────────────────────
+   MAIN HOME COMPONENT
+───────────────────────────────────────────── */
+const Home = () => {
+  useGlobalStyles();
+  useScrollReveal();
+
+  // Filter products from data.json or fallback to sample
+  const contactLenses = data.products?.filter(p => p.category === 'contact-lenses')?.length > 0
+    ? data.products.filter(p => p.category === 'contact-lenses')
+    : SAMPLE.contactLenses;
+  const men = data.products?.filter(p => p.category === 'men')?.length > 0
+    ? data.products.filter(p => p.category === 'men')
+    : SAMPLE.men;
+  const women = data.products?.filter(p => p.category === 'women')?.length > 0
+    ? data.products.filter(p => p.category === 'women')
+    : SAMPLE.women;
+  const kids = data.products?.filter(p => p.category === 'kids')?.length > 0
+    ? data.products.filter(p => p.category === 'kids')
+    : SAMPLE.kids;
+
+  return (
+    <>
+      <Hero />
+      <TopCategories />
+      <Features />
+      
+      <ProductSection
+        title="Contact Lenses"
+        subtitle="Daily & monthly disposables"
+        products={contactLenses}
+        tag="👁️ Vision"
+      />
+      
+      <ProductSection
+        title="Men's Collection"
+        subtitle="Bold, refined frames"
+        products={men}
+        tag="👔 For Him"
+      />
+      
+      <ProductSection
+        title="Women's Collection"
+        subtitle="Elegant designs"
+        products={women}
+        tag="💃 For Her"
+      />
+      
+      <ProductSection
+        title="Kids' Collection"
+        subtitle="Durable & flexible"
+        products={kids}
+        tag="🧸 For Kids"
+      />
+      
+      <CTASection />
+      <Testimonials />
+      <Newsletter />
+      <FloatingWA />
+    </>
   );
 };
 

@@ -13,3 +13,70 @@
   max-width: calc(25% - 21px);
   min-width: 250px;
 }
+.categories-section {
+  background-color: #f3f4f6; /* Matching the light gray background */
+  padding: 4rem 1rem;
+  font-family: sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 3rem;
+  letter-spacing: 1px;
+}
+
+.categories-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160px; /* Adjust size based on preference */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.image-wrapper {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  /* Adds the subtle border seen in professional eyeglass stores */
+  border: 1px solid #ddd; 
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.2;
+}
+.mmm{
+  padding: 40px 10px;
+}
+.mmmm{
+  padding: 10px 10px;
+}

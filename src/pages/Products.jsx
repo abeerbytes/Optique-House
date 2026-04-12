@@ -1,5 +1,6 @@
 // Products.jsx
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import productsData from "../data/data.json"
 
 const Products = () => {
@@ -10,6 +11,7 @@ const Products = () => {
   const [selectedShapes, setSelectedShapes] = useState([]);
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [sortBy, setSortBy] = useState('default');
+  const [notification, setNotification] = useState(null);
 
   // Shape options based on product types
   const shapeOptions = ['Circle', 'Square', 'Rectangle', 'Oval', 'Cat-eye', 'Aviator', 'Wayfarer', 'Round', 'Geometric'];
@@ -29,16 +31,16 @@ const Products = () => {
   useEffect(() => {
     let result = [...products];
 
-    // Filter by main category (Men, Women, Kids, Contact Lens)
+    // Filter by main category
     if (activeCategory !== 'all') {
-      result = result.filter(product => 
+      result = result.filter(product =>
         product.category?.toLowerCase() === activeCategory.toLowerCase()
       );
     }
 
     // Filter by gender
     if (selectedGenders.length > 0) {
-      result = result.filter(product => 
+      result = result.filter(product =>
         selectedGenders.includes(product.gender)
       );
     }
@@ -59,7 +61,7 @@ const Products = () => {
 
     // Filter by shape
     if (selectedShapes.length > 0) {
-      result = result.filter(product => 
+      result = result.filter(product =>
         product.shape && selectedShapes.includes(product.shape)
       );
     }
@@ -114,39 +116,58 @@ const Products = () => {
     return `PKR ${price}`;
   };
 
+const addToCart = (product, selectedVariantIndex = 0) => {
+  const saved = JSON.parse(localStorage.getItem("cart")) || [];
+  const exists = saved.find(i => i.id === product.id);
+  
+  if (exists) {
+    exists.quantity = (exists.quantity || 1) + 1;
+  } else {
+    saved.push({ ...product, quantity: 1, selectedVariant: selectedVariantIndex });
+  }
+  
+  localStorage.setItem("cart", JSON.stringify(saved));
+};
+
   return (
     <div className="products-page">
+      {notification && (
+        <div className="notification">
+          {notification}
+        </div>
+      )}
+      
       <div className="container">
         <h1 className="page-title">Our Products</h1>
         <p className="page-subtitle">Discover premium eyewear for every style and need</p>
 
         {/* Category Tabs */}
         <div className="category-tabs">
-          <button 
+          <button
             className={`category-tab ${activeCategory === 'all' ? 'active' : ''}`}
             onClick={() => setActiveCategory('all')}
           >
             All Products
           </button>
-          <button 
+          <button
             className={`category-tab ${activeCategory === 'men' ? 'active' : ''}`}
             onClick={() => setActiveCategory('men')}
           >
             Men
           </button>
-          <button 
+          <button
             className={`category-tab ${activeCategory === 'women' ? 'active' : ''}`}
             onClick={() => setActiveCategory('women')}
           >
             Women
           </button>
-          <button 
+          <button
             className={`category-tab ${activeCategory === 'kids' ? 'active' : ''}`}
             onClick={() => setActiveCategory('kids')}
           >
             Kids
           </button>
-          <button 
+          <button
             className={`category-tab ${activeCategory === 'contactlens' ? 'active' : ''}`}
             onClick={() => setActiveCategory('contactlens')}
           >
@@ -168,8 +189,8 @@ const Products = () => {
               <div className="filter-options">
                 {genderOptions.map(gender => (
                   <label key={gender} className="filter-checkbox">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={selectedGenders.includes(gender)}
                       onChange={() => toggleGender(gender)}
                     />
@@ -183,28 +204,28 @@ const Products = () => {
             <div className="filter-section">
               <h4>Price Range</h4>
               <div className="price-inputs">
-                <input 
-                  type="number" 
-                  placeholder="Min PKR" 
+                <input
+                  type="number"
+                  placeholder="Min PKR"
                   value={priceRange.min}
                   onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
                 />
                 <span>-</span>
-                <input 
-                  type="number" 
-                  placeholder="Max PKR" 
+                <input
+                  type="number"
+                  placeholder="Max PKR"
                   value={priceRange.max}
                   onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
                 />
               </div>
             </div>
 
-            {/* Shape Filter - Circle, Square, Rectangle etc. */}
+            {/* Shape Filter */}
             <div className="filter-section">
               <h4>Frame Shape</h4>
               <div className="shape-options">
                 {shapeOptions.map(shape => (
-                  <button 
+                  <button
                     key={shape}
                     className={`shape-btn ${selectedShapes.includes(shape) ? 'active' : ''}`}
                     onClick={() => toggleShape(shape)}
@@ -220,9 +241,9 @@ const Products = () => {
           <main className="products-main">
             <div className="products-header">
               <p className="products-count">{filteredProducts.length} products found</p>
-              <select 
-                className="sort-select" 
-                value={sortBy} 
+              <select
+                className="sort-select"
+                value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
                 <option value="default">Sort by: Featured</option>
@@ -245,16 +266,16 @@ const Products = () => {
                     <div className="product-image">
                       {product.discount && <span className="discount-badge">{product.discount} OFF</span>}
                       {product.madeInTaiwan && <span className="made-badge">Made in Taiwan</span>}
-                      <img 
-                        src={product.variants?.[0]?.image || 'https://via.placeholder.com/300x200?text=Product'} 
+                      <img
+                        src={product.variants?.[0]?.image || 'https://via.placeholder.com/300x200?text=Product'}
                         alt={product.name}
                       />
                       {product.variants && product.variants.length > 1 && (
                         <div className="color-swatches">
                           {product.variants.slice(0, 4).map((variant, idx) => (
-                            <span 
-                              key={idx} 
-                              className="color-swatch" 
+                            <span
+                              key={idx}
+                              className="color-swatch"
                               style={{ backgroundColor: variant.hex }}
                               title={variant.colorName}
                             />
@@ -277,7 +298,12 @@ const Products = () => {
                           <span>({product.reviews} reviews)</span>
                         </div>
                       )}
-                      <button className="add-to-cart">Add to Cart</button>
+                      <button
+                        className="add-to-cart"
+                        onClick={() => addToCart(product)}
+                      >
+                        Add to Cart
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -293,6 +319,31 @@ const Products = () => {
           background: #f8f9fa;
           min-height: 100vh;
           padding: 40px 0;
+          position: relative;
+        }
+
+        .notification {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #4CAF50;
+          color: white;
+          padding: 15px 25px;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
         }
 
         .container {

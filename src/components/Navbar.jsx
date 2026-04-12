@@ -13,7 +13,7 @@ const Navbar = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100">
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100 mmmm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo and Brand */}
       <Link 

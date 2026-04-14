@@ -2,77 +2,72 @@
   "products": [
     {
       "id": 1,
-      "name": "OVision 43-752 - Sports Sunglasses",
-      "originalPrice": "4,970.00",
-      "discountPrice": "4,225.00",
+      "name": "SL-5503 - Metal Round Shape",
+      "originalPrice": "1999",
+      "discountPrice": "1499",
       "reviews": 12,
-      "madeInTaiwan": true,
+      "madeInTaiwan": false,
       "discount": "15%",
       "category": "men",
       "gender": "Men",
-      "shape": "Aviator",
+      "shape": "Round",
       "variants": [
-        { "colorName": "White", "hex": "#ffffff", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
-        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
-        { "colorName": "Brown", "hex": "#b68a35", "image": "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500&q=80" },
-        { "colorName": "Matt Black", "hex": "#333333", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
-        { "colorName": "Grey", "hex": "#808080", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+        { "colorName": "Gun Metalic", "hex": "#ffffff", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
+        { "colorName": "Golden", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
       ]
     },
     {
       "id": 2,
-      "name": "Eleganza Diva - Cat Eye Glasses",
-      "originalPrice": "3,500.00",
-      "discountPrice": "2,800.00",
+      "name": "9722 - Metal Oval Shape",
+      "originalPrice": "2500",
+      "discountPrice": "1799",
       "reviews": 24,
       "madeInTaiwan": false,
       "discount": "20%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Cat-eye",
+      "category": "men",
+      "gender": "men",
+      "shape": "Oval",
       "variants": [
-        { "colorName": "Rose Gold", "hex": "#b76e79", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
-        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Tortoise", "hex": "#8b5a2b", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+        { "colorName": "Black", "hex": "#b76e79", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
+        { "colorName": "Black & Gold", "hex": "#000000", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
+        { "colorName": "Black & Brown", "hex": "#8b5a2b", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
       ]
     },
     {
       "id": 3,
-      "name": "Urban Youth - Rectangle Frame",
-      "originalPrice": "2,200.00",
-      "discountPrice": "1,870.00",
+      "name": "806271 - Plastic Oval Shape ",
+      "originalPrice": "2000",
+      "discountPrice": "1499",
       "reviews": 8,
       "madeInTaiwan": true,
       "discount": "15%",
       "category": "kids",
-      "gender": "Unisex",
+      "gender": "men",
       "shape": "Rectangle",
       "variants": [
-        { "colorName": "Blue", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
-        { "colorName": "Red", "hex": "#e74c3c", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
-        { "colorName": "Green", "hex": "#2ecc71", "image": "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500&q=80" }
+        { "colorName": "Leopard", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
       ]
     },
     {
       "id": 4,
-      "name": "ClearVision Monthly - Contact Lenses",
-      "originalPrice": "1,500.00",
-      "discountPrice": "1,200.00",
+      "name": "5011 - Metal & Plastic Round Shape",
+      "originalPrice": "2800",
+      "discountPrice": "1899",
       "reviews": 45,
       "madeInTaiwan": false,
       "discount": "20%",
       "category": "contactlens",
-      "gender": "Unisex",
-      "shape": "Circle",
+      "gender": "men",
+      "shape": "Round",
       "variants": [
-        { "colorName": "Clear", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+        { "colorName": "Black & Gray", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
       ]
     },
     {
       "id": 5,
-      "name": "Executive Pro - Square Frame",
-      "originalPrice": "6,800.00",
-      "discountPrice": "5,780.00",
+      "name": "2603 - Curve Square Half Frame Plastic",
+      "originalPrice": "2899",
+      "discountPrice": "2199",
       "reviews": 31,
       "madeInTaiwan": true,
       "discount": "15%",
@@ -80,65 +75,67 @@
       "gender": "Men",
       "shape": "Square",
       "variants": [
-        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
-        { "colorName": "Silver", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
-        { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        { "colorName": "Tiger", "hex": "#000000", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
       ]
     },
     {
       "id": 6,
-      "name": "Chic Round - Vintage Style",
-      "originalPrice": "3,200.00",
-      "discountPrice": "2,720.00",
+      "name": "9702 Metal Oval",
+      "originalPrice": "1899",
+      "discountPrice": "1499",
       "reviews": 18,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Oval",
       "variants": [
         { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
-        { "colorName": "Silver", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
-        { "colorName": "Rose Gold", "hex": "#b76e79", "image": "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500&q=80" }
+        { "colorName": "Brown", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
       ]
     },
     {
       "id": 7,
-      "name": "Kids Play - Oval Frame",
-      "originalPrice": "1,800.00",
-      "discountPrice": "1,530.00",
+      "name": "JV5816 - Plastic Curve Square Shape",
+      "originalPrice": "15,999",
+      "discountPrice": "1399",
       "reviews": 6,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "kids",
+      "category": "unisex",
       "gender": "Unisex",
-      "shape": "Oval",
+      "shape": "Square",
       "variants": [
-        { "colorName": "Yellow", "hex": "#f1c40f", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
-        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
-        { "colorName": "Purple", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
+        { "colorName": "Black & Purple", "hex": "#f1c40f", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
+        { "colorName": "Black & Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
+        { "colorName": "Black & Orange", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
+        { "colorName": "Black & Yellow", "hex": "#f1c40f", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
+        { "colorName": "Black & Green", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
+        { "colorName": "Black & Blue", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
+        { "colorName": "Black", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
+        { "colorName": "Black & Red", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
       ]
     },
     {
       "id": 8,
-      "name": "Daily Fresh - Contact Lenses",
-      "originalPrice": "2,000.00",
-      "discountPrice": "1,600.00",
+      "name": "D8822 - Plastic Square Shape",
+      "originalPrice": "1499",
+      "discountPrice": "1199",
       "reviews": 52,
       "madeInTaiwan": false,
       "discount": "20%",
       "category": "contactlens",
-      "gender": "Unisex",
-      "shape": "Circle",
+      "gender": "Women",
+      "shape": "Square",
       "variants": [
-        { "colorName": "Clear", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+        { "colorName": "Black & White", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
       ]
     },
     {
       "id": 9,
-      "name": "Bold Wayfarer - Classic",
-      "originalPrice": "5,500.00",
-      "discountPrice": "4,675.00",
+      "name": "PS8035 - Plastic Square Shape",
+      "originalPrice": "1899",
+      "discountPrice": "1399",
       "reviews": 27,
       "madeInTaiwan": true,
       "discount": "15%",
@@ -146,97 +143,90 @@
       "gender": "Men",
       "shape": "Wayfarer",
       "variants": [
-        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
-        { "colorName": "Tortoise", "hex": "#8b5a2b", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
+        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
       ]
     },
     {
       "id": 10,
-      "name": "Glamour Queen - Oversized Square",
-      "originalPrice": "4,200.00",
-      "discountPrice": "3,570.00",
+      "name": "HZ281001 - Plastic Square Shape",
+      "originalPrice": "1899",
+      "discountPrice": "1499",
       "reviews": 33,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
-      "gender": "Women",
+      "category": "men",
+      "gender": "Men",
       "shape": "Square",
       "variants": [
-        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
-        { "colorName": "White", "hex": "#ffffff", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Leopard", "hex": "#d4a373", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+        { "colorName": "Black & Blue", "hex": "#000000", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" }
       ]
     },
     {
       "id": 11,
-      "name": "Tiny Explorer - Kids Rectangle",
-      "originalPrice": "1,500.00",
-      "discountPrice": "1,275.00",
+      "name": "D8815 - Plastic Vaffer Shape",
+      "originalPrice": "1899",
+      "discountPrice": "1499",
       "reviews": 4,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "kids",
-      "gender": "Unisex",
-      "shape": "Rectangle",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Vaffer",
       "variants": [
-        { "colorName": "Orange", "hex": "#e67e22", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
-        { "colorName": "Teal", "hex": "#008080", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
+        { "colorName": "White & Black", "hex": "#e67e22", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" }
       ]
     },
     {
       "id": 12,
-      "name": "Color Fusion - Colored Contact Lenses",
-      "originalPrice": "2,500.00",
-      "discountPrice": "2,000.00",
+      "name": "9362 - Plastic Square Shape",
+      "originalPrice": "1499",
+      "discountPrice": "1199",
       "reviews": 67,
       "madeInTaiwan": false,
       "discount": "20%",
       "category": "contactlens",
       "gender": "Women",
-      "shape": "Circle",
+      "shape": "Square",
       "variants": [
-        { "colorName": "Blue", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" },
-        { "colorName": "Green", "hex": "#2ecc71", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" },
-        { "colorName": "Gray", "hex": "#808080", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+        { "colorName": "Black & Shade Mahroon", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
       ]
     },
     {
       "id": 13,
-      "name": "Aviator Pro - Metal Frame",
-      "originalPrice": "7,200.00",
-      "discountPrice": "6,120.00",
+      "name": "D8953 - Plastic Square Shape",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
       "reviews": 41,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "men",
-      "gender": "Men",
-      "shape": "Aviator",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Square",
       "variants": [
-        { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
-        { "colorName": "Silver", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
+        { "colorName": "Leopard" , "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
+        { "colorName": "mahroon", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
       ]
     },
     {
       "id": 14,
-      "name": "Floral Chic - Cat Eye",
-      "originalPrice": "3,800.00",
-      "discountPrice": "3,230.00",
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
       "category": "women",
       "gender": "Women",
-      "shape": "Cat-eye",
+      "shape": "Round",
       "variants": [
-        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Purple", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" }
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
       ]
     },
     {
       "id": 15,
-      "name": "Geometric Edge - Hexagon Frame",
-      "originalPrice": "4,500.00",
-      "discountPrice": "3,825.00",
+      "name": "TR1020 Plastic Eye Shape",
+      "originalPrice": "1499",
+      "discountPrice": "1199",
       "reviews": 15,
       "madeInTaiwan": true,
       "discount": "15%",
@@ -244,8 +234,157 @@
       "gender": "Men",
       "shape": "Geometric",
       "variants": [
-        { "colorName": "Matt Black", "hex": "#333333", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
-        { "colorName": "Blue", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" }
+        { "colorName": "Brown", "hex": "#333333", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "BB6522 Plastic Eye Shape",
+      "originalPrice": "2599",
+      "discountPrice": "1799",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Eye",
+      "variants": [
+        { "colorName": "Black & Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "D9108 Plastic Square Shape ",
+      "originalPrice": "1499",
+      "discountPrice": "1199",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Square",
+      "variants": [
+        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "D8967 - Plastic Round Shape ",
+      "originalPrice": "1799",
+      "discountPrice": "1499",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
       ]
     }
   ]

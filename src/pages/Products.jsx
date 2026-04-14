@@ -1,7 +1,8 @@
 // Products.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import productsData from "../data/data.json"
+import productsData from "../data/data.json";
+import ProductCard from '../components/ProductCard'; // Import the ProductCard component
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ const Products = () => {
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [sortBy, setSortBy] = useState('default');
   const [notification, setNotification] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); // NEW: search term state
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Shape options based on product types
   const shapeOptions = ['Circle', 'Square', 'Rectangle', 'Oval', 'Cat-eye', 'Aviator', 'Wayfarer', 'Round', 'Geometric'];
@@ -117,7 +118,7 @@ const Products = () => {
     setSelectedShapes([]);
     setSelectedGenders([]);
     setSortBy('default');
-    setSearchTerm(''); // NEW: clear search term
+    setSearchTerm('');
   };
 
   // Format price display
@@ -136,6 +137,10 @@ const Products = () => {
     }
     
     localStorage.setItem("cart", JSON.stringify(saved));
+    
+    // Show notification
+    setNotification(`${product.name} added to cart!`);
+    setTimeout(() => setNotification(null), 3000);
   };
 
   return (
@@ -291,49 +296,8 @@ const Products = () => {
             ) : (
               <div className="products-grid">
                 {filteredProducts.map(product => (
-                  <div key={product.id} className="product-card">
-                    <div className="product-image">
-                      {product.discount && <span className="discount-badge">{product.discount} OFF</span>}
-                      {product.madeInTaiwan && <span className="made-badge">Made in Taiwan</span>}
-                      <img
-                        src={product.variants?.[0]?.image || 'https://via.placeholder.com/300x200?text=Product'}
-                        alt={product.name}
-                      />
-                      {product.variants && product.variants.length > 1 && (
-                        <div className="color-swatches">
-                          {product.variants.slice(0, 4).map((variant, idx) => (
-                            <span
-                              key={idx}
-                              className="color-swatch"
-                              style={{ backgroundColor: variant.hex }}
-                              title={variant.colorName}
-                            />
-                          ))}
-                          {product.variants.length > 4 && <span className="more-colors">+{product.variants.length - 4}</span>}
-                        </div>
-                      )}
-                    </div>
-                    <div className="product-info">
-                      <h3 className="product-name">{product.name}</h3>
-                      <div className="product-price">
-                        <span className="discount-price">{formatPrice(product.discountPrice)}</span>
-                        <span className="original-price">{formatPrice(product.originalPrice)}</span>
-                      </div>
-                      {product.reviews && (
-                        <div className="product-reviews">
-                          <div className="stars">
-                            {'★'.repeat(5)}
-                          </div>
-                          <span>({product.reviews} reviews)</span>
-                        </div>
-                      )}
-                      <button
-                        className="add-to-cart"
-                        onClick={() => addToCart(product)}
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
+                  <div key={product.id} className="product-card-wrapper">
+                    <ProductCard product={product} addToCart={addToCart} />
                   </div>
                 ))}
               </div>
@@ -628,146 +592,12 @@ const Products = () => {
           gap: 28px;
         }
 
-        .product-card {
-          background: white;
-          border-radius: 16px;
-          overflow: hidden;
+        .product-card-wrapper {
           transition: transform 0.3s, box-shadow 0.3s;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .product-card:hover {
+        .product-card-wrapper:hover {
           transform: translateY(-5px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-        }
-
-        .product-image {
-          position: relative;
-          background: #f5f5f5;
-          height: 240px;
-          overflow: hidden;
-        }
-
-        .product-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s;
-        }
-
-        .product-card:hover .product-image img {
-          transform: scale(1.05);
-        }
-
-        .discount-badge {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          background: #e74c3c;
-          color: white;
-          padding: 4px 10px;
-          border-radius: 20px;
-          font-size: 0.7rem;
-          font-weight: 600;
-          z-index: 1;
-        }
-
-        .made-badge {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          background: rgba(0,0,0,0.7);
-          color: white;
-          padding: 4px 10px;
-          border-radius: 20px;
-          font-size: 0.7rem;
-          z-index: 1;
-        }
-
-        .color-swatches {
-          position: absolute;
-          bottom: 12px;
-          left: 12px;
-          display: flex;
-          gap: 6px;
-          background: rgba(255,255,255,0.9);
-          padding: 6px 10px;
-          border-radius: 30px;
-          z-index: 1;
-        }
-
-        .color-swatch {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          border: 1px solid #ddd;
-          cursor: pointer;
-        }
-
-        .more-colors {
-          font-size: 0.7rem;
-          color: #666;
-          margin-left: 4px;
-        }
-
-        .product-info {
-          padding: 16px;
-        }
-
-        .product-name {
-          font-size: 1rem;
-          font-weight: 600;
-          color: #1a1a2e;
-          margin-bottom: 8px;
-          line-height: 1.4;
-        }
-
-        .product-price {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-bottom: 10px;
-        }
-
-        .discount-price {
-          font-size: 1.2rem;
-          font-weight: 700;
-          color: #1a1a2e;
-        }
-
-        .original-price {
-          font-size: 0.9rem;
-          color: #999;
-          text-decoration: line-through;
-        }
-
-        .product-reviews {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 14px;
-        }
-
-        .stars {
-          color: #f39c12;
-          font-size: 0.8rem;
-          letter-spacing: 2px;
-        }
-
-        .add-to-cart {
-          width: 100%;
-          padding: 12px;
-          background: #1a1a2e;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.3s;
-        }
-
-        .add-to-cart:hover {
-          background: #16213e;
         }
 
         .no-products {

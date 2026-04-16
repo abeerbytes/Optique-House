@@ -14,11 +14,14 @@ const Cart = () => {
   }, []);
 
   // Update quantity
-  const updateQuantity = (id, newQuantity, variantName) => {
+  const updateQuantity = (id, newQuantity, variantName, lensType) => {
     if (newQuantity < 1) return;
-
+    
     const updatedCart = cart.map(item => {
-      if (item.id === id && item.selectedVariant?.colorName === variantName) {
+      // Check if same product, same variant, same lens type
+      if (item.id === id && 
+          item.selectedVariant?.colorName === variantName && 
+          item.prescription?.lensType === lensType) {
         return { ...item, quantity: newQuantity };
       }
       return item;
@@ -28,19 +31,35 @@ const Cart = () => {
   };
 
   // Remove item
-  const removeItem = (id, variantName) => {
-    const updatedCart = cart.filter(
-      item => !(item.id === id && item.selectedVariant?.colorName === variantName)
+  const removeItem = (id, variantName, lensType) => {
+    const updatedCart = cart.filter(item => 
+      !(item.id === id && 
+        item.selectedVariant?.colorName === variantName && 
+        item.prescription?.lensType === lensType)
     );
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Get subtotal (price is numeric)
+  // Get item price (prefer totalPrice, fallback to framePrice + lensExtraCharge, then discountPrice)
+  const getItemPrice = (item) => {
+    if (item.totalPrice) return item.totalPrice;
+    if (item.framePrice !== undefined && item.lensExtraCharge !== undefined) {
+      return item.framePrice + (item.lensExtraCharge || 0);
+    }
+    // Fallback for old cart items
+    if (item.discountPrice) {
+      return parseFloat(item.discountPrice?.replace(/,/g, "")) || 0;
+    }
+    if (item.price) return item.price;
+    return 0;
+  };
+
+  // Get subtotal
   const getSubtotal = () => {
     return cart.reduce((total, item) => {
-      const price = item.price || item.discountPrice || 0;
-      return total + price * (item.quantity || 1);
+      const price = getItemPrice(item);
+      return total + (price * (item.quantity || 1));
     }, 0);
   };
 
@@ -73,12 +92,12 @@ const Cart = () => {
         <div className="lens-flare"></div>
         <div className="glint-overlay"></div>
       </div>
-
+      
       <div className="container">
         <h1 className="cart-title">
           <span className="title-icon">👓</span> Shopping Cart
         </h1>
-
+        
         {cart.length === 0 ? (
           <div className="empty-cart">
             <div className="empty-cart-icon">🛒✨</div>
@@ -98,17 +117,19 @@ const Cart = () => {
                 <div className="total-col">Total</div>
                 <div className="action-col"></div>
               </div>
-
+              
               {cart.map((item, index) => {
-                const price = item.price || item.discountPrice || 0;
+                const price = getItemPrice(item);
                 const itemTotal = price * (item.quantity || 1);
-
+                // Create unique key for each cart item
+                const uniqueKey = `${item.id}-${item.selectedVariant?.colorName || 'default'}-${item.prescription?.lensType || 'no-lens'}`;
+                
                 return (
-                  <div key={`${item.id}-${item.selectedVariant?.colorName}`} className="cart-item" style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div key={uniqueKey} className="cart-item" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="product-col">
                       <div className="product-info">
-                        <img
-                          src={item.image || 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop'}
+                        <img 
+                          src={item.image || item.selectedVariant?.image || 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop'} 
                           alt={item.name}
                           className="product-image"
                         />
@@ -117,46 +138,76 @@ const Cart = () => {
                           {item.selectedVariant && (
                             <span className="product-meta">Color: {item.selectedVariant.colorName}</span>
                           )}
+                          {item.prescription && (
+                            <span className="product-prescription">
+                              Lens: {item.prescription.lensName || item.prescription.lensType || 'Standard'} 
+                              (+₹{item.prescription.lensPrice?.toLocaleString() || 0})
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
-
+                    
                     <div className="price-col">
-                      <span className="price">PKR {price.toLocaleString()}</span>
+                      <span className="price">₹{price.toLocaleString()}</span>
+                      {item.lensExtraCharge > 0 && (
+                        <span className="price-breakdown">
+                          (Frame: ₹{item.framePrice?.toLocaleString()} + Lens: ₹{item.lensExtraCharge?.toLocaleString()})
+                        </span>
+                      )}
                     </div>
-
+                    
                     <div className="quantity-col">
                       <div className="quantity-selector">
-                        <button
+                        <button 
                           className="qty-btn"
-                          onClick={() => updateQuantity(item.id, (item.quantity || 1) - 1, item.selectedVariant?.colorName)}
+                          onClick={() => updateQuantity(
+                            item.id, 
+                            (item.quantity || 1) - 1,
+                            item.selectedVariant?.colorName,
+                            item.prescription?.lensType
+                          )}
                         >
                           -
                         </button>
-                        <input
-                          type="number"
+                        <input 
+                          type="number" 
                           value={item.quantity || 1}
-                          onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1, item.selectedVariant?.colorName)}
+                          onChange={(e) => updateQuantity(
+                            item.id, 
+                            parseInt(e.target.value) || 1,
+                            item.selectedVariant?.colorName,
+                            item.prescription?.lensType
+                          )}
                           min="1"
                           className="qty-input"
                         />
-                        <button
+                        <button 
                           className="qty-btn"
-                          onClick={() => updateQuantity(item.id, (item.quantity || 1) + 1, item.selectedVariant?.colorName)}
+                          onClick={() => updateQuantity(
+                            item.id, 
+                            (item.quantity || 1) + 1,
+                            item.selectedVariant?.colorName,
+                            item.prescription?.lensType
+                          )}
                         >
                           +
                         </button>
                       </div>
                     </div>
-
+                    
                     <div className="total-col">
-                      <span className="item-total">PKR {itemTotal.toLocaleString()}</span>
+                      <span className="item-total">₹{itemTotal.toLocaleString()}</span>
                     </div>
-
+                    
                     <div className="action-col">
-                      <button
+                      <button 
                         className="remove-btn"
-                        onClick={() => removeItem(item.id, item.selectedVariant?.colorName)}
+                        onClick={() => removeItem(
+                          item.id,
+                          item.selectedVariant?.colorName,
+                          item.prescription?.lensType
+                        )}
                       >
                         🗑️
                       </button>
@@ -165,35 +216,38 @@ const Cart = () => {
                 );
               })}
             </div>
-
+            
             <div className="cart-summary">
               <h2 className="summary-title">Order Summary</h2>
-
+              
               <div className="summary-row">
                 <span>Subtotal</span>
-                <span>PKR {getSubtotal().toLocaleString()}</span>
+                <span>₹{getSubtotal().toLocaleString()}</span>
               </div>
-
+              
               <div className="summary-row">
                 <span>Shipping</span>
-                <span>{getShipping() === 0 ? 'Free' : `PKR ${getShipping().toLocaleString()}`}</span>
+                <span>{getShipping() === 0 ? 'Free' : `₹${getShipping().toLocaleString()}`}</span>
               </div>
-
+              
               {getShipping() > 0 && getSubtotal() < 5000 && (
                 <div className="shipping-note">
-                  ✨ Add PKR {(5000 - getSubtotal()).toLocaleString()} more for free shipping
+                  ✨ Add ₹{(5000 - getSubtotal()).toLocaleString()} more for free shipping
                 </div>
               )}
-
+              
               <div className="summary-total">
                 <span>Total</span>
-                <span>PKR {getTotal().toLocaleString()}</span>
+                <span>₹{getTotal().toLocaleString()}</span>
               </div>
-
-              <button className="checkout-btn" onClick={proceedToCheckout}>
+              
+              <button 
+                className="checkout-btn"
+                onClick={proceedToCheckout}
+              >
                 Proceed to Checkout
               </button>
-
+              
               <Link to="/products" className="continue-shopping-link">
                 ← Continue Shopping
               </Link>
@@ -201,7 +255,7 @@ const Cart = () => {
           </div>
         )}
       </div>
-
+      
       <style jsx>{`
         .cart-page {
           position: relative;
@@ -209,7 +263,7 @@ const Cart = () => {
           padding: 60px 0;
           overflow-x: hidden;
         }
-
+        
         /* ========== ANIMATED BACKGROUND ========== */
         .animated-bg {
           position: fixed;
@@ -221,7 +275,7 @@ const Cart = () => {
           background: linear-gradient(135deg, #e8eef5 0%, #dce3ec 25%, #f0eef7 50%, #e2e8f0 100%);
           overflow: hidden;
         }
-
+        
         .bg-orb {
           position: absolute;
           border-radius: 50%;
@@ -229,7 +283,7 @@ const Cart = () => {
           opacity: 0.5;
           animation: floatOrb 20s infinite alternate ease-in-out;
         }
-
+        
         .orb1 {
           width: 55vw;
           height: 55vw;
@@ -238,7 +292,7 @@ const Cart = () => {
           left: -10%;
           animation-duration: 24s;
         }
-
+        
         .orb2 {
           width: 60vw;
           height: 60vw;
@@ -248,7 +302,7 @@ const Cart = () => {
           animation-duration: 28s;
           animation-delay: -4s;
         }
-
+        
         .orb3 {
           width: 45vw;
           height: 45vw;
@@ -258,7 +312,7 @@ const Cart = () => {
           animation-duration: 32s;
           animation-delay: -7s;
         }
-
+        
         .orb4 {
           width: 35vw;
           height: 35vw;
@@ -268,7 +322,7 @@ const Cart = () => {
           animation-duration: 26s;
           animation-delay: -2s;
         }
-
+        
         @keyframes floatOrb {
           0% {
             transform: translate(0, 0) scale(1);
@@ -277,7 +331,7 @@ const Cart = () => {
             transform: translate(5%, 7%) scale(1.1);
           }
         }
-
+        
         /* Lens flare & glint animation */
         .lens-flare {
           position: absolute;
@@ -289,12 +343,12 @@ const Cart = () => {
           animation: rotateFlare 30s linear infinite;
           pointer-events: none;
         }
-
+        
         @keyframes rotateFlare {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-
+        
         .glint-overlay {
           position: absolute;
           top: 0;
@@ -305,19 +359,19 @@ const Cart = () => {
           animation: glintMove 12s ease-in-out infinite;
           pointer-events: none;
         }
-
+        
         @keyframes glintMove {
           0% { transform: translateX(-100%) skewX(-15deg); }
           20% { transform: translateX(100%) skewX(-15deg); }
           100% { transform: translateX(100%) skewX(-15deg); }
         }
-
+        
         .container {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 24px;
         }
-
+        
         .cart-title {
           font-size: 2.5rem;
           font-weight: 700;
@@ -330,17 +384,17 @@ const Cart = () => {
           justify-content: center;
           gap: 12px;
         }
-
+        
         .title-icon {
           display: inline-block;
           animation: bounceIcon 2s ease-in-out infinite;
         }
-
+        
         @keyframes bounceIcon {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-5px) rotate(5deg); }
         }
-
+        
         @keyframes titleReveal {
           0% {
             opacity: 0;
@@ -351,7 +405,7 @@ const Cart = () => {
             transform: translateY(0);
           }
         }
-
+        
         .empty-cart {
           text-align: center;
           padding: 80px 20px;
@@ -362,12 +416,12 @@ const Cart = () => {
           transition: all 0.4s ease;
           animation: fadeInUp 0.5s ease-out;
         }
-
+        
         .empty-cart:hover {
           transform: scale(1.01);
           box-shadow: 0 28px 48px rgba(0, 0, 0, 0.12);
         }
-
+        
         @keyframes fadeInUp {
           from {
             opacity: 0;
@@ -378,29 +432,29 @@ const Cart = () => {
             transform: translateY(0);
           }
         }
-
+        
         .empty-cart-icon {
           font-size: 85px;
           margin-bottom: 20px;
           animation: floatCart 2s ease-in-out infinite;
         }
-
+        
         @keyframes floatCart {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }
         }
-
+        
         .empty-cart h2 {
           font-size: 1.8rem;
           color: #1a1a2e;
           margin-bottom: 10px;
         }
-
+        
         .empty-cart p {
           color: #4a5568;
           margin-bottom: 30px;
         }
-
+        
         .continue-shopping-btn {
           display: inline-block;
           padding: 12px 32px;
@@ -412,19 +466,19 @@ const Cart = () => {
           transition: all 0.3s ease;
           box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
         }
-
+        
         .continue-shopping-btn:hover {
           transform: translateY(-3px);
           box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
           background: linear-gradient(135deg, #16213e 0%, #0f172a 100%);
         }
-
+        
         .cart-content {
           display: grid;
           grid-template-columns: 1fr 380px;
           gap: 30px;
         }
-
+        
         .cart-items-section {
           background: rgba(255, 255, 255, 0.94);
           backdrop-filter: blur(6px);
@@ -434,7 +488,7 @@ const Cart = () => {
           transition: all 0.3s ease;
           animation: slideInLeft 0.5s ease-out;
         }
-
+        
         @keyframes slideInLeft {
           from {
             opacity: 0;
@@ -445,7 +499,7 @@ const Cart = () => {
             transform: translateX(0);
           }
         }
-
+        
         .cart-header {
           display: grid;
           grid-template-columns: 3fr 1fr 1.5fr 1fr 0.5fr;
@@ -455,7 +509,7 @@ const Cart = () => {
           color: #2c3e66;
           letter-spacing: 0.3px;
         }
-
+        
         .cart-item {
           display: grid;
           grid-template-columns: 3fr 1fr 1.5fr 1fr 0.5fr;
@@ -465,7 +519,7 @@ const Cart = () => {
           transition: all 0.3s ease;
           animation: fadeSlideItem 0.45s cubic-bezier(0.2, 0.8, 0.4, 1) backwards;
         }
-
+        
         @keyframes fadeSlideItem {
           from {
             opacity: 0;
@@ -476,7 +530,7 @@ const Cart = () => {
             transform: translateX(0);
           }
         }
-
+        
         .cart-item:hover {
           background: linear-gradient(90deg, rgba(245, 248, 255, 0.8), transparent);
           border-radius: 20px;
@@ -484,13 +538,13 @@ const Cart = () => {
           margin-left: -6px;
           transition: 0.2s;
         }
-
+        
         .product-info {
           display: flex;
           gap: 15px;
           align-items: center;
         }
-
+        
         .product-image {
           width: 80px;
           height: 80px;
@@ -499,36 +553,54 @@ const Cart = () => {
           box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
           transition: all 0.3s ease;
         }
-
+        
         .product-image:hover {
           transform: scale(1.03) rotate(1deg);
           box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
         }
-
+        
         .product-details h3 {
           font-size: 1rem;
           font-weight: 700;
           margin-bottom: 5px;
           color: #0f172a;
         }
-
+        
         .product-meta {
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           color: #4b5563;
+          display: block;
         }
-
-        .price,
-        .item-total {
+        
+        .product-prescription {
+          font-size: 0.75rem;
+          color: #667eea;
+          background: #eef2ff;
+          padding: 2px 8px;
+          border-radius: 20px;
+          display: inline-block;
+          margin-top: 4px;
+        }
+        
+        .price, .item-total {
           font-weight: 700;
           color: #0f172a;
         }
-
+        
+        .price-breakdown {
+          display: block;
+          font-size: 0.7rem;
+          font-weight: normal;
+          color: #64748b;
+          margin-top: 2px;
+        }
+        
         .quantity-selector {
           display: flex;
           align-items: center;
           gap: 10px;
         }
-
+        
         .qty-btn {
           width: 34px;
           height: 34px;
@@ -541,17 +613,17 @@ const Cart = () => {
           transition: all 0.2s ease;
           color: #1e293b;
         }
-
+        
         .qty-btn:hover {
           background: #eef2ff;
           transform: scale(1.05);
           border-color: #94a3b8;
         }
-
+        
         .qty-btn:active {
           transform: scale(0.95);
         }
-
+        
         .qty-input {
           width: 54px;
           height: 38px;
@@ -563,13 +635,13 @@ const Cart = () => {
           background: white;
           transition: all 0.2s;
         }
-
+        
         .qty-input:focus {
           outline: none;
           border-color: #667eea;
           box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
+        
         .remove-btn {
           background: none;
           border: none;
@@ -580,13 +652,13 @@ const Cart = () => {
           padding: 8px;
           border-radius: 40px;
         }
-
+        
         .remove-btn:hover {
           opacity: 1;
           transform: scale(1.12);
           background: #fee2e2;
         }
-
+        
         .cart-summary {
           background: rgba(255, 255, 255, 0.97);
           backdrop-filter: blur(8px);
@@ -599,7 +671,7 @@ const Cart = () => {
           transition: all 0.3s ease;
           animation: slideInRight 0.5s ease-out;
         }
-
+        
         @keyframes slideInRight {
           from {
             opacity: 0;
@@ -610,11 +682,11 @@ const Cart = () => {
             transform: translateX(0);
           }
         }
-
+        
         .cart-summary:hover {
           transform: translateY(-4px);
         }
-
+        
         .summary-title {
           font-size: 1.4rem;
           font-weight: 700;
@@ -623,7 +695,7 @@ const Cart = () => {
           border-bottom: 2px solid #e2e8f0;
           letter-spacing: -0.2px;
         }
-
+        
         .summary-row {
           display: flex;
           justify-content: space-between;
@@ -631,7 +703,7 @@ const Cart = () => {
           color: #334155;
           transition: all 0.2s;
         }
-
+        
         .summary-total {
           display: flex;
           justify-content: space-between;
@@ -642,7 +714,7 @@ const Cart = () => {
           font-weight: 800;
           color: #0f172a;
         }
-
+        
         .shipping-note {
           background: linear-gradient(135deg, #e6f9ed, #d4f5e0);
           padding: 12px;
@@ -654,18 +726,18 @@ const Cart = () => {
           font-weight: 600;
           animation: pulseGlow 2s infinite;
         }
-
+        
         @keyframes pulseGlow {
-          0%, 100% {
+          0%, 100% { 
             background: linear-gradient(135deg, #e6f9ed, #d4f5e0);
             box-shadow: 0 0 0 0 rgba(30, 92, 46, 0.2);
           }
-          50% {
+          50% { 
             background: linear-gradient(135deg, #d0f0dc, #c0e8d0);
             box-shadow: 0 0 0 4px rgba(30, 92, 46, 0.1);
           }
         }
-
+        
         .checkout-btn {
           width: 100%;
           padding: 15px;
@@ -681,17 +753,17 @@ const Cart = () => {
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
           letter-spacing: 0.5px;
         }
-
+        
         .checkout-btn:hover {
           transform: translateY(-2px);
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
           background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         }
-
+        
         .checkout-btn:active {
           transform: translateY(1px);
         }
-
+        
         .continue-shopping-link {
           display: block;
           text-align: center;
@@ -702,7 +774,7 @@ const Cart = () => {
           font-weight: 500;
           transition: all 0.25s ease;
         }
-
+        
         .continue-shopping-link:hover {
           color: #0f172a;
           transform: translateX(-5px);
@@ -711,56 +783,54 @@ const Cart = () => {
           margin-left: auto;
           margin-right: auto;
         }
-
+        
         @media (max-width: 968px) {
           .cart-content {
             grid-template-columns: 1fr;
           }
-
+          
           .cart-header {
             display: none;
           }
-
+          
           .cart-item {
             grid-template-columns: 1fr;
             gap: 15px;
             text-align: center;
           }
-
+          
           .product-info {
             flex-direction: column;
             text-align: center;
           }
-
+          
           .quantity-selector {
             justify-content: center;
           }
-
-          .price-col,
-          .total-col,
-          .action-col {
+          
+          .price-col, .total-col, .action-col {
             text-align: center;
           }
-
+          
           .cart-summary {
             position: static;
           }
-
+          
           .cart-title {
             font-size: 2rem;
           }
         }
-
+        
         /* Custom scrollbar */
         ::-webkit-scrollbar {
           width: 8px;
         }
-
+        
         ::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.05);
+          background: rgba(0,0,0,0.05);
           border-radius: 10px;
         }
-
+        
         ::-webkit-scrollbar-thumb {
           background: linear-gradient(135deg, #1a1a2e, #2c3e66);
           border-radius: 10px;

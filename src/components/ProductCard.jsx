@@ -2,84 +2,87 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
+  // Default to the first variant
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
-  const [hoveredColor, setHoveredColor] = useState(null);
 
   return (
-    <div className="group relative bg-white transition-all duration-300">
+    <div className="max-w-[300px] bg-white p-4 rounded-xl font-sans text-center group shadow-sm hover:shadow-md transition-shadow">
       <Link to={`/product/${product.id}`} className="block">
-        {/* Image Container with Light Gray Background */}
-        <div className="relative aspect-[4/3] w-full bg-[#f4f4f4] flex items-center justify-center overflow-hidden mb-3">
-          {/* Top Right Badges */}
-          <div className="absolute top-0 right-0 z-10 flex flex-col items-end">
-            <span className="bg-[#ff0000] text-white text-[11px] font-bold px-2 py-1">
-              -{product.discount}
-            </span>
-            {product.madeInTaiwan && (
-              <span className="bg-[#00adef] text-white text-[10px] px-2 py-1 font-semibold mt-0.5">
-                Made in Taiwan
-              </span>
-            )}
-            {/* Added "Made in France" logic if needed based on the image */}
-            {product.id === 4 && ( // Example condition
-               <span className="bg-[#00adef] text-white text-[10px] px-2 py-1 font-semibold mt-0.5">
-               Made In France
-             </span>
-            )}
+        
+        {/* Image Container */}
+        <div className="relative aspect-square w-full flex items-center justify-center mb-4 bg-[#f8f8f8] rounded-lg overflow-hidden">
+          
+          {/* "Try on" Button (Top Right) */}
+          <div className="absolute top-3 right-3 z-10">
+            <button className="flex items-center gap-1 bg-[#cc2121] text-white px-2.5 py-1 rounded-md text-[12px] font-bold shadow-md">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <path d="M15 8h.01M9 8h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+              </svg>
+              Try on
+            </button>
           </div>
 
           <img
-            src={selectedVariant.image}
+            src={selectedVariant.image} 
             alt={product.name}
-            className="w-full h-full object-contain p-4 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
           />
         </div>
 
-        {/* Product Details */}
-        <div className="px-1 space-y-0.5">
-          <h3 className="text-[#333] text-[13px] font-medium truncate">
+        {/* Status Badges */}
+        <div className="flex justify-center gap-2 mb-3">
+          <span className="bg-[#2d5a4c] text-white text-[12px] font-bold px-3 py-0.5 rounded-[4px] uppercase tracking-wider">
+            New
+          </span>
+          <span className="bg-[#ffea00] text-black text-[12px] font-bold px-3 py-0.5 rounded-[4px] uppercase tracking-wider">
+            Premium
+          </span>
+        </div>
+
+        {/* Variant Selector (Dual-tone style) */}
+        <div className="flex justify-center gap-3 mb-4">
+          {product.variants.map((variant, index) => (
+            <button
+              key={index}
+              onClick={(e) => {
+                e.preventDefault();
+                setSelectedVariant(variant);
+              }}
+              className={`w-6 h-6 rounded-full border-2 transition-all overflow-hidden flex ${
+                selectedVariant.colorName === variant.colorName ? 'border-black scale-110' : 'border-gray-200'
+              }`}
+            >
+              {/* This mimics the split-color look from the image */}
+              <div className="w-1/2 h-full" style={{ backgroundColor: variant.hex }}></div>
+              <div className="w-1/2 h-full brightness-75" style={{ backgroundColor: variant.hex }}></div>
+            </button>
+          ))}
+        </div>
+
+        {/* Text Details */}
+        <div className="space-y-1">
+          <h3 className="text-[#333] text-[16px] font-bold leading-tight line-clamp-1">
             {product.name}
           </h3>
           
-          {/* Rating Stars & Review Count */}
-          <div className="flex items-center gap-1">
-            <div className="flex text-black text-[10px]">
-              {[...Array(5)].map((_, i) => (
-                <span key={i}>{i < 5 ? "★" : "☆"}</span>
-              ))}
-            </div>
-            <span className="text-gray-500 text-[11px]">{product.reviews} reviews</span>
-          </div>
+          <p className="text-[14px]">
+            <span className="text-[#a33333] font-medium">{product.shape} </span>
+            <span className="text-[#a33333] font-bold">({product.gender})</span>
+          </p>
 
-          {/* Pricing - Using the specific colors from image */}
-          <div className="flex items-center gap-2 text-[12px]">
-            <span className="text-[#999] line-through">
-              Rs.{product.originalPrice} PKR
+          <div className="flex flex-col items-center mt-2">
+            <span className="text-[#999] text-xs line-through font-medium">
+              Rs {product.originalPrice}
             </span>
-            <span className="text-[#e32a2a] font-semibold">
-              Rs.{product.discountPrice} PKR
+            <span className="text-[#001529] text-[18px] font-black leading-none">
+              Rs {product.discountPrice}
+            </span>
+            <span className="text-[#cc2121] text-[11px] font-bold mt-1">
+              Save {product.discount}
             </span>
           </div>
         </div>
       </Link>
-
-      {/* Color Swatches - Positioned below text like the image */}
-      <div className="flex items-center gap-2 mt-3 px-1">
-        {product.variants.map((variant, index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedVariant(variant)}
-            onMouseEnter={() => setHoveredColor(variant.colorName)}
-            onMouseLeave={() => setHoveredColor(null)}
-            className={`w-3.5 h-3.5 rounded-full border border-gray-200 transition-all relative ${
-              selectedVariant.colorName === variant.colorName 
-              ? 'ring-1 ring-offset-1 ring-black' 
-              : ''
-            }`}
-            style={{ backgroundColor: variant.hex }}
-          />
-        ))}
-      </div>
     </div>
   );
 };

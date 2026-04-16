@@ -1,8 +1,10 @@
 // components/ProductDetail.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import productsData from '../data/data.json';
 
-// Helper component for star ratings
+// ==================== Helper Components ====================
+
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
@@ -29,7 +31,6 @@ const StarRating = ({ rating }) => {
   );
 };
 
-// Quantity selector component
 const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
   const decrease = () => setQuantity((prev) => Math.max(1, prev - 1));
   const increase = () => setQuantity((prev) => Math.min(maxStock, prev + 1));
@@ -59,10 +60,8 @@ const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
   );
 };
 
-// Color variant selector with radio buttons and color count display
 const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant }) => {
   if (!variants || variants.length === 0) return null;
-
   const totalColors = variants.length;
 
   return (
@@ -73,7 +72,6 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
           {totalColors} {totalColors === 1 ? 'Color' : 'Colors'} Available
         </span>
       </div>
-
       <div className="flex flex-wrap gap-3">
         {variants.map((variant) => {
           const isSelected = selectedVariant?.colorName === variant.colorName;
@@ -83,10 +81,9 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
               className={`
                 relative flex items-center gap-3 px-4 py-2 rounded-full border cursor-pointer
                 transition-all duration-200 ease-out
-                ${
-                  isSelected
-                    ? 'border-black bg-black text-white shadow-md'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:shadow-sm'
+                ${isSelected
+                  ? 'border-black bg-black text-white shadow-md'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:shadow-sm'
                 }
               `}
             >
@@ -98,19 +95,13 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
                 onChange={() => setSelectedVariant(variant)}
                 className="sr-only"
               />
-              {/* Color swatch */}
               <div
                 className="w-5 h-5 rounded-full border border-white/30 shadow-sm"
                 style={{ backgroundColor: variant.hex || '#E8F4F8' }}
               />
               <span className="text-sm font-medium">{variant.colorName}</span>
               {isSelected && (
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                 </svg>
               )}
@@ -118,7 +109,6 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
           );
         })}
       </div>
-
       {selectedVariant && (
         <p className="text-sm text-gray-500 mt-2 animate-fade-in">
           Selected: <span className="font-medium text-gray-900">{selectedVariant.colorName}</span>
@@ -128,21 +118,61 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
   );
 };
 
-// Prescription form for contact lenses
-const PrescriptionForm = ({ show, onClose, onSave }) => {
-  const [prescription, setPrescription] = useState({
-    sphere: '',
-    cylinder: '',
-    axis: '',
-    baseCurve: '',
-    diameter: '',
-  });
+// ==================== ENHANCED PRESCRIPTION FORM ====================
+const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }) => {
+  const [lensType, setLensType] = useState(existingPrescription?.lensType || 'standard');
+  const [leftEye, setLeftEye] = useState(
+    existingPrescription?.leftEye || {
+      sphere: '',
+      cylinder: '',
+      axis: '',
+      baseCurve: '',
+      diameter: '',
+    }
+  );
+  const [rightEye, setRightEye] = useState(
+    existingPrescription?.rightEye || {
+      sphere: '',
+      cylinder: '',
+      axis: '',
+      baseCurve: '',
+      diameter: '',
+    }
+  );
+
+  const lensOptions = [
+    { id: 'standard', name: 'Standard Lenses', price: 850 },
+    { id: 'blueCut', name: 'Blue Cut Lenses', price: 1800 },
+    { id: 'photochromic', name: 'Photochromic Lenses', price: 2500 },
+  ];
+
+  const selectedLens = lensOptions.find((l) => l.id === lensType) || lensOptions[0];
+
+  const handleLeftChange = (field, value) => {
+    setLeftEye((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleRightChange = (field, value) => {
+    setRightEye((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    const prescriptionData = {
+      lensType,
+      lensName: selectedLens.name,
+      lensPrice: selectedLens.price,
+      leftEye,
+      rightEye,
+    };
+    onSave(prescriptionData);
+    onClose();
+  };
 
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-3xl max-w-md w-full p-8 transform animate-slide-up">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in overflow-y-auto">
+      <div className="bg-white rounded-3xl max-w-3xl w-full p-6 md:p-8 transform animate-slide-up max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-bold">Prescription Details</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -151,35 +181,73 @@ const PrescriptionForm = ({ show, onClose, onSave }) => {
             </svg>
           </button>
         </div>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sphere (Power)</label>
-            <input
-              type="text"
-              placeholder="e.g., -2.00"
-              value={prescription.sphere}
-              onChange={(e) => setPrescription({ ...prescription, sphere: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-            />
+
+        {/* Lens Type Selection */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Lens Type (Extra Charge)</label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {lensOptions.map((lens) => (
+              <label
+                key={lens.id}
+                className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                  lensType === lens.id
+                    ? 'border-black bg-black text-white'
+                    : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="lensType"
+                    value={lens.id}
+                    checked={lensType === lens.id}
+                    onChange={() => setLensType(lens.id)}
+                    className="sr-only"
+                  />
+                  <span className="font-medium">{lens.name}</span>
+                </div>
+                <span className={`font-bold ${lensType === lens.id ? 'text-white' : 'text-gray-700'}`}>
+                  +₹{lens.price}
+                </span>
+              </label>
+            ))}
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Cylinder</label>
-            <input
-              type="text"
-              placeholder="e.g., -0.75"
-              value={prescription.cylinder}
-              onChange={(e) => setPrescription({ ...prescription, cylinder: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+        </div>
+
+        {/* Left Eye */}
+        <div className="mb-6 border rounded-xl p-4">
+          <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+            <span className="bg-blue-100 text-blue-700 w-6 h-6 rounded-full flex items-center justify-center text-sm">L</span>
+            Left Eye
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Sphere (Power)</label>
+              <input
+                type="text"
+                placeholder="e.g., -2.00"
+                value={leftEye.sphere}
+                onChange={(e) => handleLeftChange('sphere', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Cylinder</label>
+              <input
+                type="text"
+                placeholder="e.g., -0.75"
+                value={leftEye.cylinder}
+                onChange={(e) => handleLeftChange('cylinder', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Axis</label>
               <input
                 type="text"
                 placeholder="e.g., 180"
-                value={prescription.axis}
-                onChange={(e) => setPrescription({ ...prescription, axis: e.target.value })}
+                value={leftEye.axis}
+                onChange={(e) => handleLeftChange('axis', e.target.value)}
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
               />
             </div>
@@ -188,43 +256,109 @@ const PrescriptionForm = ({ show, onClose, onSave }) => {
               <input
                 type="text"
                 placeholder="8.6"
-                value={prescription.baseCurve}
-                onChange={(e) => setPrescription({ ...prescription, baseCurve: e.target.value })}
+                value={leftEye.baseCurve}
+                onChange={(e) => handleLeftChange('baseCurve', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Diameter</label>
+              <input
+                type="text"
+                placeholder="14.2"
+                value={leftEye.diameter}
+                onChange={(e) => handleLeftChange('diameter', e.target.value)}
                 className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Diameter</label>
-            <input
-              type="text"
-              placeholder="14.2"
-              value={prescription.diameter}
-              onChange={(e) => setPrescription({ ...prescription, diameter: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-            />
-          </div>
-          <button
-            onClick={() => {
-              onSave(prescription);
-              onClose();
-            }}
-            className="w-full bg-black text-white py-3 rounded-full font-bold hover:bg-gray-800 transition-colors mt-4"
-          >
-            Save Prescription
-          </button>
         </div>
+
+        {/* Right Eye */}
+        <div className="mb-6 border rounded-xl p-4">
+          <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+            <span className="bg-blue-100 text-blue-700 w-6 h-6 rounded-full flex items-center justify-center text-sm">R</span>
+            Right Eye
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Sphere (Power)</label>
+              <input
+                type="text"
+                placeholder="e.g., -1.50"
+                value={rightEye.sphere}
+                onChange={(e) => handleRightChange('sphere', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Cylinder</label>
+              <input
+                type="text"
+                placeholder="e.g., -0.50"
+                value={rightEye.cylinder}
+                onChange={(e) => handleRightChange('cylinder', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Axis</label>
+              <input
+                type="text"
+                placeholder="e.g., 170"
+                value={rightEye.axis}
+                onChange={(e) => handleRightChange('axis', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Base Curve</label>
+              <input
+                type="text"
+                placeholder="8.6"
+                value={rightEye.baseCurve}
+                onChange={(e) => handleRightChange('baseCurve', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Diameter</label>
+              <input
+                type="text"
+                placeholder="14.2"
+                value={rightEye.diameter}
+                onChange={(e) => handleRightChange('diameter', e.target.value)}
+                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 rounded-xl p-4 mb-4">
+          <div className="flex justify-between items-center">
+            <span className="font-medium">Lens Extra Charge:</span>
+            <span className="font-bold text-lg">+₹{selectedLens.price}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={handleSave}
+          className="w-full bg-black text-white py-3 rounded-full font-bold hover:bg-gray-800 transition-colors"
+        >
+          Save Prescription
+        </button>
       </div>
     </div>
   );
 };
 
-// Main Product Detail Component
+// ==================== MAIN PRODUCT DETAIL COMPONENT ====================
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
@@ -233,58 +367,66 @@ const ProductDetail = () => {
   const [currentImage, setCurrentImage] = useState('');
   const [showAddedToCart, setShowAddedToCart] = useState(false);
 
-  // Mock product data - in real app, fetch from API based on id
+  // Load product from imported JSON
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const mockProduct = {
-        id: parseInt(id) || 101,
-        name: 'Premium Daily Contact Lenses',
-        discount: '20%',
-        madeInTaiwan: true,
-        originalPrice: 4999,
-        discountPrice: 3999,   // numeric price
-        reviews: 128,
-        rating: 4.7,
+    try {
+      setLoading(true);
+      const products = Array.isArray(productsData) ? productsData : productsData.products || [];
+      const productId = parseInt(id);
+      const foundProduct = products.find((p) => p.id === productId);
+
+      if (!foundProduct) throw new Error('Product not found');
+
+      const transformedProduct = {
+        id: foundProduct.id,
+        name: foundProduct.name,
+        discount: foundProduct.discount || '0%',
+        madeInTaiwan: foundProduct.madeInTaiwan || false,
+        originalPrice: parseFloat(foundProduct.originalPrice.toString().replace(/,/g, '')),
+        discountPrice: parseFloat(foundProduct.discountPrice.toString().replace(/,/g, '')),
+        reviews: foundProduct.reviews || 0,
+        rating: foundProduct.rating || 4.5,
         description:
-          'Experience all-day comfort with our Premium Daily Contact Lenses. Made with advanced moisture-lock technology, these lenses keep your eyes hydrated from morning to night. Perfect for sensitive eyes and busy lifestyles.',
-        features: [
-          'UV Protection (Class 1)',
-          'Moisture-lock technology',
-          'Breathable material',
-          'Easy to handle',
-          'Prescription range: -12.00 to +8.00',
+          foundProduct.description ||
+          `Experience style and comfort with our ${foundProduct.name}. Crafted with premium materials.`,
+        features: foundProduct.features || [
+          'Premium quality material',
+          'UV protection coating',
+          'Scratch resistant',
+          'Lightweight design',
+          'Comfort fit',
         ],
-        specifications: {
-          Material: 'Silicone Hydrogel',
-          'Water Content': '55%',
-          'Oxygen Transmissibility': '138 Dk/t',
-          'Wearing Schedule': 'Daily Disposable',
-          Packaging: '30 lenses per box',
+        specifications: foundProduct.specifications || {
+          Material: 'Premium Plastic/Metal',
+          'Frame Type': foundProduct.shape || 'Standard',
+          Gender: foundProduct.gender || 'Unisex',
+          Warranty: '1 Year Manufacturing Warranty',
         },
-        variants: [
-          { colorName: 'Clear', hex: '#E8F4F8', image: 'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=600' },
-          { colorName: 'Natural Brown', hex: '#8B7355', image: 'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=600' },
-          { colorName: 'Hazel', hex: '#A68A56', image: 'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=600' },
-        ],
-        images: [
-          'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=800',
-          'https://images.unsplash.com/photo-1591076482161-42ce6da69f67?w=800',
-          'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=800',
-        ],
-        category: 'contact-lenses',
-        inStock: true,
-        freeShipping: true,
-        warranty: '30-day satisfaction guarantee',
+        variants: foundProduct.variants || [],
+        images: [...new Map((foundProduct.variants || []).map((v) => [v.image, v.image])).values()],
+        category: foundProduct.category || 'eyeglasses',
+        inStock: foundProduct.inStock !== undefined ? foundProduct.inStock : true,
+        freeShipping: foundProduct.freeShipping !== undefined ? foundProduct.freeShipping : true,
+        warranty: foundProduct.warranty || '30-day satisfaction guarantee',
+        shape: foundProduct.shape || 'Standard',
+        gender: foundProduct.gender || 'Unisex',
       };
-      setProduct(mockProduct);
-      setSelectedVariant(mockProduct.variants[0]);
-      setCurrentImage(mockProduct.variants[0]?.image || mockProduct.images[0]);
+
+      setProduct(transformedProduct);
+      if (transformedProduct.variants && transformedProduct.variants.length > 0) {
+        setSelectedVariant(transformedProduct.variants[0]);
+        setCurrentImage(transformedProduct.variants[0].image);
+      } else if (transformedProduct.images && transformedProduct.images.length > 0) {
+        setCurrentImage(transformedProduct.images[0]);
+      }
       setLoading(false);
-    }, 500);
+    } catch (err) {
+      console.error('Error loading product:', err);
+      setError(err.message);
+      setLoading(false);
+    }
   }, [id]);
 
-  // Update main image when selected variant changes
   useEffect(() => {
     if (selectedVariant && selectedVariant.image) {
       setCurrentImage(selectedVariant.image);
@@ -300,53 +442,61 @@ const ProductDetail = () => {
     setActiveImageIndex(idx);
   };
 
-  // ---------- ADD TO CART WITH PRESCRIPTION ----------
+  // Calculate total price (frame + lens extra)
+  const getFramePrice = () => {
+    return product?.discountPrice || product?.originalPrice || 0;
+  };
+
+  const getLensExtraCharge = () => {
+    return prescriptionData?.lensPrice || 0;
+  };
+
+  const getTotalItemPrice = () => {
+    return getFramePrice() + getLensExtraCharge();
+  };
+
+  // Add to cart with prescription and lens extra charge
   const addToCart = () => {
     if (!product) return;
 
-    // Get existing cart
     const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Build cart item with prescription
     const cartItem = {
       id: product.id,
       name: product.name,
-      price: product.discountPrice || product.originalPrice,
+      framePrice: getFramePrice(),
+      lensExtraCharge: getLensExtraCharge(),
+      totalPrice: getTotalItemPrice(),
       quantity: quantity,
       selectedVariant: selectedVariant,
       image: selectedVariant?.image || product.images[0],
-      prescription: prescriptionData || null,   // ✅ store prescription per item
+      prescription: prescriptionData || null, // includes lensType, leftEye, rightEye, lensPrice
     };
 
-    // Check if same product AND same variant already exists
+    // Check if same product, variant, and prescription lens type already exists
     const existingIndex = existingCart.findIndex(
-      (item) => item.id === cartItem.id && item.selectedVariant?.colorName === cartItem.selectedVariant?.colorName
+      (item) =>
+        item.id === cartItem.id &&
+        item.selectedVariant?.colorName === cartItem.selectedVariant?.colorName &&
+        item.prescription?.lensType === cartItem.prescription?.lensType
     );
 
     if (existingIndex !== -1) {
-      // Update quantity (prescription remains as original)
       existingCart[existingIndex].quantity += quantity;
     } else {
       existingCart.push(cartItem);
     }
 
-    // Save to localStorage
     localStorage.setItem('cart', JSON.stringify(existingCart));
-
-    // Show notification
     setShowAddedToCart(true);
     setTimeout(() => setShowAddedToCart(false), 2000);
   };
 
-  const handleAddToCart = () => {
-    addToCart();
-  };
-
+  const handleAddToCart = () => addToCart();
   const handleBuyNow = () => {
     addToCart();
     navigate('/checkout');
   };
-  // ---------------------------------------------
 
   if (loading) {
     return (
@@ -359,11 +509,11 @@ const ProductDetail = () => {
     );
   }
 
-  if (!product) {
+  if (error || !product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
+          <h2 className="text-2xl font-bold mb-4">{error || 'Product Not Found'}</h2>
           <button onClick={() => navigate('/')} className="bg-black text-white px-6 py-3 rounded-full">
             Back to Home
           </button>
@@ -375,7 +525,9 @@ const ProductDetail = () => {
   const discountPercent = product.discount
     ? parseInt(product.discount)
     : Math.round(((product.originalPrice - product.discountPrice) / product.originalPrice) * 100);
-  const finalPrice = product.discountPrice || product.originalPrice;
+  const finalFramePrice = getFramePrice();
+  const lensCharge = getLensExtraCharge();
+  const totalItemPrice = getTotalItemPrice();
 
   return (
     <div className="relative overflow-hidden bg-white">
@@ -437,7 +589,7 @@ const ProductDetail = () => {
           <div className="space-y-6">
             {/* Badges */}
             <div className="flex flex-wrap gap-2">
-              {product.discount && (
+              {product.discount && parseFloat(product.discount) > 0 && (
                 <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                   {discountPercent}% OFF
                 </span>
@@ -474,21 +626,35 @@ const ProductDetail = () => {
               <span className="text-sm text-gray-500">{product.reviews} reviews</span>
             </div>
 
-            {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-bold text-gray-900">₹{finalPrice.toLocaleString()}</span>
-              {product.originalPrice !== finalPrice && (
-                <>
-                  <span className="text-lg text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
-                  <span className="text-green-600 font-semibold">{product.discount} off</span>
-                </>
+            {/* Price Breakdown */}
+            <div>
+              <div className="flex items-baseline gap-3">
+                <span className="text-3xl font-bold text-gray-900">₹{finalFramePrice.toLocaleString()}</span>
+                {product.originalPrice !== finalFramePrice && (
+                  <>
+                    <span className="text-lg text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                    <span className="text-green-600 font-semibold">{product.discount} off</span>
+                  </>
+                )}
+              </div>
+              {prescriptionData && (
+                <div className="mt-2 text-sm">
+                  <span className="text-gray-600">+ Lens extra: </span>
+                  <span className="font-semibold text-blue-600">₹{lensCharge.toLocaleString()}</span>
+                  <span className="text-gray-500 ml-2">({prescriptionData.lensName})</span>
+                </div>
+              )}
+              {prescriptionData && (
+                <div className="mt-1 text-md font-bold">
+                  Total: <span className="text-black">₹{totalItemPrice.toLocaleString()}</span>
+                </div>
               )}
             </div>
 
             {/* Short Description */}
             <p className="text-gray-600 leading-relaxed border-t border-gray-100 pt-4">{product.description}</p>
 
-            {/* Color Variant Selector with Radio Bar */}
+            {/* Color Variant Selector */}
             {product.variants && product.variants.length > 0 && (
               <ColorVariantSelector
                 variants={product.variants}
@@ -497,31 +663,32 @@ const ProductDetail = () => {
               />
             )}
 
-            {/* Prescription Note for Contact Lenses */}
-            {product.category === 'contact-lenses' && (
-              <div className="bg-blue-50 rounded-2xl p-4 shadow-inner">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div className="flex-1">
-                    <p className="text-sm text-blue-800 font-medium">Prescription Required</p>
-                    <p className="text-xs text-blue-600 mt-1">
-                      Please have your prescription ready. You can upload or enter details at checkout.
-                    </p>
-                    <button
-                      onClick={() => setShowPrescriptionModal(true)}
-                      className="text-xs text-blue-700 font-semibold underline mt-2 hover:text-blue-900"
-                    >
-                      Enter Prescription Details →
-                    </button>
-                    {prescriptionData && (
-                      <p className="text-xs text-green-600 mt-2">✓ Prescription saved</p>
-                    )}
-                  </div>
+            {/* Prescription Block - shown for all eyeglasses (you can adjust condition) */}
+            <div className="bg-blue-50 rounded-2xl p-4 shadow-inner">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-sm text-blue-800 font-medium">Prescription Lenses (Extra Charge)</p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    Add your prescription details and choose lens type. Extra charges apply.
+                  </p>
+                  <button
+                    onClick={() => setShowPrescriptionModal(true)}
+                    className="text-xs text-blue-700 font-semibold underline mt-2 hover:text-blue-900"
+                  >
+                    {prescriptionData ? 'Edit Prescription →' : 'Add Prescription →'}
+                  </button>
+                  {prescriptionData && (
+                    <div className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded-lg">
+                      <p>✓ {prescriptionData.lensName} added (+₹{prescriptionData.lensPrice})</p>
+                      <p className="text-gray-600 mt-1">Left: {prescriptionData.leftEye.sphere || '—'} | Right: {prescriptionData.rightEye.sphere || '—'}</p>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Quantity & Actions */}
             <div className="flex flex-wrap gap-4 pt-4">
@@ -594,9 +761,7 @@ const ProductDetail = () => {
               ))}
             </div>
           </div>
-
           <div className="py-8">
-            {/* Features Tab */}
             <div className="space-y-4">
               <ul className="grid md:grid-cols-2 gap-3">
                 {product.features?.map((feature, idx) => (
@@ -642,6 +807,7 @@ const ProductDetail = () => {
         show={showPrescriptionModal}
         onClose={() => setShowPrescriptionModal(false)}
         onSave={(data) => setPrescriptionData(data)}
+        existingPrescription={prescriptionData}
       />
 
       {/* Floating WhatsApp Button */}

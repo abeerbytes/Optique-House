@@ -17,10 +17,12 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   // ✅ YOUR GOOGLE SHEETS WEBHOOK URL
-  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz5Jt0ovrR6wg-fjK-mirrz6Ehh8QHUy8iiHH9QrgdaHgdl5wQ4wXNGhjWqSr0p_ohHFQ/exec";
+// ✅ YOUR GOOGLE SHEETS WEBHOOK URL (UPDATED)
+const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypumtAXRdstYULB-36zGuwuOnu9c-TUP2JfKQvnIySCCXDo8Srai7Lc7boBLG4XRyYXA/exec";
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    console.log("Cart loaded:", savedCart); // Debug: check cart structure
     if (savedCart.length === 0) {
       navigate("/cart");
     }
@@ -31,11 +33,62 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Calculate subtotal (prices are numbers)
+  // ✅ Get item price (supports multiple price formats)
+  const getItemPrice = (item) => {
+    if (item.totalPrice) return item.totalPrice;
+    if (item.framePrice !== undefined && item.lensExtraCharge !== undefined) {
+      return item.framePrice + (item.lensExtraCharge || 0);
+    }
+    if (item.discountPrice) {
+      const price = typeof item.discountPrice === 'string' 
+        ? parseFloat(item.discountPrice.replace(/,/g, "")) 
+        : item.discountPrice;
+      return price || 0;
+    }
+    if (item.price) return item.price;
+    return 0;
+  };
+
+  // ✅ Helper function to format prescription value
+  const formatPrescriptionValue = (value) => {
+    if (!value || value === "" || value === null || value === undefined) {
+      return "—";
+    }
+    return value;
+  };
+
+  // ✅ Helper function to display prescription details
+  const getPrescriptionDisplay = (prescription) => {
+    if (!prescription) return null;
+    
+    const leftEye = prescription.leftEye || {};
+    const rightEye = prescription.rightEye || {};
+    
+    return {
+      lensName: prescription.lensName || prescription.lensType || "Standard",
+      lensPrice: prescription.lensPrice || 0,
+      left: {
+        sphere: formatPrescriptionValue(leftEye.sphere),
+        cylinder: formatPrescriptionValue(leftEye.cylinder),
+        axis: formatPrescriptionValue(leftEye.axis),
+        baseCurve: formatPrescriptionValue(leftEye.baseCurve),
+        diameter: formatPrescriptionValue(leftEye.diameter)
+      },
+      right: {
+        sphere: formatPrescriptionValue(rightEye.sphere),
+        cylinder: formatPrescriptionValue(rightEye.cylinder),
+        axis: formatPrescriptionValue(rightEye.axis),
+        baseCurve: formatPrescriptionValue(rightEye.baseCurve),
+        diameter: formatPrescriptionValue(rightEye.diameter)
+      }
+    };
+  };
+
+  // Calculate subtotal
   const getSubtotal = () => {
     return cart.reduce((total, item) => {
-      const price = item.price ?? item.discountPrice ?? 0;
-      return total + price * (item.quantity || 1);
+      const price = getItemPrice(item);
+      return total + (price * (item.quantity || 1));
     }, 0);
   };
 
@@ -68,15 +121,38 @@ const Checkout = () => {
       orderNotes: form.notes,
       paymentMethod: paymentMethod === "cod" ? "Cash on Delivery" : "Bank Transfer",
       items: cart.map(item => {
-        const price = item.price ?? item.discountPrice ?? 0;
+        const price = getItemPrice(item);
         const quantity = item.quantity || 1;
+        const prescription = item.prescription || null;
+        
         return {
           name: item.name,
           variant: item.selectedVariant?.colorName || "Default",
           quantity: quantity,
-          price: price,
+          framePrice: item.framePrice || price,
+          lensExtraCharge: item.lensExtraCharge || 0,
+          lensType: prescription?.lensName || prescription?.lensType || "Standard",
+          totalPrice: price,
           total: price * quantity,
-          prescription: item.prescription || null   // ✅ each item has its own prescription
+          prescription: prescription ? {
+            lensType: prescription.lensType || "standard",
+            lensName: prescription.lensName || "Standard Lenses",
+            lensPrice: prescription.lensPrice || 0,
+            leftEye: {
+              sphere: prescription.leftEye?.sphere || "",
+              cylinder: prescription.leftEye?.cylinder || "",
+              axis: prescription.leftEye?.axis || "",
+              baseCurve: prescription.leftEye?.baseCurve || "",
+              diameter: prescription.leftEye?.diameter || ""
+            },
+            rightEye: {
+              sphere: prescription.rightEye?.sphere || "",
+              cylinder: prescription.rightEye?.cylinder || "",
+              axis: prescription.rightEye?.axis || "",
+              baseCurve: prescription.rightEye?.baseCurve || "",
+              diameter: prescription.rightEye?.diameter || ""
+            }
+          } : null
         };
       }),
       subtotal: getSubtotal(),
@@ -88,7 +164,6 @@ const Checkout = () => {
     console.log("Sending order:", orderData);
 
     try {
-      // ✅ Use no-cors to avoid CORS preflight issues with Google Script
       await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
         method: "POST",
         mode: "no-cors",
@@ -100,20 +175,17 @@ const Checkout = () => {
 
       console.log("Order sent (no-cors mode - request accepted)");
 
-      // Save order locally
       const orders = JSON.parse(localStorage.getItem("orders")) || [];
       orders.push(orderData);
       localStorage.setItem("orders", JSON.stringify(orders));
 
-      // Clear cart
       localStorage.removeItem("cart");
 
       alert(`✅ Order placed successfully!\nOrder ID: ${orderData.orderId}\nWe'll contact you shortly.`);
       navigate("/order-success", { state: { orderData } });
 
     } catch (err) {
-      console.error("Fetch error (likely CORS or network):", err);
-      // Even if fetch fails, save order locally and inform user
+      console.error("Fetch error:", err);
       const orders = JSON.parse(localStorage.getItem("orders")) || [];
       orders.push(orderData);
       localStorage.setItem("orders", JSON.stringify(orders));
@@ -299,12 +371,16 @@ const Checkout = () => {
             </h2>
             <div className="summary-items">
               {cart.map((item, idx) => {
-                const price = item.price ?? item.discountPrice ?? 0;
+                const price = getItemPrice(item);
                 const quantity = item.quantity || 1;
                 const total = price * quantity;
+                const framePrice = item.framePrice || price;
+                const lensCharge = item.lensExtraCharge || 0;
+                const prescriptionDisplay = getPrescriptionDisplay(item.prescription);
+                
                 return (
                   <div
-                    key={`${item.id}-${item.selectedVariant?.colorName || idx}`}
+                    key={`${item.id}-${item.selectedVariant?.colorName || idx}-${item.prescription?.lensType || 'no-lens'}`}
                     className="summary-item"
                     style={{ animationDelay: `${idx * 0.05}s` }}
                   >
@@ -316,16 +392,48 @@ const Checkout = () => {
                         )}
                         <span className="item-quantity">x{quantity}</span>
                       </div>
-                      <div className="item-price">PKR {total.toLocaleString()}</div>
+                      <div className="item-price">₹{total.toLocaleString()}</div>
                     </div>
-                    {/* ✅ Display prescription if present */}
-                    {item.prescription && (
+                    
+                    {/* Show price breakdown */}
+                    {lensCharge > 0 && (
+                      <div className="price-breakdown">
+                        Frame: ₹{framePrice.toLocaleString()} + Lens: ₹{lensCharge.toLocaleString()}
+                      </div>
+                    )}
+                    
+                    {/* Display prescription if present */}
+                    {prescriptionDisplay && (
                       <div className="item-prescription">
-                        <strong>Prescription:</strong> SPH {item.prescription.sphere || "—"} | 
-                        CYL {item.prescription.cylinder || "—"} | 
-                        Axis {item.prescription.axis || "—"} | 
-                        BC {item.prescription.baseCurve || "—"} | 
-                        DIA {item.prescription.diameter || "—"}
+                        <div className="prescription-header">
+                          <strong>👓 Lens:</strong> {prescriptionDisplay.lensName} (+₹{prescriptionDisplay.lensPrice.toLocaleString()})
+                        </div>
+                        <div className="prescription-details">
+                          <div className="eye-column">
+                            <div className="eye-title">👁️ Left Eye</div>
+                            <div className="prescription-row">
+                              <span>SPH:</span> {prescriptionDisplay.left.sphere}
+                              <span>CYL:</span> {prescriptionDisplay.left.cylinder}
+                              <span>Axis:</span> {prescriptionDisplay.left.axis}
+                            </div>
+                            <div className="prescription-row">
+                              <span>BC:</span> {prescriptionDisplay.left.baseCurve}
+                              <span>DIA:</span> {prescriptionDisplay.left.diameter}
+                            </div>
+                          </div>
+                          <div className="eye-column">
+                            <div className="eye-title">👁️ Right Eye</div>
+                            <div className="prescription-row">
+                              <span>SPH:</span> {prescriptionDisplay.right.sphere}
+                              <span>CYL:</span> {prescriptionDisplay.right.cylinder}
+                              <span>Axis:</span> {prescriptionDisplay.right.axis}
+                            </div>
+                            <div className="prescription-row">
+                              <span>BC:</span> {prescriptionDisplay.right.baseCurve}
+                              <span>DIA:</span> {prescriptionDisplay.right.diameter}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -336,17 +444,17 @@ const Checkout = () => {
             <div className="summary-totals">
               <div className="summary-row">
                 <span>Subtotal</span>
-                <span>PKR {getSubtotal().toLocaleString()}</span>
+                <span>₹{getSubtotal().toLocaleString()}</span>
               </div>
               <div className="summary-row">
                 <span>Shipping</span>
                 <span className={getShipping() === 0 ? "free-shipping" : ""}>
-                  {getShipping() === 0 ? "✨ Free" : `PKR ${getShipping().toLocaleString()}`}
+                  {getShipping() === 0 ? "✨ Free" : `₹${getShipping().toLocaleString()}`}
                 </span>
               </div>
               <div className="summary-total">
                 <span>Total</span>
-                <span>PKR {getTotal().toLocaleString()}</span>
+                <span>₹{getTotal().toLocaleString()}</span>
               </div>
             </div>
 
@@ -796,15 +904,55 @@ const Checkout = () => {
           color: #0f172a;
         }
 
+        .price-breakdown {
+          font-size: 0.7rem;
+          color: #64748b;
+          margin-top: 4px;
+          padding-left: 8px;
+        }
+
         .item-prescription {
           margin-top: 8px;
-          font-size: 0.7rem;
-          color: #4b5563;
-          padding-left: 12px;
-          border-left: 2px solid #667eea;
           background: #f8fafc;
-          border-radius: 8px;
-          padding: 6px 10px;
+          border-radius: 12px;
+          padding: 10px;
+          border-left: 3px solid #667eea;
+        }
+
+        .prescription-header {
+          font-size: 0.75rem;
+          color: #1e293b;
+          margin-bottom: 8px;
+          padding-bottom: 6px;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        .prescription-details {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .eye-column {
+          font-size: 0.7rem;
+        }
+
+        .eye-title {
+          font-weight: 600;
+          color: #667eea;
+          margin-bottom: 4px;
+        }
+
+        .prescription-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          color: #475569;
+        }
+
+        .prescription-row span {
+          font-weight: 600;
+          color: #334155;
         }
 
         .summary-totals {
@@ -889,6 +1037,9 @@ const Checkout = () => {
           }
           .order-summary {
             position: static;
+          }
+          .prescription-row {
+            gap: 6px;
           }
         }
       `}</style>

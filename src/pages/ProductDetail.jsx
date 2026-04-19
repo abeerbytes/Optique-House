@@ -49,7 +49,7 @@ const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
       <span className="w-12 text-center font-medium text-gray-800">{quantity}</span>
       <button
         onClick={increase}
-        className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600"
+        className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600"
         aria-label="Increase quantity"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,51 +118,235 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
   );
 };
 
-// ==================== ENHANCED PRESCRIPTION FORM ====================
+// ==================== PROFESSIONAL SCROLL NUMBER INPUT WITH SIGN DISPLAY ====================
+const ScrollNumberInput = ({ 
+  value, 
+  onChange, 
+  min = -20, 
+  max = 20, 
+  step = 0.25, 
+  label, 
+  unit = '', 
+  required = false,
+  placeholder = "0.00",
+  description = "",
+  showSign = true,
+  allowNegative = true
+}) => {
+  const displayValue = value === '' || value === undefined || value === null ? '' : value;
+  
+  // Format value with sign for display
+  const getFormattedValue = () => {
+    if (displayValue === '' || displayValue === '-') return '';
+    const num = parseFloat(displayValue);
+    if (isNaN(num)) return '';
+    if (!showSign) return num.toString();
+    if (num > 0) return `+${num}`;
+    if (num < 0) return `${num}`;
+    return '0';
+  };
+  
+  const handleIncrement = () => {
+    let currentValue = typeof value === 'number' ? value : 0;
+    let newValue = currentValue + step;
+    newValue = Math.round(newValue / step) * step;
+    if (newValue <= max) {
+      onChange(newValue);
+    }
+  };
+
+  const handleDecrement = () => {
+    let currentValue = typeof value === 'number' ? value : 0;
+    let newValue = currentValue - step;
+    newValue = Math.round(newValue / step) * step;
+    if (newValue >= min) {
+      onChange(newValue);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    let rawValue = e.target.value;
+    // Remove any + sign from input
+    rawValue = rawValue.replace(/\+/g, '');
+    
+    if (rawValue === '' || rawValue === '-') {
+      onChange(rawValue);
+      return;
+    }
+    let numValue = parseFloat(rawValue);
+    if (!isNaN(numValue)) {
+      let rounded = Math.round(numValue / step) * step;
+      rounded = Math.min(max, Math.max(min, rounded));
+      onChange(rounded);
+    }
+  };
+
+  const preventScroll = (e) => {
+    e.preventDefault();
+  };
+
+  const isValid = () => {
+    if (!required) return true;
+    return value !== '' && value !== undefined && value !== null && value !== '-';
+  };
+
+  // Get color class based on value
+  const getValueColorClass = () => {
+    if (displayValue === '' || displayValue === '-') return 'text-gray-800';
+    const num = parseFloat(displayValue);
+    if (isNaN(num)) return 'text-gray-800';
+    if (num > 0) return 'text-green-600';
+    if (num < 0) return 'text-red-600';
+    return 'text-gray-800';
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col">
+      <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      {description && (
+        <p className="text-[10px] text-gray-400 mb-2">{description}</p>
+      )}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={handleDecrement}
+          className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg transition-all duration-150 text-gray-700"
+          aria-label={`Decrease ${label}`}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 12H4" />
+          </svg>
+        </button>
+        
+        <div className={`relative flex-1 ${!isValid() && required ? 'ring-2 ring-red-500 rounded-lg' : ''}`}>
+          <input
+            type="text"
+            value={getFormattedValue()}
+            onChange={handleInputChange}
+            onWheel={preventScroll}
+            placeholder={placeholder}
+            className={`w-full text-center py-2.5 px-2 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-mono text-sm font-medium [appearance:textfield] transition-all ${getValueColorClass()} ${
+              !isValid() && required ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
+            }`}
+          />
+          {unit && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none font-medium">
+              {unit}
+            </span>
+          )}
+        </div>
+        
+        <button
+          type="button"
+          onClick={handleIncrement}
+          className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg transition-all duration-150 text-gray-700"
+          aria-label={`Increase ${label}`}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
+      <div className="flex justify-between items-center mt-1.5">
+        <span className="text-[9px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">
+          Range: {min} to {max}
+        </span>
+        <span className="text-[9px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">
+          Step: {step}
+        </span>
+      </div>
+      {!isValid() && required && (
+        <p className="text-red-500 text-[10px] mt-1">Required</p>
+      )}
+    </div>
+  );
+};
+
+// ==================== PRESCRIPTION FORM ====================
 const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }) => {
   const [lensType, setLensType] = useState(existingPrescription?.lensType || 'standard');
-  const [leftEye, setLeftEye] = useState(
-    existingPrescription?.leftEye || {
-      sphere: '',
-      cylinder: '',
-      axis: '',
-      baseCurve: '',
-      diameter: '',
-    }
-  );
+  
+  // Right eye first, then left eye
   const [rightEye, setRightEye] = useState(
     existingPrescription?.rightEye || {
       sphere: '',
       cylinder: '',
       axis: '',
-      baseCurve: '',
-      diameter: '',
+      addition: '',
     }
   );
+  const [leftEye, setLeftEye] = useState(
+    existingPrescription?.leftEye || {
+      sphere: '',
+      cylinder: '',
+      axis: '',
+      addition: '',
+    }
+  );
+  
+  const [errors, setErrors] = useState({});
 
   const lensOptions = [
-    { id: 'standard', name: 'Standard Lenses', price: 850 },
-    { id: 'blueCut', name: 'Blue Cut Lenses', price: 1800 },
-    { id: 'photochromic', name: 'Photochromic Lenses', price: 2500 },
+    { id: 'standard', name: 'Standard Lenses', price: 850, description: 'Clear vision with anti-reflective coating' },
+    { id: 'blueCut', name: 'Blue Cut Lenses', price: 1800, description: 'Protects against harmful blue light' },
+    { id: 'photochromic', name: 'Photochromic Lenses', price: 2500, description: 'Automatically darken in sunlight' },
   ];
 
   const selectedLens = lensOptions.find((l) => l.id === lensType) || lensOptions[0];
 
-  const handleLeftChange = (field, value) => {
-    setLeftEye((prev) => ({ ...prev, [field]: value }));
+  const isAxisRequired = (eye) => {
+    return eye.cylinder !== '' && eye.cylinder !== undefined && eye.cylinder !== null && eye.cylinder !== 0;
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (isAxisRequired(rightEye) && (!rightEye.axis || rightEye.axis === '')) {
+      newErrors.right_axis = 'Axis is required when Cylinder has a value';
+    }
+    
+    if (isAxisRequired(leftEye) && (!leftEye.axis || leftEye.axis === '')) {
+      newErrors.left_axis = 'Axis is required when Cylinder has a value';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleRightChange = (field, value) => {
     setRightEye((prev) => ({ ...prev, [field]: value }));
+    if (field === 'cylinder' && (!value || value === 0)) {
+      setErrors((prev) => ({ ...prev, right_axis: '' }));
+    }
+    if (field === 'axis' && errors.right_axis) {
+      setErrors((prev) => ({ ...prev, right_axis: '' }));
+    }
+  };
+
+  const handleLeftChange = (field, value) => {
+    setLeftEye((prev) => ({ ...prev, [field]: value }));
+    if (field === 'cylinder' && (!value || value === 0)) {
+      setErrors((prev) => ({ ...prev, left_axis: '' }));
+    }
+    if (field === 'axis' && errors.left_axis) {
+      setErrors((prev) => ({ ...prev, left_axis: '' }));
+    }
   };
 
   const handleSave = () => {
+    if (!validateForm()) {
+      return;
+    }
+    
     const prescriptionData = {
       lensType,
       lensName: selectedLens.name,
       lensPrice: selectedLens.price,
-      leftEye,
       rightEye,
+      leftEye,
     };
     onSave(prescriptionData);
     onClose();
@@ -172,181 +356,277 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-3xl w-full p-6 md:p-8 transform animate-slide-up max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold">Prescription Details</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="bg-white rounded-2xl max-w-6xl w-full p-6 transform animate-slide-up max-h-[90vh] overflow-y-auto shadow-xl">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6 pb-3 border-b border-gray-100">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">Prescription Details</h3>
+            <p className="text-xs text-gray-500 mt-0.5">Enter your optical prescription information</p>
+          </div>
+          <button 
+            onClick={onClose} 
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 rounded-full"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
+        {/* Info Banner */}
+        <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <div className="flex items-start gap-2">
+            <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div className="text-xs text-blue-800">
+              <p><span className="font-semibold">Note:</span> All fields are optional.</p>
+              <p className="mt-0.5">• <strong>Sphere & Cylinder</strong> can be positive (+) or negative (-)</p>
+              <p>• <strong>Axis</strong> is only required if Cylinder has a value (0-180°)</p>
+              <p>• <strong>Addition</strong> is only positive values (+)</p>
+            </div>
+          </div>
+        </div>
+
         {/* Lens Type Selection */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Lens Type (Extra Charge)</label>
+          <label className="block text-sm font-bold text-gray-800 mb-2">
+            Select Lens Type
+          </label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {lensOptions.map((lens) => (
               <label
                 key={lens.id}
-                className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                className={`relative p-3 rounded-lg border-2 cursor-pointer transition-all ${
                   lensType === lens.id
-                    ? 'border-black bg-black text-white'
-                    : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+                    ? 'border-black bg-gray-50'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="lensType"
-                    value={lens.id}
-                    checked={lensType === lens.id}
-                    onChange={() => setLensType(lens.id)}
-                    className="sr-only"
-                  />
-                  <span className="font-medium">{lens.name}</span>
+                <input
+                  type="radio"
+                  name="lensType"
+                  value={lens.id}
+                  checked={lensType === lens.id}
+                  onChange={() => setLensType(lens.id)}
+                  className="sr-only"
+                />
+                <div className="flex justify-between items-start mb-1">
+                  <span className={`font-semibold text-sm ${lensType === lens.id ? 'text-black' : 'text-gray-800'}`}>
+                    {lens.name}
+                  </span>
+                  <span className={`font-bold text-sm ${lensType === lens.id ? 'text-black' : 'text-gray-700'}`}>
+                    +₹{lens.price}
+                  </span>
                 </div>
-                <span className={`font-bold ${lensType === lens.id ? 'text-white' : 'text-gray-700'}`}>
-                  +₹{lens.price}
-                </span>
+                <p className="text-[10px] text-gray-500">{lens.description}</p>
+                {lensType === lens.id && (
+                  <div className="absolute top-2 right-2">
+                    <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
               </label>
             ))}
           </div>
         </div>
 
-        {/* Left Eye */}
-        <div className="mb-6 border rounded-xl p-4">
-          <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
-            <span className="bg-blue-100 text-blue-700 w-6 h-6 rounded-full flex items-center justify-center text-sm">L</span>
-            Left Eye
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sphere (Power)</label>
-              <input
-                type="text"
-                placeholder="e.g., -2.00"
-                value={leftEye.sphere}
-                onChange={(e) => handleLeftChange('sphere', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
+        {/* RIGHT EYE (First) */}
+        <div className="mb-6 bg-gray-50 rounded-xl border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
+            <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">R</span>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cylinder</label>
-              <input
-                type="text"
-                placeholder="e.g., -0.75"
-                value={leftEye.cylinder}
-                onChange={(e) => handleLeftChange('cylinder', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
+              <h4 className="font-bold text-base text-gray-800">Right Eye</h4>
+              <p className="text-[10px] text-gray-500">OD (Oculus Dexter)</p>
             </div>
+          </div>
+          
+          {/* 4-column grid for perfect alignment */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <ScrollNumberInput
+              label="Sphere (Power)"
+              value={rightEye.sphere === '' ? '' : parseFloat(rightEye.sphere) || 0}
+              onChange={(val) => handleRightChange('sphere', val)}
+              min={-20}
+              max={20}
+              step={0.25}
+              unit="D"
+              required={false}
+              placeholder="0.00"
+              description="Distance correction (±)"
+              showSign={true}
+              allowNegative={true}
+            />
+            
+            <ScrollNumberInput
+              label="Cylinder"
+              value={rightEye.cylinder === '' ? '' : parseFloat(rightEye.cylinder) || 0}
+              onChange={(val) => handleRightChange('cylinder', val)}
+              min={-6}
+              max={6}
+              step={0.25}
+              unit="D"
+              required={false}
+              placeholder="0.00"
+              description="Astigmatism (±)"
+              showSign={true}
+              allowNegative={true}
+            />
+            
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Axis</label>
-              <input
-                type="text"
-                placeholder="e.g., 180"
-                value={leftEye.axis}
-                onChange={(e) => handleLeftChange('axis', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              <ScrollNumberInput
+                label="Axis"
+                value={rightEye.axis === '' ? '' : parseFloat(rightEye.axis) || 0}
+                onChange={(val) => handleRightChange('axis', val)}
+                min={0}
+                max={180}
+                step={1}
+                unit="°"
+                required={isAxisRequired(rightEye)}
+                placeholder="0"
+                description="0-180 degrees"
+                showSign={false}
+                allowNegative={false}
               />
+              {errors.right_axis && (
+                <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {errors.right_axis}
+                </p>
+              )}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Base Curve</label>
-              <input
-                type="text"
-                placeholder="8.6"
-                value={leftEye.baseCurve}
-                onChange={(e) => handleLeftChange('baseCurve', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Diameter</label>
-              <input
-                type="text"
-                placeholder="14.2"
-                value={leftEye.diameter}
-                onChange={(e) => handleLeftChange('diameter', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
-            </div>
+            
+            <ScrollNumberInput
+              label="Addition"
+              value={rightEye.addition === '' ? '' : parseFloat(rightEye.addition) || 0}
+              onChange={(val) => handleRightChange('addition', val)}
+              min={0}
+              max={3.5}
+              step={0.25}
+              unit="D"
+              required={false}
+              placeholder="0.00"
+              description="Reading/Multifocal (+ only)"
+              showSign={true}
+              allowNegative={false}
+            />
           </div>
         </div>
 
-        {/* Right Eye */}
-        <div className="mb-6 border rounded-xl p-4">
-          <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
-            <span className="bg-blue-100 text-blue-700 w-6 h-6 rounded-full flex items-center justify-center text-sm">R</span>
-            Right Eye
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sphere (Power)</label>
-              <input
-                type="text"
-                placeholder="e.g., -1.50"
-                value={rightEye.sphere}
-                onChange={(e) => handleRightChange('sphere', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
+        {/* LEFT EYE (Second) */}
+        <div className="mb-6 bg-gray-50 rounded-xl border border-gray-200 p-4">
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
+            <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">L</span>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cylinder</label>
-              <input
-                type="text"
-                placeholder="e.g., -0.50"
-                value={rightEye.cylinder}
-                onChange={(e) => handleRightChange('cylinder', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
+              <h4 className="font-bold text-base text-gray-800">Left Eye</h4>
+              <p className="text-[10px] text-gray-500">OS (Oculus Sinister)</p>
             </div>
+          </div>
+          
+          {/* 4-column grid for perfect alignment */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <ScrollNumberInput
+              label="Sphere (Power)"
+              value={leftEye.sphere === '' ? '' : parseFloat(leftEye.sphere) || 0}
+              onChange={(val) => handleLeftChange('sphere', val)}
+              min={-20}
+              max={20}
+              step={0.25}
+              unit="D"
+              required={false}
+              placeholder="0.00"
+              description="Distance correction (±)"
+              showSign={true}
+              allowNegative={true}
+            />
+            
+            <ScrollNumberInput
+              label="Cylinder"
+              value={leftEye.cylinder === '' ? '' : parseFloat(leftEye.cylinder) || 0}
+              onChange={(val) => handleLeftChange('cylinder', val)}
+              min={-6}
+              max={6}
+              step={0.25}
+              unit="D"
+              required={false}
+              placeholder="0.00"
+              description="Astigmatism (±)"
+              showSign={true}
+              allowNegative={true}
+            />
+            
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Axis</label>
-              <input
-                type="text"
-                placeholder="e.g., 170"
-                value={rightEye.axis}
-                onChange={(e) => handleRightChange('axis', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
+              <ScrollNumberInput
+                label="Axis"
+                value={leftEye.axis === '' ? '' : parseFloat(leftEye.axis) || 0}
+                onChange={(val) => handleLeftChange('axis', val)}
+                min={0}
+                max={180}
+                step={1}
+                unit="°"
+                required={isAxisRequired(leftEye)}
+                placeholder="0"
+                description="0-180 degrees"
+                showSign={false}
+                allowNegative={false}
               />
+              {errors.left_axis && (
+                <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {errors.left_axis}
+                </p>
+              )}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Base Curve</label>
-              <input
-                type="text"
-                placeholder="8.6"
-                value={rightEye.baseCurve}
-                onChange={(e) => handleRightChange('baseCurve', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Diameter</label>
-              <input
-                type="text"
-                placeholder="14.2"
-                value={rightEye.diameter}
-                onChange={(e) => handleRightChange('diameter', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:outline-none"
-              />
-            </div>
+            
+            <ScrollNumberInput
+              label="Addition"
+              value={leftEye.addition === '' ? '' : parseFloat(leftEye.addition) || 0}
+              onChange={(val) => handleLeftChange('addition', val)}
+              min={0}
+              max={3.5}
+              step={0.25}
+              unit="D"
+              required={false}
+              placeholder="0.00"
+              description="Reading/Multifocal (+ only)"
+              showSign={true}
+              allowNegative={false}
+            />
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-xl p-4 mb-4">
+        {/* Summary Section */}
+        <div className="bg-gray-100 rounded-lg p-3 mb-5">
           <div className="flex justify-between items-center">
-            <span className="font-medium">Lens Extra Charge:</span>
-            <span className="font-bold text-lg">+₹{selectedLens.price}</span>
+            <span className="text-sm font-semibold text-gray-700">Lens Extra Charge:</span>
+            <span className="font-bold text-xl text-black">+₹{selectedLens.price}</span>
           </div>
         </div>
 
-        <button
-          onClick={handleSave}
-          className="w-full bg-black text-white py-3 rounded-full font-bold hover:bg-gray-800 transition-colors"
-        >
-          Save Prescription
-        </button>
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="flex-1 bg-black text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-800 transition-colors"
+          >
+            Save Prescription
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -470,7 +750,7 @@ const ProductDetail = () => {
       quantity: quantity,
       selectedVariant: selectedVariant,
       image: selectedVariant?.image || product.images[0],
-      prescription: prescriptionData || null, // includes lensType, leftEye, rightEye, lensPrice
+      prescription: prescriptionData || null,
     };
 
     // Check if same product, variant, and prescription lens type already exists
@@ -663,7 +943,7 @@ const ProductDetail = () => {
               />
             )}
 
-            {/* Prescription Block - shown for all eyeglasses (you can adjust condition) */}
+            {/* Prescription Block - shown for all eyeglasses */}
             <div className="bg-blue-50 rounded-2xl p-4 shadow-inner">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -683,7 +963,15 @@ const ProductDetail = () => {
                   {prescriptionData && (
                     <div className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded-lg">
                       <p>✓ {prescriptionData.lensName} added (+₹{prescriptionData.lensPrice})</p>
-                      <p className="text-gray-600 mt-1">Left: {prescriptionData.leftEye.sphere || '—'} | Right: {prescriptionData.rightEye.sphere || '—'}</p>
+                      <p className="text-gray-600 mt-1">
+                        {prescriptionData.rightEye.sphere && prescriptionData.rightEye.sphere !== '' 
+                          ? `Right: ${prescriptionData.rightEye.sphere > 0 ? '+' : ''}${prescriptionData.rightEye.sphere}D` 
+                          : 'Right: Not specified'}
+                        {' | '}
+                        {prescriptionData.leftEye.sphere && prescriptionData.leftEye.sphere !== '' 
+                          ? `Left: ${prescriptionData.leftEye.sphere > 0 ? '+' : ''}${prescriptionData.leftEye.sphere}D` 
+                          : 'Left: Not specified'}
+                      </p>
                     </div>
                   )}
                 </div>

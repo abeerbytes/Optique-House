@@ -284,94 +284,6 @@ function extractFaceGeometry(lm, W, H) {
   return { centerX, centerY, angle, glassesWidth, glassesHeight, depthScale };
 }
 
-// ── REALISTIC GLASSES WITH SIDE ARMS (always drawn) ───────────────
-const drawGlassesWithRealisticArms = (ctx, img, x, y, w, h, angle) => {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(angle);
-  ctx.shadowColor = "rgba(0,0,0,0.45)";
-  ctx.shadowBlur = 12;
-  ctx.shadowOffsetX = 3;
-  ctx.shadowOffsetY = 3;
-  ctx.drawImage(img, -w / 2, -h / 2, w, h);
-  ctx.shadowColor = "transparent";
-
-  const armLength    = w * 0.92;
-  const armThickness = h * 0.058;
-  const armStartY    = -h * 0.09;
-
-  const hingeX = -w / 2, hingeY = armStartY;
-  const backX  = -w / 2 - armLength * 0.42, backY = armStartY - armThickness * 0.2;
-  const earX   = -w / 2 - armLength * 0.68, earY  = armStartY + armThickness * 1.3;
-  const hookX  = -w / 2 - armLength,         hookY = armStartY + armThickness * 2.0;
-
-  ctx.beginPath();
-  const armGrad = ctx.createLinearGradient(hingeX - 10, hingeY - 5, hookX + 5, hookY + 5);
-  armGrad.addColorStop(0, "#2a241c");
-  armGrad.addColorStop(0.5, "#4a3e2e");
-  armGrad.addColorStop(1, "#1e1914");
-  ctx.fillStyle = armGrad;
-  ctx.moveTo(hingeX, hingeY);
-  ctx.lineTo(backX, backY - armThickness * 0.35);
-  ctx.quadraticCurveTo(earX - 6, earY - armThickness * 0.6, earX, earY);
-  ctx.quadraticCurveTo(hookX - 4, hookY - armThickness * 0.4, hookX, hookY);
-  ctx.lineTo(hookX, hookY + armThickness);
-  ctx.quadraticCurveTo(hookX - 4, hookY + armThickness * 0.6 + armThickness, earX, earY + armThickness);
-  ctx.quadraticCurveTo(earX - 6, earY + armThickness * 0.6 + armThickness, backX, backY + armThickness * 0.35);
-  ctx.lineTo(hingeX, hingeY + armThickness);
-  ctx.closePath();
-  ctx.fill();
-
-  const hingeXR = w / 2,   hingeYR = armStartY;
-  const backXR  = w / 2 + armLength * 0.42, backYR = armStartY - armThickness * 0.2;
-  const earXR   = w / 2 + armLength * 0.68, earYR  = armStartY + armThickness * 1.3;
-  const hookXR  = w / 2 + armLength,         hookYR = armStartY + armThickness * 2.0;
-
-  ctx.beginPath();
-  ctx.moveTo(hingeXR, hingeYR);
-  ctx.lineTo(backXR, backYR - armThickness * 0.35);
-  ctx.quadraticCurveTo(earXR + 6, earYR - armThickness * 0.6, earXR, earYR);
-  ctx.quadraticCurveTo(hookXR + 4, hookYR - armThickness * 0.4, hookXR, hookYR);
-  ctx.lineTo(hookXR, hookYR + armThickness);
-  ctx.quadraticCurveTo(hookXR + 4, hookYR + armThickness * 0.6 + armThickness, earXR, earYR + armThickness);
-  ctx.quadraticCurveTo(earXR + 6, earYR + armThickness * 0.6 + armThickness, backXR, backYR + armThickness * 0.35);
-  ctx.lineTo(hingeXR, hingeYR + armThickness);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.fillStyle = "#c9a84c";
-  ctx.fillRect(hingeX - 4, hingeY - 1.5, 6, armThickness + 3);
-  ctx.fillRect(hingeXR - 2, hingeYR - 1.5, 6, armThickness + 3);
-
-  ctx.fillStyle = "#3a3022";
-  ctx.beginPath();
-  ctx.ellipse(hookX - 3, hookY + armThickness * 0.7, armThickness * 0.9, armThickness * 1.3, -0.25, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.ellipse(hookXR + 3, hookYR + armThickness * 0.7, armThickness * 0.9, armThickness * 1.3, 0.25, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "rgba(220,200,160,0.25)";
-  ctx.beginPath();
-  ctx.moveTo(hingeX + 2,  hingeY + 2);
-  ctx.lineTo(backX - 3,   backY + 1.5);
-  ctx.quadraticCurveTo(earX - 4, earY - 3, hookX - 3, hookY + 2);
-  ctx.lineTo(hookX - 3,   hookY + armThickness - 3);
-  ctx.quadraticCurveTo(earX - 4, earY + armThickness - 5, backX - 3, backY + armThickness - 2);
-  ctx.lineTo(hingeX + 2,  hingeY + armThickness - 1);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(hingeXR - 2, hingeYR + 2);
-  ctx.lineTo(backXR + 3,  backYR + 1.5);
-  ctx.quadraticCurveTo(earXR + 4, earYR - 3, hookXR + 3, hookYR + 2);
-  ctx.lineTo(hookXR + 3,  hookYR + armThickness - 3);
-  ctx.quadraticCurveTo(earXR + 4, earYR + armThickness - 5, backXR + 3, backYR + armThickness - 2);
-  ctx.lineTo(hingeXR - 2, hingeYR + armThickness - 1);
-  ctx.fill();
-
-  ctx.restore();
-};
-
 // ══════════════════════════════════════════════════════════════════
 // ── MAIN COMPONENT ────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════
@@ -536,7 +448,7 @@ const TryOn = () => {
         prevPosRef.current = { cx: smoothed.cx, cy: smoothed.cy };
       }
 
-      // Use first (and only) size from the frame's sizes array
+      // Use the single size from the frame's sizes array (first element)
       const currentGlassObj = GLASS_OPTIONS.find(g => g.id === glassesRef.current);
       let sizeScale = 1.0;
       if (currentGlassObj?.sizes && currentGlassObj.sizes.length > 0) {
@@ -576,12 +488,16 @@ const TryOn = () => {
         const fx = smoothed.cx + adj.offsetX;
         const fy = smoothed.cy + adj.offsetY;
 
-        // Arms are always drawn
-        drawGlassesWithRealisticArms(ctx, img, fx, fy, w, h, finalAngle);
+        // ARMS ARE NEVER DRAWN – only the glasses image is placed
+        ctx.save();
+        ctx.translate(fx, fy);
+        ctx.rotate(finalAngle);
+        ctx.drawImage(img, -w / 2, -h / 2, w, h);
+        ctx.restore();
       }
     }
     return () => { if (faceMesh) faceMesh.close(); };
-  }, []);  // No dependency on selectedSizeKey – removed
+  }, []); // No dependency on selectedSizeKey (removed)
 
   useEffect(() => {
     if (!is3D && imgRef.current) {
@@ -783,8 +699,7 @@ const TryOn = () => {
           background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.6) 60%, transparent 100%)",
           zIndex: 20,
         }}>
-          {/* Size selection removed – no buttons here anymore */}
-
+          {/* Frame selector (no size or arms buttons) */}
           <div style={{
             overflowX: "auto",
             display: "flex",
@@ -960,8 +875,6 @@ const TryOn = () => {
               ))}
             </div>
           </div>
-
-          {/* Size buttons section removed */}
 
           {!is3D && (
             <div style={{ background:"rgba(0,0,0,0.3)", borderRadius:"28px", padding:"20px", border:"0.5px solid rgba(201,168,76,0.15)" }}>

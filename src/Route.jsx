@@ -5,13 +5,14 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";    
 import Products from "./pages/Products";
-import ProductDetail from "./pages/ProductDetail";  // Import the ProductDetail component
+import ProductDetail from "./pages/ProductDetail";
 import Contact from "./pages/Contact";
 import Brands from "./pages/Brands";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
-import Checkout from "./pages/Chackout";
+import Checkout from "./pages/Chackout";  // Note: Keep as is or fix typo
 import OrderSuccess from "./pages/OrderSuccess";
+import TryOn from "./pages/Tryon"; // Import the TryOn component
 
 const AppRouter = () => {
     return (
@@ -20,13 +21,14 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/" element={<Home />} />   
                 <Route path="/products" element={<Products />} />
-                <Route path="/product/:id" element={<ProductDetail />} />  {/* Dynamic route for product details */}
+                <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/brands" element={<Brands />} />   
                 <Route path="/cart" element={<Cart />} />   
                 <Route path="/order-success" element={<OrderSuccess />} />   
                 <Route path="/checkout" element={<Checkout />} />   
                 <Route path="/about" element={<About />} />
+                <Route path="/tryon" element={<TryOn />} />  {/* Add virtual try-on route */}
             </Routes>
             <Footer />
         </Router>

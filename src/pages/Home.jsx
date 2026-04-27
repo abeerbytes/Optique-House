@@ -1,5 +1,6 @@
 // components/Home.js
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import data from '../data/data.json';
 import { Gem, Box, Headset, RotateCcw } from 'lucide-react';
@@ -663,6 +664,7 @@ const Features = () => {
    PRODUCT SECTION with Horizontal Scroll (responsive)
 ───────────────────────────────────────────── */
 const ProductSection = ({ title, subtitle, products, tag }) => {
+  const navigate = useNavigate();
   const trackRef = useRef(null);
 
   const scroll = (direction) => {
@@ -670,6 +672,13 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
       const scrollAmount = direction === 'left' ? -340 : 340;
       trackRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
+  };
+
+  // Handle try on for any product
+  const handleTryOn = (product) => {
+    console.log('Product from Home:', product);
+    // Navigate directly with product ID
+    navigate(`/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}`);
   };
 
   if (!products?.length) return null;
@@ -745,34 +754,43 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
 /* ─────────────────────────────────────────────
    SIMPLE CALL TO ACTION - Glass Style (responsive)
 ───────────────────────────────────────────── */
-const CTASection = () => (
-  <section style={{
-    padding: '4rem 2rem',
-    backgroundImage: 'url("https://cdn.prod.website-files.com/66751ebd9740f5d5704a4b56/66ff7b69eec253d6cbc42034_66%20-%2015%20Best%20Try-On%20Glasses%20in%202024.webp")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    position: 'relative'
-  }}>
-    <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1, padding: '0 1rem' }}>
-      <div className="glass-card reveal cta-glass-card" style={{ 
-        padding: '2.5rem', 
-        textAlign: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.75)',
-        borderRadius: '1rem',
-        backdropFilter: 'blur(2px)'
-      }}>
-        <h2 className="cta-title" style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', marginBottom: '0.75rem' }}>
-          Virtual Try-On
-        </h2>
-        <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.25rem', fontSize: '0.9rem' }}>
-          See how frames look on your face — from any angle — using our AI-powered tool.
-        </p>
-        <button className="btn-gold">Try Now</button>
+const CTASection = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <section style={{
+      padding: '4rem 2rem',
+      backgroundImage: 'url("https://cdn.prod.website-files.com/66751ebd9740f5d5704a4b56/66ff7b69eec253d6cbc42034_66%20-%2015%20Best%20Try-On%20Glasses%20in%202024.webp")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      position: 'relative'
+    }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1, padding: '0 1rem' }}>
+        <div className="glass-card reveal cta-glass-card" style={{ 
+          padding: '2.5rem', 
+          textAlign: 'center',
+          backgroundColor: 'rgba(255, 255, 255, 0.75)',
+          borderRadius: '1rem',
+          backdropFilter: 'blur(2px)'
+        }}>
+          <h2 className="cta-title" style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', marginBottom: '0.75rem' }}>
+            Virtual Try-On
+          </h2>
+          <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.25rem', fontSize: '0.9rem' }}>
+            See how frames look on your face — from any angle — using our AI-powered tool.
+          </p>
+          <button 
+            className="btn-gold" 
+            onClick={() => navigate('/tryon')}
+          >
+            Try Now
+          </button>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /* ─────────────────────────────────────────────
    TESTIMONIALS (Glass Cards) responsive grid

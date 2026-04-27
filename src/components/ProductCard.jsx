@@ -1,9 +1,24 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onTryOn }) => {
+  const navigate = useNavigate();
   // Default to the first variant
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+
+  // Function to handle try on click
+  const handleTryOn = (e) => {
+    e.preventDefault(); // Prevent navigation to product detail
+    e.stopPropagation(); // Stop event bubbling
+    
+    // If onTryOn prop is provided (from Home page), use it
+    if (onTryOn) {
+      onTryOn(product);
+    } else {
+      // Direct navigation with product ID
+      navigate(`/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}&image=${encodeURIComponent(selectedVariant.image || '')}`);
+    }
+  };
 
   return (
     <div className="max-w-[300px] bg-white p-4 rounded-xl font-sans text-center group shadow-sm hover:shadow-md transition-shadow">
@@ -14,7 +29,10 @@ const ProductCard = ({ product }) => {
           
           {/* "Try on" Button (Top Right) */}
           <div className="absolute top-3 right-3 z-10">
-            <button className="flex items-center gap-1 bg-[#cc2121] text-white px-2.5 py-1 rounded-md text-[12px] font-bold shadow-md">
+            <button 
+              onClick={handleTryOn}
+              className="flex items-center gap-1 bg-[#cc2121] text-white px-2.5 py-1 rounded-md text-[12px] font-bold shadow-md hover:bg-[#aa1a1a] transition-colors duration-200"
+            >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M15 8h.01M9 8h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
               </svg>

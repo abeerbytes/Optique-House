@@ -21,7 +21,7 @@ const ProductCard = ({ product, onTryOn }) => {
   };
 
   return (
-    <div className="max-w-[300px] bg-white p-4 rounded-xl font-sans text-center group shadow-sm hover:shadow-md transition-shadow">
+    <div className="max-w-75 bg-white p-4 rounded-xl font-sans text-center group shadow-sm hover:shadow-md transition-shadow">
       <Link to={`/product/${product.id}`} className="block">
         
         {/* Image Container */}
@@ -49,10 +49,10 @@ const ProductCard = ({ product, onTryOn }) => {
 
         {/* Status Badges */}
         <div className="flex justify-center gap-2 mb-3">
-          <span className="bg-[#2d5a4c] text-white text-[12px] font-bold px-3 py-0.5 rounded-[4px] uppercase tracking-wider">
+          <span className="bg-[#2d5a4c] text-white text-[12px] font-bold px-3 py-0.5 rounded-sm uppercase tracking-wider">
             New
           </span>
-          <span className="bg-[#ffea00] text-black text-[12px] font-bold px-3 py-0.5 rounded-[4px] uppercase tracking-wider">
+          <span className="bg-[#ffea00] text-black text-[12px] font-bold px-3 py-0.5 rounded-sm uppercase tracking-wider">
             Premium
           </span>
         </div>

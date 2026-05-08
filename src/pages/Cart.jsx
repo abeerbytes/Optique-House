@@ -28,6 +28,8 @@ const Cart = () => {
     });
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Dispatch event to update navbar cart badge
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   // Remove item
@@ -39,6 +41,8 @@ const Cart = () => {
     );
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Dispatch event to update navbar cart badge
+    window.dispatchEvent(new Event('cartUpdated'));
   };
 
   // Get item price (prefer totalPrice, fallback to framePrice + lensExtraCharge, then discountPrice)

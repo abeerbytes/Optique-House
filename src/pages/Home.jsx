@@ -1,10 +1,9 @@
 // components/Home.js
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import data from '../data/data.json';
 import { Gem, Box, Headset, RotateCcw } from 'lucide-react';
-import FullWidthVideo from '../components/FullWidthVideo';
 
 /* ─────────────────────────────────────────────
    GLOBAL STYLES - Light Theme with Gradient & Glass
@@ -458,7 +457,9 @@ const Hero = () => {
 
   const slides = [
     { image: './ban1.jpeg', title: '', subtitle: '', tagline: '' },
-    { image: './ban2.jpeg', title: '', subtitle: '', tagline: '' }
+    { image: './ban2.jpeg', title: '', subtitle: '', tagline: '' },
+    { image: './ban3.jpeg', title: '', subtitle: '', tagline: '' },
+    { image: './ban4.jpeg', title: '', subtitle: '', tagline: '' },
   ];
 
   useEffect(() => {
@@ -470,16 +471,16 @@ const Hero = () => {
 
   return (
     <section style={{
-  minHeight: '100vh',
-  maxHeight: '100vh',
-  width: '100%',
-  position: 'relative',
-  overflow: 'hidden',
-  backgroundColor: '#f5f5f5',
-  ...(window.innerWidth <= 768 && {
-    minHeight: '30vh',
-  })
-}}>
+      minHeight: '100vh',
+      maxHeight: '100vh',
+      width: '100%',
+      position: 'relative',
+      overflow: 'hidden',
+      backgroundColor: '#f5f5f5',
+      ...(window.innerWidth <= 768 && {
+        minHeight: '30vh',
+      })
+    }}>
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -579,12 +580,13 @@ const Hero = () => {
 ───────────────────────────────────────────── */
 const TopCategories = () => {
   const cats = [
-    { name: "Men's Eyeglasses", img: './cat1.jpeg' },
-    { name: "Men's Sunglasses", img: './cat2.jpeg' },
-    { name: "Women's Eyeglasses", img: './cat3.jpeg' },
-    { name: "Women's Sunglasses", img: './cat4.jpeg' },
-    { name: 'Color Contact Lenses', img: './cat5.jpeg' },
-    { name: 'Clear Contact Lenses', img: './cat6.jpeg' },
+    { name: "Men's Sunglass", img: './cat1.jpeg', link: '/products?category=men&type=sunglasses&gender=Men' },
+    { name: "Men's Eyeglass", img: './cat2.jpeg', link: '/products?category=men&type=eyeglasses&gender=Men' },
+    { name: "Women's Eyeglass", img: './cat3.jpeg', link: '/products?category=women&type=eyeglasses&gender=Women' },
+    { name: "Women's Sunglass", img: './cat4.jpeg', link: '/products?category=women&type=sunglasses&gender=Women' },
+    { name: "Kids' Sunglass", img: './cat5.jpeg', link: '/products?category=kids&type=sunglasses&gender=Kids' },
+    { name: "Kids' Eyeglass", img: './cat6.jpeg', link: '/products?category=kids&type=eyeglasses&gender=Kids' },
+    { name: "Contact Lens", img: './cat7.jpeg', link: '/products?category=contactlens&type=contactlens' },
   ];
 
   return (
@@ -600,7 +602,7 @@ const TopCategories = () => {
           alignItems: 'center'
         }}>
           {cats.map((cat, i) => (
-            <div key={i} className="category-card" style={{ textAlign: 'center', cursor: 'pointer' }}>
+            <Link key={i} to={cat.link} className="category-card" style={{ textAlign: 'center', textDecoration: 'none', color: 'inherit' }}>
               <div className="image-wrapper" style={{
                 width: '110px',
                 height: '110px',
@@ -614,13 +616,14 @@ const TopCategories = () => {
                 <img src={cat.img} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
               </div>
               <p className="category-name" style={{ marginTop: '0.65rem', fontSize: '0.8rem', fontWeight: 500 }}>{cat.name}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
     </section>
   );
 };
+
 
 /* ─────────────────────────────────────────────
    FEATURE CARDS (responsive grid)
@@ -661,92 +664,341 @@ const Features = () => {
 };
 
 /* ─────────────────────────────────────────────
+   FULL WIDTH VIDEO
+───────────────────────────────────────────── */
+const FullWidthVideo = ({ src, title }) => (
+  <div style={{
+    width: '100%',
+    position: 'relative',
+    borderRadius: '28px 28px 0 0',
+    overflow: 'hidden',
+    background: '#080808',
+    marginTop: 4,
+  }}>
+    <video
+      src={src}
+      autoPlay
+      muted
+      loop
+      playsInline
+      style={{ width: '100%', display: 'block', objectFit: 'cover', maxHeight: 640 }}
+    />
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.52) 100%)',
+      pointerEvents: 'none',
+    }} />
+    {title && (
+      <p style={{
+        position: 'absolute',
+        bottom: 44,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: 34,
+        fontWeight: 700,
+        color: '#fff',
+        letterSpacing: '-0.02em',
+        textShadow: '0 2px 24px rgba(0,0,0,0.45)',
+        whiteSpace: 'nowrap',
+        textAlign: 'center',
+      }}>
+        {title}
+      </p>
+    )}
+  </div>
+);
+
+/* ─────────────────────────────────────────────
+   ARROW BUTTON
+───────────────────────────────────────────── */
+const ArrowButton = ({ direction, onClick, disabled }) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    aria-label={direction === 'left' ? 'Scroll Left' : 'Scroll Right'}
+    style={{
+      position: 'absolute',
+      [direction === 'left' ? 'left' : 'right']: -20,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 30,
+      width: 46,
+      height: 46,
+      borderRadius: '50%',
+      border: '1px solid rgba(255,255,255,0.55)',
+      background: 'rgba(255,255,255,0.8)',
+      backdropFilter: 'blur(14px)',
+      WebkitBackdropFilter: 'blur(14px)',
+      boxShadow: '0 6px 28px rgba(0,0,0,0.10)',
+      cursor: disabled ? 'default' : 'pointer',
+      opacity: disabled ? 0.3 : 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, background 0.3s ease',
+      fontFamily: "'Outfit', sans-serif",
+    }}
+    onMouseEnter={e => {
+      if (!disabled) {
+        e.currentTarget.style.transform = 'translateY(-50%) scale(1.12)';
+        e.currentTarget.style.boxShadow = '0 10px 36px rgba(0,0,0,0.16)';
+        e.currentTarget.style.background = 'rgba(255,255,255,0.98)';
+      }
+    }}
+    onMouseLeave={e => {
+      e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+      e.currentTarget.style.boxShadow = '0 6px 28px rgba(0,0,0,0.10)';
+      e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+    }}
+    onMouseDown={e => { if (!disabled) e.currentTarget.style.transform = 'translateY(-50%) scale(0.95)'; }}
+    onMouseUp={e => { if (!disabled) e.currentTarget.style.transform = 'translateY(-50%) scale(1.12)'; }}
+  >
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      {direction === 'left'
+        ? <polyline points="15 18 9 12 15 6" />
+        : <polyline points="9 18 15 12 9 6" />}
+    </svg>
+  </button>
+);
+
+/* ─────────────────────────────────────────────
    PRODUCT SECTION with Horizontal Scroll (responsive)
 ───────────────────────────────────────────── */
 const ProductSection = ({ title, subtitle, products, tag }) => {
   const navigate = useNavigate();
   const trackRef = useRef(null);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(true);
+
+  const updateArrows = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 8);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 8);
+  }, []);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    updateArrows();
+    el.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+    return () => {
+      el.removeEventListener('scroll', updateArrows);
+      window.removeEventListener('resize', updateArrows);
+    };
+  }, [updateArrows, products]);
 
   const scroll = (direction) => {
-    if (trackRef.current) {
-      const scrollAmount = direction === 'left' ? -340 : 340;
-      trackRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector('[data-card]');
+    const step = card ? card.offsetWidth + 20 : 310;
+    el.scrollBy({ left: direction === 'left' ? -step : step, behavior: 'smooth' });
   };
 
-  // Handle try on for any product
   const handleTryOn = (product) => {
-    console.log('Product from Home:', product);
-    // Navigate directly with product ID
     navigate(`/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}`);
   };
 
   if (!products?.length) return null;
 
   const videoConfig = {
-    "Contact Lenses": { src: "https://cdn.shopify.com/videos/c/o/v/833459dc295b4d71aef7a9636dffa2e8.mp4", title: "" },
-    "Men's Collection": { src: "https://cdn.shopify.com/videos/c/o/v/ed1b7a80d9de4a0a90c8ce5dff2bd48b.mp4", title: "" },
-    "Women's Collection": { src: "/videos/women-collection.mp4", title: "Elevate your style" },
-    "Kids' Collection": { src: "/videos/kids-collection.mp4", title: "Fun & flexible frames" }
+    'Contact Lenses': { src: 'Web1.MOV', title: '' },
   };
-
   const shouldShowVideo = videoConfig[title];
 
   return (
     <>
-      <section className="min-h-screen w-full py-12 bg-white flex items-center justify-center">
-        <div className="w-full max-w-[1320px] mx-auto px-4 md:px-6 relative">
-          
-          <div className="section-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-            <div>
-              {tag && <span className="inline-block text-sm font-semibold text-gray-500 mb-2">{tag}</span>}
-              <h2 className="product-section-title text-2xl md:text-3xl font-bold tracking-tight text-gray-900">{title}</h2>
-              {subtitle && <p className="text-gray-600 mt-1 text-sm md:text-base">{subtitle}</p>}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap');
+        .ps-track::-webkit-scrollbar { display: none; }
+        .ps-track { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes ps-fadein {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .ps-fadein   { animation: ps-fadein 0.75s cubic-bezier(0.22,1,0.36,1) both; }
+        .ps-fadein-2 { animation: ps-fadein 0.75s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+
+        .ps-viewall {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          padding: 12px 24px;
+          background: transparent;
+          border: 1px solid rgba(0,0,0,0.18);
+          border-radius: 100px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 600;
+          font-family: 'Outfit', sans-serif;
+          color: #1a1a1a;
+          letter-spacing: 0.03em;
+          white-space: nowrap;
+          transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+        .ps-viewall:hover {
+          background: #0f0f0f;
+          color: #fff;
+          border-color: #0f0f0f;
+          box-shadow: 0 6px 24px rgba(0,0,0,0.16);
+        }
+        .ps-viewall .ps-arrow-icon { transition: transform 0.35s ease; }
+        .ps-viewall:hover .ps-arrow-icon { transform: translateX(4px); }
+
+        .desktop-arrows { display: none; }
+        @media (min-width: 768px) { .desktop-arrows { display: block; } }
+
+        @media (max-width: 767px)  { [data-card] { width: 252px !important; } }
+        @media (min-width: 768px)  { [data-card] { width: 278px !important; } }
+        @media (min-width: 1024px) { [data-card] { width: 298px !important; } }
+      `}</style>
+
+      <section style={{
+        position: 'relative',
+        width: '100%',
+        padding: 'clamp(56px, 7vw, 92px) 0',
+        background: 'linear-gradient(180deg, #ffffff 0%, #f7f7f5 50%, #ffffff 100%)',
+        overflow: 'hidden',
+        fontFamily: "'Outfit', sans-serif",
+      }}>
+        {/* Ambient radial glow */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 65% 45% at 50% 62%, rgba(170,170,195,0.10) 0%, transparent 70%)',
+        }} />
+
+        <div style={{
+          position: 'relative',
+          maxWidth: 1440,
+          margin: '0 auto',
+          padding: '0 clamp(18px, 5vw, 68px)',
+        }}>
+
+          {/* ── Section Header ── */}
+          <div className="ps-fadein" style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            gap: '16px 36px',
+            marginBottom: 48,
+          }}>
+            <div style={{ flex: '1 1 auto', minWidth: 240 }}>
+              {tag && (
+                <span style={{
+                  display: 'inline-block',
+                  fontSize: 10,
+                  fontWeight: 600,
+                  letterSpacing: '0.22em',
+                  color: '#A0A0A0',
+                  textTransform: 'uppercase',
+                  marginBottom: 10,
+                }}>
+                  {tag}
+                </span>
+              )}
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 'clamp(30px, 4.2vw, 54px)',
+                fontWeight: 700,
+                color: '#0a0a0a',
+                letterSpacing: '-0.024em',
+                lineHeight: 1.06,
+                margin: '0 0 12px',
+              }}>
+                {title}
+              </h2>
+              {subtitle && (
+                <p style={{
+                  fontSize: 'clamp(13px, 1.4vw, 15px)',
+                  color: '#6B7280',
+                  fontWeight: 300,
+                  lineHeight: 1.72,
+                  maxWidth: 400,
+                  margin: 0,
+                }}>
+                  {subtitle}
+                </p>
+              )}
             </div>
-            <button className="view-all-btn text-sm font-semibold text-gray-600 hover:text-black transition-colors underline underline-offset-4">
+
+            <button className="ps-viewall" style={{ alignSelf: 'flex-end' }}>
               View All
+              <span className="ps-arrow-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </span>
             </button>
           </div>
 
-          <div className="relative">
-            <div className="hidden md:block carousel-arrow">
-              <button 
-                onClick={() => scroll('left')}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
-                aria-label="Scroll Left"
-              >
-                <span className="text-2xl">‹</span>
-              </button>
+          {/* ── Carousel ── */}
+          <div className="ps-fadein-2" style={{ position: 'relative' }}>
 
-              <button 
-                onClick={() => scroll('right')}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
-                aria-label="Scroll Right"
-              >
-                <span className="text-2xl">›</span>
-              </button>
+            {/* Fade edges */}
+            <div style={{
+              position: 'absolute', left: 0, top: 0, bottom: 28, width: 56,
+              zIndex: 20, pointerEvents: 'none',
+              background: 'linear-gradient(to right, rgba(247,247,245,0.95) 0%, transparent 100%)',
+              opacity: canLeft ? 1 : 0, transition: 'opacity 0.35s ease',
+            }} />
+            <div style={{
+              position: 'absolute', right: 0, top: 0, bottom: 28, width: 56,
+              zIndex: 20, pointerEvents: 'none',
+              background: 'linear-gradient(to left, rgba(247,247,245,0.95) 0%, transparent 100%)',
+              opacity: canRight ? 1 : 0, transition: 'opacity 0.35s ease',
+            }} />
+
+            {/* Arrows */}
+            <div className="desktop-arrows">
+              <ArrowButton direction="left" onClick={() => scroll('left')} disabled={!canLeft} />
+              <ArrowButton direction="right" onClick={() => scroll('right')} disabled={!canRight} />
             </div>
 
-            <div 
+            {/* Track */}
+            <div
               ref={trackRef}
-              className="product-scroll-track flex overflow-x-auto gap-6 no-scrollbar pb-6 snap-x snap-mandatory"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', justifyContent: 'flex-start' }}
+              className="ps-track"
+              style={{
+                display: 'flex',
+                gap: 20,
+                overflowX: 'auto',
+                paddingBottom: 28,
+                paddingTop: 6,
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+              }}
             >
+              <div style={{ flexShrink: 0, width: 2 }} />
+
               {products.map((product) => (
-                <div key={product.id} className="product-card-wrapper min-w-[270px] md:min-w-[290px] flex-shrink-0 snap-start">
-                  <ProductCard product={product} />
+                <div
+                  key={product.id}
+                  data-card
+                  style={{ flexShrink: 0, scrollSnapAlign: 'start', width: 298 }}
+                >
+                  <ProductCard product={product} onTryOn={handleTryOn} />
                 </div>
               ))}
+
+              <div style={{ flexShrink: 0, width: 2 }} />
             </div>
           </div>
-        </div>
 
-        <style>{`
-          .no-scrollbar::-webkit-scrollbar { display: none; }
-        `}</style>
+        </div>
       </section>
 
-      {shouldShowVideo && <FullWidthVideo src={shouldShowVideo.src} title={shouldShowVideo.title} />}
+      {shouldShowVideo && (
+        <FullWidthVideo src={shouldShowVideo.src} title={shouldShowVideo.title} />
+      )}
     </>
   );
 };

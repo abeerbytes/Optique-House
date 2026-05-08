@@ -768,6 +768,10 @@ const ProductDetail = () => {
     }
 
     localStorage.setItem('cart', JSON.stringify(existingCart));
+    
+    // Dispatch event to update navbar cart badge
+    window.dispatchEvent(new Event('cartUpdated'));
+    
     setShowAddedToCart(true);
     setTimeout(() => setShowAddedToCart(false), 2000);
   };

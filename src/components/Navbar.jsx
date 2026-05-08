@@ -1,12 +1,22 @@
 // components/Navbar.js
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
+  const [cartCount, setCartCount] = useState(0); // ← NEW: cart badge count
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Load cart count from localStorage
+  const loadCartCount = () => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalItems = savedCart.reduce((total, item) => total + (item.quantity || 1), 0);
+    setCartCount(totalItems);
+    return totalItems;
+  };
 
   // Scroll shadow effect
   useEffect(() => {
@@ -22,15 +32,50 @@ const Navbar = () => {
     return () => clearTimeout(t);
   }, [location.pathname]);
 
+  // Load cart count on mount and listen for changes
+  useEffect(() => {
+    // Initial load
+    loadCartCount();
+
+    // Listen for storage events (if cart updated in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'cart') {
+        loadCartCount();
+        setCartBounce(true);
+        setTimeout(() => setCartBounce(false), 600);
+      }
+    };
+
+    // Custom event for cart updates (dispatch from Cart.jsx or product pages)
+    const handleCartUpdate = () => {
+      loadCartCount();
+      setCartBounce(true);
+      setTimeout(() => setCartBounce(false), 600);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
+  }, []);
+
   const navLinks = [
     { to: '/',        label: 'Home'    },
     { to: '/about',   label: 'About'   },
-    { to: '/products#', label: 'Products'},
+    { to: '/products', label: 'Products'},
     { to: '/contact', label: 'Contact' },
   ];
 
   const isActive = (path) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
+
+  // Handle search icon click
+  const handleSearchClick = () => {
+    navigate('/products', { state: { focusSearch: true } });
+  };
 
   return (
     <>
@@ -174,14 +219,19 @@ const Navbar = () => {
         .cart-badge {
           position: absolute;
           top: -6px; right: -7px;
-          width: 16px; height: 16px;
+          min-width: 16px;
+          height: 16px;
           background: #f5c842;
           color: #0a0a0a;
           border-radius: 50%;
           font-size: 0.6rem;
           font-weight: 800;
-          display: flex; align-items: center; justify-content: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 3px;
           border: 2px solid #0a0a0a;
+          box-sizing: content-box;
         }
 
         /* Bounce animation for cart */
@@ -294,15 +344,19 @@ const Navbar = () => {
 
           {/* Right Actions */}
           <div className="nav-actions">
-            {/* Search */}
-            <button className="icon-btn search-desktop" title="Search">
+            {/* Search button with navigation */}
+            <button
+              className="icon-btn search-desktop"
+              title="Search"
+              onClick={handleSearchClick}
+            >
               <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2"
                   d="M21 21l-5.2-5.2M16.5 10.5a6 6 0 11-12 0 6 6 0 0112 0z" />
               </svg>
             </button>
 
-            {/* Cart button */}
+            {/* Cart button with dynamic badge */}
             <Link to="/cart" style={{ textDecoration: 'none' }}>
               <button className={`cart-btn${cartBounce ? ' cart-bounce' : ''}`}>
                 <span className="cart-icon-wrap">
@@ -313,7 +367,9 @@ const Navbar = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2"
                       d="M16 10a4 4 0 01-8 0" />
                   </svg>
-                  <span className="cart-badge">0</span>
+                  {cartCount > 0 && (
+                    <span className="cart-badge">{cartCount > 99 ? '99+' : cartCount}</span>
+                  )}
                 </span>
                 Cart
               </button>
@@ -357,7 +413,9 @@ const Navbar = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2"
                         d="M16 10a4 4 0 01-8 0" />
                     </svg>
-                    <span className="cart-badge">0</span>
+                    {cartCount > 0 && (
+                      <span className="cart-badge">{cartCount > 99 ? '99+' : cartCount}</span>
+                    )}
                   </span>
                   View Cart
                 </button>

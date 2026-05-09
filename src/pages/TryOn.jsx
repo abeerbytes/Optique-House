@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 // TryOn.jsx - Fixed mobile stretching issue + ASW Solution branding badge
 import React, { useRef, useEffect, useState, useCallback } from "react";
 
@@ -238,7 +227,7 @@ const BrandingBadge = ({ mobile }) => (
     aria-label="Product by ASW Solution"
     style={{
       position: "absolute",
-      top: mobile ? 14 : 18,
+      top: mobile ? 60 : 18,
       left: "50%",
       transform: "translateX(-50%)",
       zIndex: 100,

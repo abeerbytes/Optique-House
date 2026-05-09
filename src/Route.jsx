@@ -12,7 +12,8 @@ import About from "./pages/About";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Chackout";  // Note: Keep as is or fix typo
 import OrderSuccess from "./pages/OrderSuccess";
-import TryOn from "./pages/Tryon"; // Import the TryOn component
+ // Import the TryOn component
+ import Tryon from "./pages/TryOn"
 
 const AppRouter = () => {
     return (
@@ -28,7 +29,7 @@ const AppRouter = () => {
                 <Route path="/order-success" element={<OrderSuccess />} />   
                 <Route path="/checkout" element={<Checkout />} />   
                 <Route path="/about" element={<About />} />
-                <Route path="/tryon" element={<TryOn />} />  {/* Add virtual try-on route */}
+                <Route path="/tryon" element={<Tryon/>} />  {/* Add virtual try-on route */}
             </Routes>
             <Footer />
         </Router>

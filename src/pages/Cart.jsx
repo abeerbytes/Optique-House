@@ -45,18 +45,41 @@ const Cart = () => {
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
-  // Get item price (prefer totalPrice, fallback to framePrice + lensExtraCharge, then discountPrice)
+  // Helper to parse price from string or number
+  const parsePrice = (price) => {
+    if (!price) return 0;
+    if (typeof price === 'number') return price;
+    return parseFloat(String(price).replace(/,/g, '')) || 0;
+  };
+
+  // Get item price (prefer totalPrice, fallback to framePrice + lensExtraCharge, then discountPrice/originalPrice)
   const getItemPrice = (item) => {
     if (item.totalPrice) return item.totalPrice;
     if (item.framePrice !== undefined && item.lensExtraCharge !== undefined) {
       return item.framePrice + (item.lensExtraCharge || 0);
     }
-    // Fallback for old cart items
+    // Fallback for old cart items using discountPrice or originalPrice
     if (item.discountPrice) {
-      return parseFloat(item.discountPrice?.replace(/,/g, "")) || 0;
+      return parsePrice(item.discountPrice);
+    }
+    if (item.originalPrice) {
+      return parsePrice(item.originalPrice);
     }
     if (item.price) return item.price;
     return 0;
+  };
+
+  // Get frame price for display
+  const getFramePrice = (item) => {
+    if (item.framePrice !== undefined) return item.framePrice;
+    if (item.discountPrice) return parsePrice(item.discountPrice);
+    if (item.originalPrice) return parsePrice(item.originalPrice);
+    return 0;
+  };
+
+  // Get lens extra charge
+  const getLensExtraCharge = (item) => {
+    return item.lensExtraCharge || item.prescription?.lensPrice || 0;
   };
 
   // Get subtotal
@@ -67,7 +90,7 @@ const Cart = () => {
     }, 0);
   };
 
-  // Shipping cost
+  // Shipping cost (free over ₹5000)
   const getShipping = () => {
     return getSubtotal() > 5000 ? 0 : 200;
   };
@@ -75,6 +98,20 @@ const Cart = () => {
   // Get total
   const getTotal = () => {
     return getSubtotal() + getShipping();
+  };
+
+  // Get category display name
+  const getCategoryDisplay = (category) => {
+    const categoryMap = {
+      'men sunglass': 'Men\'s Sunglass',
+      'men eyeglass': 'Men\'s Eyeglass',
+      'woman sunglass': 'Women\'s Sunglass',
+      'women eyeglass': 'Women\'s Eyeglass',
+      'kid sunglass': 'Kids\' Sunglass',
+      'kids eyeglass': 'Kids\' Eyeglass',
+      'contactless': 'Contact Lens'
+    };
+    return categoryMap[category] || category || 'Optical';
   };
 
   const proceedToCheckout = () => {
@@ -123,29 +160,52 @@ const Cart = () => {
               </div>
               
               {cart.map((item, index) => {
+                const framePrice = getFramePrice(item);
+                const lensCharge = getLensExtraCharge(item);
                 const price = getItemPrice(item);
                 const itemTotal = price * (item.quantity || 1);
                 // Create unique key for each cart item
                 const uniqueKey = `${item.id}-${item.selectedVariant?.colorName || 'default'}-${item.prescription?.lensType || 'no-lens'}`;
+                
+                // Get the image from variant or item
+                const itemImage = item.image || 
+                  item.selectedVariant?.images?.[0] || 
+                  item.selectedVariant?.image || 
+                  'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop';
                 
                 return (
                   <div key={uniqueKey} className="cart-item" style={{ animationDelay: `${index * 0.05}s` }}>
                     <div className="product-col">
                       <div className="product-info">
                         <img 
-                          src={item.image || item.selectedVariant?.image || 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop'} 
+                          src={itemImage}
                           alt={item.name}
                           className="product-image"
                         />
                         <div className="product-details">
                           <h3 className="product-name">{item.name}</h3>
-                          {item.selectedVariant && (
+                          {item.code && (
+                            <span className="product-sku">SKU: {item.code}</span>
+                          )}
+                          {item.category && (
+                            <span className="product-category">{getCategoryDisplay(item.category)}</span>
+                          )}
+                          {item.selectedVariant && item.selectedVariant.colorName && (
                             <span className="product-meta">Color: {item.selectedVariant.colorName}</span>
+                          )}
+                          {item.shape && (
+                            <span className="product-meta">Shape: {item.shape}</span>
+                          )}
+                          {item.type && (
+                            <span className="product-meta">Type: {item.type}</span>
+                          )}
+                          {item.pattern && (
+                            <span className="product-meta">Pattern: {item.pattern}</span>
                           )}
                           {item.prescription && (
                             <span className="product-prescription">
                               Lens: {item.prescription.lensName || item.prescription.lensType || 'Standard'} 
-                              (+₹{item.prescription.lensPrice?.toLocaleString() || 0})
+                              (+₹{parsePrice(item.prescription.lensPrice).toLocaleString()})
                             </span>
                           )}
                         </div>
@@ -154,10 +214,13 @@ const Cart = () => {
                     
                     <div className="price-col">
                       <span className="price">₹{price.toLocaleString()}</span>
-                      {item.lensExtraCharge > 0 && (
+                      {lensCharge > 0 && (
                         <span className="price-breakdown">
-                          (Frame: ₹{item.framePrice?.toLocaleString()} + Lens: ₹{item.lensExtraCharge?.toLocaleString()})
+                          Frame: ₹{framePrice.toLocaleString()} + Lens: ₹{lensCharge.toLocaleString()}
                         </span>
+                      )}
+                      {item.discount && parseFloat(item.discount) > 0 && (
+                        <span className="discount-badge">Save {item.discount}</span>
                       )}
                     </div>
                     
@@ -212,6 +275,7 @@ const Cart = () => {
                           item.selectedVariant?.colorName,
                           item.prescription?.lensType
                         )}
+                        aria-label="Remove item"
                       >
                         🗑️
                       </button>
@@ -570,14 +634,32 @@ const Cart = () => {
           color: #0f172a;
         }
         
+        .product-sku {
+          font-size: 0.7rem;
+          color: #94a3b8;
+          display: block;
+          margin-bottom: 2px;
+        }
+        
+        .product-category {
+          font-size: 0.7rem;
+          color: #667eea;
+          background: #eef2ff;
+          padding: 2px 8px;
+          border-radius: 20px;
+          display: inline-block;
+          margin-bottom: 4px;
+        }
+        
         .product-meta {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           color: #4b5563;
           display: block;
+          margin-top: 2px;
         }
         
         .product-prescription {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           color: #667eea;
           background: #eef2ff;
           padding: 2px 8px;
@@ -597,6 +679,17 @@ const Cart = () => {
           font-weight: normal;
           color: #64748b;
           margin-top: 2px;
+        }
+        
+        .discount-badge {
+          display: inline-block;
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: #b91c1c;
+          background: rgba(185, 28, 28, 0.1);
+          padding: 2px 6px;
+          border-radius: 20px;
+          margin-top: 4px;
         }
         
         .quantity-selector {

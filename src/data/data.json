@@ -2,102 +2,456 @@
   "products": [
     {
       "id": 1,
-      "name": "SL-5503 - Metal Round Shape",
-      "originalPrice": "1999",
-      "discountPrice": "1499",
-      "reviews": 12,
+      "code": "T04917",
+      "name": "Square Plastic Sunglass Luxury Style",
+      "originalPrice": "3500",
+      "discountPrice": "2999",
+      "reviews": 0,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "men",
+      "category": "men sunglass",
       "gender": "Men",
-      "shape": "Round",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Mat White",
+      "pattern": null,
+      "detailDescription": "Premium square plastic sunglass with luxury matte white finish. Features UV400 protection, durable hinges, and comfortable fit for all-day wear.",
       "variants": [
-        { "colorName": "Gun Metalic", "hex": "#ffffff", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
-        { "colorName": "Golden", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
+        {
+          "colorName": "Mat White",
+          "hex": "#ffffff",
+          "images": ["./p1.jpeg", "./p5.jpeg"]
+        },
+        {
+          "colorName": "Black & Blue",
+          "hex": "#ffffff",
+          "images": ["./p17.jpeg", "./p18.jpeg"]
+        }
       ]
     },
     {
       "id": 2,
-      "name": "9722 - Metal Oval Shape",
-      "originalPrice": "2500",
-      "discountPrice": "1799",
-      "reviews": 24,
+      "code": "K01",
+      "name": "Oval Plastic Sunglass",
+      "originalPrice": "800",
+      "discountPrice": null,
+      "reviews": 0,
       "madeInTaiwan": false,
-      "discount": "20%",
-      "category": "men",
-      "gender": "men",
+      "discount": null,
+      "category": "kid sunglass",
+      "gender": "Women Kids",
       "shape": "Oval",
+      "type": "Plastic",
+      "color": "Yellow",
+      "pattern": null,
+      "detailDescription": "Fun and lightweight oval plastic sunglass for kids. Bright yellow color with rounded edges for safety. Provides basic UV protection.",
       "variants": [
-        { "colorName": "Black", "hex": "#b76e79", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
-        { "colorName": "Black & Gold", "hex": "#000000", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Black & Brown", "hex": "#8b5a2b", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+        {
+          "colorName": "Yellow",
+          "hex": "#ffffff",
+          "images": ["./p2.jpeg", "./p7.jpeg"]
+        }
       ]
     },
     {
       "id": 3,
-      "name": "806271 - Plastic Oval Shape ",
-      "originalPrice": "2000",
-      "discountPrice": "1499",
-      "reviews": 8,
-      "madeInTaiwan": true,
-      "discount": "15%",
-      "category": "kids",
-      "gender": "men",
-      "shape": "Rectangle",
+      "code": "D403054S",
+      "name": "Square Plastic Sunglass",
+      "originalPrice": "2800",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "men sunglass",
+      "gender": "Men",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Mat Blue",
+      "pattern": null,
+      "detailDescription": "Modern square plastic sunglass in matte blue finish. Sturdy construction with spring hinges and complete UV protection.",
       "variants": [
-        { "colorName": "Leopard", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
+        {
+          "colorName": "Mat Blue",
+          "hex": "#ffffff",
+          "images": ["./p3.jpeg", "./p21.jpeg"]
+        }
       ]
     },
     {
       "id": 4,
-      "name": "5011 - Metal & Plastic Round Shape",
-      "originalPrice": "2800",
-      "discountPrice": "1899",
-      "reviews": 45,
+      "code": "20237",
+      "name": "Square Shape Plastic Sunglass",
+      "originalPrice": "800",
+      "discountPrice": null,
+      "reviews": 0,
       "madeInTaiwan": false,
-      "discount": "20%",
-      "category": "contactlens",
-      "gender": "men",
-      "shape": "Round",
+      "discount": null,
+      "category": "kid sunglass",
+      "gender": "Men,Baby",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Brown",
+      "pattern": null,
+      "detailDescription": "Affordable square plastic sunglass designed for kids. Brown color frame with lightweight material for active children.",
       "variants": [
-        { "colorName": "Black & Gray", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+        {
+          "colorName": "",
+          "hex": "#ffffff",
+          "images": ["./p4.jpeg", "./p20.jpeg"]
+        }
       ]
     },
     {
       "id": 5,
-      "name": "2603 - Curve Square Half Frame Plastic",
-      "originalPrice": "2899",
-      "discountPrice": "2199",
-      "reviews": 31,
-      "madeInTaiwan": true,
-      "discount": "15%",
-      "category": "men",
+      "code": "RB4455F",
+      "name": "Square Plastic Sunglass",
+      "originalPrice": "2500",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "men sunglass",
       "gender": "Men",
       "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": "Leopard",
+      "detailDescription": "Bold square plastic sunglass with trendy leopard pattern. Fashion-forward design for style-conscious men with UV protection.",
       "variants": [
-        { "colorName": "Tiger", "hex": "#000000", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
+        {
+          "colorName": "Lepord",
+          "hex": "#ffffff",
+          "images": ["./p6.jpeg", "./p25.jpeg"]
+        }
       ]
     },
     {
       "id": 6,
+      "code": "5013",
+      "name": "Square Plastic Shape Sunglass",
+      "originalPrice": "2400",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "woman sunglass",
+      "gender": "Women",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": "Marble Texture",
+      "detailDescription": "Elegant square plastic sunglass featuring unique marble texture. Chic design for women with scratch-resistant lenses.",
+      "variants": [
+        {
+          "colorName": "Lepord",
+          "hex": "#ffffff",
+          "images": ["./p8.jpeg", "./p33.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "code": "S2160",
+      "name": "Square Plastic Sunglass",
+      "originalPrice": "1899",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "woman sunglass",
+      "gender": "Women",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Classic black square plastic sunglass for women. Timeless design that complements any outfit with UV400 protection.",
+      "variants": [
+        {
+          "colorName": "Black",
+          "hex": "#ffffff",
+          "images": ["./p9.jpeg", "./p31.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "code": "3377",
+      "name": "Plastic Eye Sunglass",
+      "originalPrice": "1600",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "women eyeglass",
+      "gender": "Women",
+      "shape": "Other",
+      "type": "Plastic",
+      "color": "Brown",
+      "pattern": null,
+      "detailDescription": "Stylish brown plastic eyeglass frame for women. Comfortable fit for daily wear, can be fitted with prescription lenses.",
+      "variants": [
+        {
+          "colorName": "Brown",
+          "hex": "#ffffff",
+          "images": ["./p10.jpeg", "./p37.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "code": "28044",
+      "name": "Square Plastic Sunglass",
+      "originalPrice": "2899",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "men sunglass",
+      "gender": "Men",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Sleek black square plastic sunglass for men. Strong build quality with reinforced hinges, great for driving and outdoor activities.",
+      "variants": [
+        {
+          "colorName": "Black",
+          "hex": "#ffffff",
+          "images": ["./p11.jpeg", "./p14.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "code": "99032",
+      "name": "Eye Plastic Sunglass",
+      "originalPrice": "4200",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "women eyeglass",
+      "gender": "Women",
+      "shape": "Other",
+      "type": "Plastic",
+      "color": "Mat Nichron",
+      "pattern": null,
+      "detailDescription": "Premium plastic eyeglass frame with matte finish. Lightweight design perfect for all-day wear in multiple elegant colors.",
+      "variants": [
+        {
+          "colorName": "Mat Mehroon",
+          "hex": "#ffffff",
+          "images": ["./p12.jpeg", "./p35.jpeg"]
+        },
+        {
+          "colorName": "Mat Brown",
+          "hex": "#ffffff",
+          "images": ["./p27.jpeg", "./p36.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "code": "T1798",
+      "name": "Square Plastic Sunglass",
+      "originalPrice": "2400",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "woman sunglass",
+      "gender": "Women",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Black Brown",
+      "pattern": null,
+      "detailDescription": "Two-tone square plastic sunglass combining black and brown. Fashionable gradient style for women with full UV protection.",
+      "variants": [
+        {
+          "colorName": "Black & Brown",
+          "hex": "#ffffff",
+          "images": ["./p13.jpeg", "./p29.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "code": "28118",
+      "name": "Eye Plastic Sunglass",
+      "originalPrice": "3200",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "women eyeglass",
+      "gender": "Women",
+      "shape": "Other",
+      "type": "Plastic",
+      "color": "White",
+      "pattern": null,
+      "detailDescription": "Clean white plastic eyeglass frame for a fresh look. Comfortable nose pads and flexible temples, prescription-ready.",
+      "variants": [
+        {
+          "colorName": "White",
+          "hex": "#ffffff",
+          "images": ["./p15.jpeg", "./p40.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "code": "IPB",
+      "name": "One Piece Sunglass",
+      "originalPrice": "800",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "kid sunglass",
+      "gender": "Kids Men",
+      "shape": "Other",
+      "type": "Plastic",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Fun one-piece sunglass design for kids. Durable black plastic frame that bends without breaking, perfect for active play.",
+      "variants": [
+        {
+          "colorName": "Black ",
+          "hex": "#ffffff",
+          "images": ["./p16.jpeg", "./p19.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "code": "F0493",
+      "name": "Plastic Square Men Sunglass",
+      "originalPrice": "4600",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "men sunglass",
+      "gender": "Men",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": "Black Leopard",
+      "detailDescription": "Premium square sunglass with black leopard pattern. High-end finish for the modern man with superior lens clarity.",
+      "variants": [
+        {
+          "colorName": "Black & Leopard",
+          "hex": "#ffffff",
+          "images": ["./p22.jpeg", "./p26.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "code": "BL0985",
+      "name": "Square Plastic Sunglass",
+      "originalPrice": "3200",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "men sunglass",
+      "gender": "Men",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Brown",
+      "pattern": null,
+      "detailDescription": "Rich brown square plastic sunglass for men. Classic color with modern shape and comfortable fit for extended wear.",
+      "variants": [
+        {
+          "colorName": "Brown",
+          "hex": "#ffffff",
+          "images": ["./p23.jpeg", "./p24.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "code": "D7481",
+      "name": "Box Plastic Sunglass",
+      "originalPrice": "4800",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "woman sunglass",
+      "gender": "Women",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Peach",
+      "pattern": null,
+      "detailDescription": "Soft peach square plastic sunglass with feminine appeal. Trendy box shape that frames the face beautifully with UV protection.",
+      "variants": [
+        {
+          "colorName": "Peach",
+          "hex": "#ffffff",
+          "images": ["./p30.jpeg", "./p32.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "code": "H077048",
+      "name": "Box Plastic Sunglass",
+      "originalPrice": "4600",
+      "discountPrice": null,
+      "reviews": 0,
+      "madeInTaiwan": false,
+      "discount": null,
+      "category": "woman sunglass",
+      "gender": "Women",
+      "shape": "Square",
+      "type": "Plastic",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Bold black box-shaped plastic sunglass for women. Statement piece that adds edge to any look, durable and stylish.",
+      "variants": [
+        {
+          "colorName": "Black",
+          "hex": "#ffffff",
+          "images": ["./p34.jpeg", "./p39.jpeg"]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "code": "9702",
       "name": "9702 Metal Oval",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 18,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "men",
+      "category": "men eyeglass",
       "gender": "Men",
       "shape": "Oval",
+      "type": "Metal",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Premium metal oval eyeglass frame for men. Gold and brown color options with lightweight construction and adjustable nose pads.",
       "variants": [
-        { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
-        { "colorName": "Brown", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
+        {
+          "colorName": "Gold",
+          "hex": "#ffd700",
+          "images": ["./p79.jpeg", "./p80.jpeg"]
+        },
+        {
+          "colorName": "Brown",
+          "hex": "#c0c0c0",
+          "images": ["./p77.jpeg", "./p78.jpeg"]
+        }
       ]
     },
     {
-      "id": 7,
+      "id": 19,
+      "code": "JV5816",
       "name": "JV5816 - Plastic Curve Square Shape",
-      "originalPrice": "15,999",
+      "originalPrice": "15999",
       "discountPrice": "1399",
       "reviews": 6,
       "madeInTaiwan": true,
@@ -105,545 +459,583 @@
       "category": "unisex",
       "gender": "Unisex",
       "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Curve square plastic frame with unique design. Made in Taiwan, featuring black and black-red color options for unisex style.",
       "variants": [
-        { "colorName": "Black & Purple", "hex": "#f1c40f", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
-        { "colorName": "Black & Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
-        { "colorName": "Black & Orange", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
-        { "colorName": "Black & Yellow", "hex": "#f1c40f", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
-        { "colorName": "Black & Green", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
-        { "colorName": "Black & Blue", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
-        { "colorName": "Black", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
-        { "colorName": "Black & Red", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
+        {
+          "colorName": "Black",
+          "hex": "#ff69b4",
+          "images": ["./p93.jpeg", "./p94.jpeg"]
+        },
+        {
+          "colorName": "Black & Red",
+          "hex": "#9b59b6",
+          "images": ["./p91.jpeg", "./p92.jpeg"]
+        }
       ]
     },
     {
-      "id": 8,
+      "id": 20,
+      "code": "D8822",
       "name": "D8822 - Plastic Square Shape",
       "originalPrice": "1499",
       "discountPrice": "1199",
       "reviews": 52,
       "madeInTaiwan": false,
       "discount": "20%",
-      "category": "contactlens",
+      "category": "contactless",
       "gender": "Women",
       "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Contactless-friendly plastic square frame in black and white. Lightweight design perfect for daily wear with prescription lenses.",
       "variants": [
-        { "colorName": "Black & White", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+        {
+          "colorName": "Black & White",
+          "hex": "#e0e0e0",
+          "images": ["./p65.jpeg", "./p66.jpeg"]
+        }
       ]
     },
     {
-      "id": 9,
+      "id": 21,
+      "code": "PS8035",
       "name": "PS8035 - Plastic Square Shape",
       "originalPrice": "1899",
       "discountPrice": "1399",
       "reviews": 27,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "men",
+      "category": "men eyeglass",
       "gender": "Men",
       "shape": "Wayfarer",
+      "type": "Plastic",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Classic wayfarer plastic eyeglass frame for men. Made in Taiwan with durable black finish and comfortable fit.",
       "variants": [
-        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
+        {
+          "colorName": "Black",
+          "hex": "#000000",
+          "images": ["./p75.jpeg", "./p76.jpeg"]
+        }
       ]
     },
     {
-      "id": 10,
-      "name": "HZ281001 - Plastic Square Shape",
-      "originalPrice": "1899",
-      "discountPrice": "1499",
-      "reviews": 33,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "men",
-      "gender": "Men",
-      "shape": "Square",
-      "variants": [
-        { "colorName": "Black & Blue", "hex": "#000000", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 11,
+      "id": 22,
+      "code": "D8815",
       "name": "D8815 - Plastic Vaffer Shape",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 4,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "men",
+      "category": "men eyeglass",
       "gender": "Men",
       "shape": "Vaffer",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Unique vaffer shape plastic eyeglass frame in white and black. Modern design with premium build quality.",
       "variants": [
-        { "colorName": "White & Black", "hex": "#e67e22", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" }
+        {
+          "colorName": "White & Black",
+          "hex": "#e67e22",
+          "images": ["./p73.jpeg", "./p74.jpeg"]
+        }
       ]
     },
     {
-      "id": 12,
+      "id": 23,
+      "code": "9362",
       "name": "9362 - Plastic Square Shape",
       "originalPrice": "1499",
       "discountPrice": "1199",
       "reviews": 67,
       "madeInTaiwan": false,
       "discount": "20%",
-      "category": "contactlens",
+      "category": "contactless",
       "gender": "Women",
       "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Contactless-ready square plastic frame in black and shade mahroon. Lightweight and comfortable for extended wear.",
       "variants": [
-        { "colorName": "Black & Shade Mahroon", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+        {
+          "colorName": "Black & Shade Mahroon",
+          "hex": "#3498db",
+          "images": ["./p71.jpeg", "./p72.jpeg"]
+        }
       ]
     },
     {
-      "id": 13,
+      "id": 24,
+      "code": "D8953",
       "name": "D8953 - Plastic Square Shape",
       "originalPrice": "1799",
       "discountPrice": "1499",
       "reviews": 41,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Square",
+      "type": "Plastic",
+      "color": null,
+      "pattern": "Leopard",
+      "detailDescription": "Trendy leopard print square plastic eyeglass frame for women. Made in Taiwan with stylish pattern and comfortable fit.",
       "variants": [
-        { "colorName": "Leopard" , "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
-        { "colorName": "mahroon", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
+        {
+          "colorName": "Leopard",
+          "hex": "#ffd700",
+          "images": ["./p41.jpeg", "./p70.jpeg"]
+        }
       ]
     },
     {
-      "id": 14,
-      "name": "D8967 - Plastic Round Shape ",
-      "originalPrice": "1799",
-      "discountPrice": "1499",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 15,
+      "id": 25,
+      "code": "TR1020",
       "name": "TR1020 Plastic Eye Shape",
       "originalPrice": "1499",
       "discountPrice": "1199",
       "reviews": 15,
       "madeInTaiwan": true,
       "discount": "15%",
-      "category": "men",
+      "category": "men eyeglass",
       "gender": "Men",
       "shape": "Geometric",
+      "type": "Plastic",
+      "color": "Brown",
+      "pattern": null,
+      "detailDescription": "Geometric plastic eyeglass frame in brown. Modern design with lightweight TR-90 material for all-day comfort.",
       "variants": [
-        { "colorName": "Brown", "hex": "#333333", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" }
+        {
+          "colorName": "Brown",
+          "hex": "#333333",
+          "images": ["./p68.jpeg", "./p69.jpeg"]
+        }
       ]
     },
     {
-      "id": 16,
-      "name": "BB6522 Plastic Eye Shape",
+      "id": 26,
+      "code": "BV6522",
+      "name": "BV6522 Plastic Eye Shape",
       "originalPrice": "2599",
       "discountPrice": "1799",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Eye",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Eye-shaped plastic frame in black and purple. Unique design that stands out, perfect for fashion-forward women.",
       "variants": [
-        { "colorName": "Black & Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Black & Purple",
+          "hex": "#ff69b4",
+          "images": ["./p64.jpeg", "./p67.jpeg"]
+        }
       ]
     },
     {
-      "id": 17,
-      "name": "D9108 Plastic Square Shape ",
+      "id": 27,
+      "code": "D9108",
+      "name": "D9108 Plastic Square Shape",
       "originalPrice": "1499",
       "discountPrice": "1199",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Square",
+      "type": "Plastic",
+      "color": "Pink",
+      "pattern": null,
+      "detailDescription": "Pretty pink square plastic eyeglass frame for women. Lightweight and comfortable for daily prescription wear.",
       "variants": [
-        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Pink",
+          "hex": "#ff69b4",
+          "images": ["./p62.jpeg", "./p63.jpeg"]
+        }
       ]
     },
     {
-      "id": 18,
-      "name": "854 - Plastic Square Shape ",
-      "originalPrice": "1699",
-      "discountPrice": "1499",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Black & Red", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 19,
-      "name": "GG6218 - Plastic Sqaure Shape ",
-      "originalPrice": "1799",
-      "discountPrice": "1499",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Black & Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 20,
+      "id": 28,
+      "code": "9368",
       "name": "9368 - Plastic Square Shape",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Round plastic eyeglass frame available in purple, pink & white, and mahroon & white. Versatile style for any occasion.",
       "variants": [
-        { "colorName": "Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Pink & White", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "mahroon & White" , "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Purple",
+          "hex": "#ff69b4",
+          "images": ["./p95.jpeg", "./p96.jpeg"]
+        },
+        {
+          "colorName": "Pink & White",
+          "hex": "#ff69b4",
+          "images": ["./p97.jpeg", "./p98.jpeg"]
+        },
+        {
+          "colorName": "mahroon & White",
+          "hex": "#ff69b4",
+          "images": ["./p99.jpeg", "./p100.jpeg"]
+        }
       ]
     },
     {
-      "id": 21,
-      "name": "K88212 - Metal Eye Shape ",
+      "id": 29,
+      "code": "K88212",
+      "name": "K88212 - Metal Eye Shape",
       "originalPrice": "2399",
       "discountPrice": "1899",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Metal",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Metal round eyeglass frame in black. Sleek and durable with adjustable nose pads for perfect fit.",
       "variants": [
-        { "colorName": "Black", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Black",
+          "hex": "#ff69b4",
+          "images": ["./p85.jpeg", "./p86.jpeg"]
+        }
       ]
     },
     {
-      "id": 22,
+      "id": 30,
+      "code": "B7195",
       "name": "B7195 - Plastic Eye Shape",
       "originalPrice": "2599",
       "discountPrice": "1999",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Round plastic eyeglass frame in black and white. Classic two-tone design that matches any outfit.",
       "variants": [
-        { "colorName": "Black & White", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Black & White",
+          "hex": "#ff69b4",
+          "images": ["./p81.jpeg", "./p82.jpeg"]
+        }
       ]
     },
     {
-      "id": 23,
-      "name": "D1256 - Plastic Oval Shape ",
+      "id": 31,
+      "code": "D1256",
+      "name": "D1256 - Plastic Oval Shape",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": "Purple",
+      "pattern": null,
+      "detailDescription": "Purple round plastic eyeglass frame. Soft color and lightweight design for comfortable daily wear.",
       "variants": [
-        { "colorName": "Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Purple",
+          "hex": "#ff69b4",
+          "images": ["./p83", "./p84.jpeg"]
+        }
       ]
     },
     {
-      "id": 24,
+      "id": 32,
+      "code": "P3002",
       "name": "P3002 - Plastic Square Shape",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Round plastic frame in black and green. Unique color combination for a distinctive look.",
       "variants": [
-        { "colorName": "Black & Green", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Black & Green",
+          "hex": "#ff69b4",
+          "images": ["./p87.jpeg", "./p89.jpeg"]
+        }
       ]
     },
     {
-      "id": 25,
-      "name": "H3663 - Plastic Square Shape",
-      "originalPrice": "2599",
-      "discountPrice": "1999",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "White & Blue", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 26,
+      "id": 33,
+      "code": "2011",
       "name": "2011 - Plastic Oval Shape",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": "Brown",
+      "pattern": null,
+      "detailDescription": "Brown round plastic eyeglass frame. Classic color with modern round shape for everyday elegance.",
       "variants": [
-        { "colorName": "Brown", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Brown",
+          "hex": "#ff69b4",
+          "images": ["./p42.jpeg", "./p43.jpeg"]
+        }
       ]
     },
     {
-      "id": 27,
+      "id": 34,
+      "code": "AR2005",
       "name": "AR2005 - Plastic Oval Shape",
       "originalPrice": "2599",
       "discountPrice": "2299",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": null,
+      "pattern": null,
+      "detailDescription": "Round plastic frame in black and red. Bold color combination for confident style statements.",
       "variants": [
-        { "colorName": "Black & Red", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Black & Red",
+          "hex": "#ff69b4",
+          "images": ["./p44.jpeg", "./p45.jpeg"]
+        }
       ]
     },
     {
-      "id": 28,
+      "id": 35,
+      "code": "P210",
       "name": "P210 - Plastic Square Shape",
       "originalPrice": "1899",
       "discountPrice": "1499",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": "Black",
+      "pattern": null,
+      "detailDescription": "Classic black round plastic eyeglass frame. Timeless design that never goes out of style.",
       "variants": [
-        { "colorName": "Black", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Black",
+          "hex": "#ff69b4",
+          "images": ["./p46.jpeg", "./p47.jpeg"]
+        }
       ]
     },
     {
-      "id": 29,
-      "name": "AR1528 - Plastic Eye Shape",
-      "originalPrice": "2899",
-      "discountPrice": "2499",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Red & Offwithe", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 30,
-      "name": "H0016 - Plastic Eye Shape",
-      "originalPrice": "2299",
-      "discountPrice": "1899",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Black", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 31,
+      "id": 36,
+      "code": "D8954",
       "name": "D8954 - Plastic Round Shape",
       "originalPrice": "2299",
       "discountPrice": "1799",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic",
+      "color": "Purple",
+      "pattern": null,
+      "detailDescription": "Purple round plastic eyeglass frame. Vibrant color for those who want to stand out.",
       "variants": [
-        { "colorName": "Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Purple",
+          "hex": "#ff69b4",
+          "images": ["./p48.jpeg", "./p49.jpeg"]
+        }
       ]
     },
     {
-      "id": 32,
-      "name": "D8978 - Plastic Oval Shape",
-      "originalPrice": "2699",
-      "discountPrice": "1899",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 33,
+      "id": 37,
+      "code": "K58083",
       "name": "K58083 - Plastic & Metal Round shape",
       "originalPrice": "3299",
       "discountPrice": "2899",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic & Metal",
+      "color": null,
+      "pattern": "Tiger",
+      "detailDescription": "Round frame with tiger pattern. Combination of plastic and metal for durability and style.",
       "variants": [
-        { "colorName": "Tiger", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Tiger",
+          "hex": "#ff69b4",
+          "images": ["./p50.jpeg", "./p51.jpeg"]
+        }
       ]
     },
     {
-      "id": 34,
+      "id": 38,
+      "code": "LFL228",
       "name": "LFL228 - Plastic & Metal Round Shape",
       "originalPrice": "2599",
       "discountPrice": "1999",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic & Metal",
+      "color": null,
+      "pattern": "Marble",
+      "detailDescription": "Marble patterned round frame. Hybrid plastic and metal construction for lightweight strength.",
       "variants": [
-        { "colorName": "Marble", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Marble",
+          "hex": "#ff69b4",
+          "images": ["./p52.jpeg", "./p53.jpeg"]
+        }
       ]
     },
     {
-      "id": 35,
-      "name": "OF5123 - Plastic Round Shape",
-      "originalPrice": "1899",
-      "discountPrice": "1499",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Blue", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 36,
+      "id": 39,
+      "code": "OF8651",
       "name": "OF8651 - Plastic & metal Round Shape",
       "originalPrice": "2599",
       "discountPrice": "1999",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic & Metal",
+      "color": null,
+      "pattern": "Leopard",
+      "detailDescription": "Leopard print round frame. Perfect for fashion-conscious women who love animal prints.",
       "variants": [
-        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Leopard",
+          "hex": "#ff69b4",
+          "images": ["./p54.jpeg", "./p55.jpeg"]
+        }
       ]
     },
     {
-      "id": 37,
+      "id": 40,
+      "code": "OF8506",
       "name": "OF8506 - Plastic & Metal Round Shape",
       "originalPrice": "3599",
       "discountPrice": "2899",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic & Metal",
+      "color": null,
+      "pattern": "Marbel",
+      "detailDescription": "Marble design round frame. Premium hybrid construction for lasting wear and unique style.",
       "variants": [
-        { "colorName": "Marbel", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 38,
-      "name": "260203- Plastic & Metal ROund Shape",
-      "originalPrice": "2599",
-      "discountPrice": "1999",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Marble", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 39,
-      "name": "9628 - Metal & Plastic Round Shape",
-      "originalPrice": "3299",
-      "discountPrice": "2799",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
-      ]
-    },
-    {
-      "id": 40,
-      "name": "TR8008 - Plastic & Metal Eye Shape",
-      "originalPrice": "2599",
-      "discountPrice": "1999",
-      "reviews": 22,
-      "madeInTaiwan": false,
-      "discount": "15%",
-      "category": "women",
-      "gender": "Women",
-      "shape": "Round",
-      "variants": [
-        { "colorName": "Red", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Marbel",
+          "hex": "#ff69b4",
+          "images": ["./p56.jpeg", "./p57.jpeg"]
+        }
       ]
     },
     {
       "id": 41,
+      "code": "1122",
       "name": "1122 - Plastic & Metal Round Shape",
       "originalPrice": "2899",
       "discountPrice": "2299",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "Plastic & Metal",
+      "color": null,
+      "pattern": "Leopard",
+      "detailDescription": "Leopard print round frame with hybrid construction. Bold style meets everyday comfort.",
       "variants": [
-        { "colorName": "Leopard", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Leopard",
+          "hex": "#ff69b4",
+          "images": ["./p58.jpeg", "./p59.jpeg"]
+        }
       ]
     },
     {
       "id": 42,
+      "code": "R1013",
       "name": "R1013 - RimLess Eye Shape",
       "originalPrice": "2599",
       "discountPrice": "1999",
       "reviews": 22,
       "madeInTaiwan": false,
       "discount": "15%",
-      "category": "women",
+      "category": "women eyeglass",
       "gender": "Women",
       "shape": "Round",
+      "type": "RimLess",
+      "color": "Pink",
+      "pattern": null,
+      "detailDescription": "Pink rimless round eyeglass frame. Minimalist design that's lightweight and nearly invisible on face.",
       "variants": [
-        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Red & Purple", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
-        { "colorName": "Silver & Blue", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+        {
+          "colorName": "Pink",
+          "hex": "#ff69b4",
+          "images": ["./p60.jpeg", "./p61.jpeg"]
+        }
       ]
     }
   ]

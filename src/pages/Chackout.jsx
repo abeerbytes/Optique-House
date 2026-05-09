@@ -17,12 +17,11 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   // ✅ YOUR GOOGLE SHEETS WEBHOOK URL
-// ✅ YOUR GOOGLE SHEETS WEBHOOK URL (UPDATED)
-const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypumtAXRdstYULB-36zGuwuOnu9c-TUP2JfKQvnIySCCXDo8Srai7Lc7boBLG4XRyYXA/exec";
+  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypumtAXRdstYULB-36zGuwuOnu9c-TUP2JfKQvnIySCCXDo8Srai7Lc7boBLG4XRyYXA/exec";
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    console.log("Cart loaded:", savedCart); // Debug: check cart structure
+    console.log("Cart loaded:", savedCart);
     if (savedCart.length === 0) {
       navigate("/cart");
     }
@@ -33,6 +32,13 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // ✅ Helper to parse price (handles strings with commas)
+  const parsePrice = (price) => {
+    if (!price) return 0;
+    if (typeof price === 'number') return price;
+    return parseFloat(String(price).replace(/,/g, '')) || 0;
+  };
+
   // ✅ Get item price (supports multiple price formats)
   const getItemPrice = (item) => {
     if (item.totalPrice) return item.totalPrice;
@@ -40,13 +46,26 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
       return item.framePrice + (item.lensExtraCharge || 0);
     }
     if (item.discountPrice) {
-      const price = typeof item.discountPrice === 'string' 
-        ? parseFloat(item.discountPrice.replace(/,/g, "")) 
-        : item.discountPrice;
-      return price || 0;
+      return parsePrice(item.discountPrice);
+    }
+    if (item.originalPrice) {
+      return parsePrice(item.originalPrice);
     }
     if (item.price) return item.price;
     return 0;
+  };
+
+  // ✅ Get frame price
+  const getFramePrice = (item) => {
+    if (item.framePrice !== undefined) return item.framePrice;
+    if (item.discountPrice) return parsePrice(item.discountPrice);
+    if (item.originalPrice) return parsePrice(item.originalPrice);
+    return 0;
+  };
+
+  // ✅ Get lens extra charge
+  const getLensExtraCharge = (item) => {
+    return item.lensExtraCharge || item.prescription?.lensPrice || 0;
   };
 
   // ✅ Helper function to format prescription value
@@ -71,6 +90,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
         sphere: formatPrescriptionValue(leftEye.sphere),
         cylinder: formatPrescriptionValue(leftEye.cylinder),
         axis: formatPrescriptionValue(leftEye.axis),
+        addition: formatPrescriptionValue(leftEye.addition),
         baseCurve: formatPrescriptionValue(leftEye.baseCurve),
         diameter: formatPrescriptionValue(leftEye.diameter)
       },
@@ -78,6 +98,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
         sphere: formatPrescriptionValue(rightEye.sphere),
         cylinder: formatPrescriptionValue(rightEye.cylinder),
         axis: formatPrescriptionValue(rightEye.axis),
+        addition: formatPrescriptionValue(rightEye.addition),
         baseCurve: formatPrescriptionValue(rightEye.baseCurve),
         diameter: formatPrescriptionValue(rightEye.diameter)
       }
@@ -98,6 +119,20 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
 
   const getTotal = () => {
     return getSubtotal() + getShipping();
+  };
+
+  // Get category display name
+  const getCategoryDisplay = (category) => {
+    const categoryMap = {
+      'men sunglass': "Men's Sunglass",
+      'men eyeglass': "Men's Eyeglass",
+      'woman sunglass': "Women's Sunglass",
+      'women eyeglass': "Women's Eyeglass",
+      'kid sunglass': "Kids' Sunglass",
+      'kids eyeglass': "Kids' Eyeglass",
+      'contactless': "Contact Lens"
+    };
+    return categoryMap[category] || category || 'Optical';
   };
 
   const handleSubmit = async (e) => {
@@ -122,15 +157,24 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
       paymentMethod: paymentMethod === "cod" ? "Cash on Delivery" : "Bank Transfer",
       items: cart.map(item => {
         const price = getItemPrice(item);
+        const framePrice = getFramePrice(item);
+        const lensCharge = getLensExtraCharge(item);
         const quantity = item.quantity || 1;
         const prescription = item.prescription || null;
         
         return {
+          id: item.id,
           name: item.name,
+          code: item.code || "",
+          category: item.category || "",
+          shape: item.shape || "",
+          type: item.type || "",
+          pattern: item.pattern || null,
+          color: item.color || "",
           variant: item.selectedVariant?.colorName || "Default",
           quantity: quantity,
-          framePrice: item.framePrice || price,
-          lensExtraCharge: item.lensExtraCharge || 0,
+          framePrice: framePrice,
+          lensExtraCharge: lensCharge,
           lensType: prescription?.lensName || prescription?.lensType || "Standard",
           totalPrice: price,
           total: price * quantity,
@@ -142,6 +186,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
               sphere: prescription.leftEye?.sphere || "",
               cylinder: prescription.leftEye?.cylinder || "",
               axis: prescription.leftEye?.axis || "",
+              addition: prescription.leftEye?.addition || "",
               baseCurve: prescription.leftEye?.baseCurve || "",
               diameter: prescription.leftEye?.diameter || ""
             },
@@ -149,6 +194,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
               sphere: prescription.rightEye?.sphere || "",
               cylinder: prescription.rightEye?.cylinder || "",
               axis: prescription.rightEye?.axis || "",
+              addition: prescription.rightEye?.addition || "",
               baseCurve: prescription.rightEye?.baseCurve || "",
               diameter: prescription.rightEye?.diameter || ""
             }
@@ -180,6 +226,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
       localStorage.setItem("orders", JSON.stringify(orders));
 
       localStorage.removeItem("cart");
+      window.dispatchEvent(new Event('cartUpdated'));
 
       alert(`✅ Order placed successfully!\nOrder ID: ${orderData.orderId}\nWe'll contact you shortly.`);
       navigate("/order-success", { state: { orderData } });
@@ -190,6 +237,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
       orders.push(orderData);
       localStorage.setItem("orders", JSON.stringify(orders));
       localStorage.removeItem("cart");
+      window.dispatchEvent(new Event('cartUpdated'));
       alert(`⚠️ Order saved locally. We'll process it soon.\nOrder ID: ${orderData.orderId}`);
       navigate("/order-success", { state: { orderData } });
     } finally {
@@ -372,11 +420,18 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
             <div className="summary-items">
               {cart.map((item, idx) => {
                 const price = getItemPrice(item);
+                const framePrice = getFramePrice(item);
+                const lensCharge = getLensExtraCharge(item);
                 const quantity = item.quantity || 1;
                 const total = price * quantity;
-                const framePrice = item.framePrice || price;
-                const lensCharge = item.lensExtraCharge || 0;
                 const prescriptionDisplay = getPrescriptionDisplay(item.prescription);
+                const categoryDisplay = getCategoryDisplay(item.category);
+                
+                // Get image from variant or item
+                const itemImage = item.image || 
+                  item.selectedVariant?.images?.[0] || 
+                  item.selectedVariant?.image || 
+                  'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=60&h=60&fit=crop';
                 
                 return (
                   <div
@@ -386,11 +441,19 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
                   >
                     <div className="item-main">
                       <div className="item-info">
-                        <span className="item-name">{item.name}</span>
-                        {item.selectedVariant && (
-                          <span className="item-variant">({item.selectedVariant.colorName})</span>
-                        )}
-                        <span className="item-quantity">x{quantity}</span>
+                        <img src={itemImage} alt={item.name} className="item-thumb" />
+                        <div className="item-details">
+                          <div className="item-name">{item.name}</div>
+                          {item.code && <div className="item-code">SKU: {item.code}</div>}
+                          <div className="item-category">{categoryDisplay}</div>
+                          {item.selectedVariant && (
+                            <span className="item-variant">{item.selectedVariant.colorName}</span>
+                          )}
+                          {item.shape && (
+                            <span className="item-shape">Shape: {item.shape}</span>
+                          )}
+                          <span className="item-quantity">Qty: {quantity}</span>
+                        </div>
                       </div>
                       <div className="item-price">₹{total.toLocaleString()}</div>
                     </div>
@@ -410,25 +473,27 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
                         </div>
                         <div className="prescription-details">
                           <div className="eye-column">
-                            <div className="eye-title">👁️ Left Eye</div>
+                            <div className="eye-title">👁️ Left Eye (OS)</div>
                             <div className="prescription-row">
                               <span>SPH:</span> {prescriptionDisplay.left.sphere}
                               <span>CYL:</span> {prescriptionDisplay.left.cylinder}
                               <span>Axis:</span> {prescriptionDisplay.left.axis}
                             </div>
                             <div className="prescription-row">
+                              <span>Add:</span> {prescriptionDisplay.left.addition}
                               <span>BC:</span> {prescriptionDisplay.left.baseCurve}
                               <span>DIA:</span> {prescriptionDisplay.left.diameter}
                             </div>
                           </div>
                           <div className="eye-column">
-                            <div className="eye-title">👁️ Right Eye</div>
+                            <div className="eye-title">👁️ Right Eye (OD)</div>
                             <div className="prescription-row">
                               <span>SPH:</span> {prescriptionDisplay.right.sphere}
                               <span>CYL:</span> {prescriptionDisplay.right.cylinder}
                               <span>Axis:</span> {prescriptionDisplay.right.axis}
                             </div>
                             <div className="prescription-row">
+                              <span>Add:</span> {prescriptionDisplay.right.addition}
                               <span>BC:</span> {prescriptionDisplay.right.baseCurve}
                               <span>DIA:</span> {prescriptionDisplay.right.diameter}
                             </div>
@@ -820,7 +885,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
 
         .summary-items {
           margin-bottom: 20px;
-          max-height: 400px;
+          max-height: 500px;
           overflow-y: auto;
           scrollbar-width: thin;
         }
@@ -866,53 +931,89 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
         .item-main {
           display: flex;
           justify-content: space-between;
-          align-items: baseline;
-          flex-wrap: wrap;
-          gap: 8px;
+          align-items: flex-start;
+          gap: 12px;
         }
 
         .item-info {
           display: flex;
           gap: 12px;
-          flex-wrap: wrap;
-          align-items: baseline;
+          flex: 1;
+        }
+
+        .item-thumb {
+          width: 55px;
+          height: 55px;
+          object-fit: cover;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-details {
+          flex: 1;
         }
 
         .item-name {
           font-weight: 700;
           color: #1e293b;
+          margin-bottom: 4px;
         }
 
-        .item-variant {
-          font-size: 0.8rem;
+        .item-code {
+          font-size: 0.7rem;
+          color: #94a3b8;
+          margin-bottom: 2px;
+        }
+
+        .item-category {
+          font-size: 0.7rem;
           color: #667eea;
           background: #eef2ff;
           padding: 2px 8px;
           border-radius: 20px;
+          display: inline-block;
+          margin-bottom: 4px;
+        }
+
+        .item-variant {
+          font-size: 0.7rem;
+          color: #667eea;
+          background: #eef2ff;
+          padding: 2px 8px;
+          border-radius: 20px;
+          display: inline-block;
+          margin-right: 6px;
+        }
+
+        .item-shape {
+          font-size: 0.7rem;
+          color: #64748b;
+          display: inline-block;
+          margin-right: 6px;
         }
 
         .item-quantity {
+          font-size: 0.7rem;
           color: #64748b;
-          font-size: 0.85rem;
-          background: #f1f5f9;
-          padding: 2px 8px;
-          border-radius: 20px;
+          display: inline-block;
         }
 
         .item-price {
           font-weight: 700;
           color: #0f172a;
+          min-width: 80px;
+          text-align: right;
         }
 
         .price-breakdown {
           font-size: 0.7rem;
           color: #64748b;
           margin-top: 4px;
-          padding-left: 8px;
+          padding-left: 67px;
         }
 
         .item-prescription {
-          margin-top: 8px;
+          margin-top: 10px;
           background: #f8fafc;
           border-radius: 12px;
           padding: 10px;
@@ -929,11 +1030,13 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
 
         .prescription-details {
           display: flex;
-          flex-direction: column;
-          gap: 8px;
+          gap: 16px;
+          flex-wrap: wrap;
         }
 
         .eye-column {
+          flex: 1;
+          min-width: 140px;
           font-size: 0.7rem;
         }
 
@@ -948,6 +1051,7 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
           flex-wrap: wrap;
           gap: 8px;
           color: #475569;
+          margin-bottom: 2px;
         }
 
         .prescription-row span {
@@ -1038,8 +1142,12 @@ const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypum
           .order-summary {
             position: static;
           }
-          .prescription-row {
-            gap: 6px;
+          .prescription-details {
+            flex-direction: column;
+            gap: 8px;
+          }
+          .price-breakdown {
+            padding-left: 0;
           }
         }
       `}</style>

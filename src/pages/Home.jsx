@@ -576,17 +576,17 @@ const Hero = () => {
 };
 
 /* ─────────────────────────────────────────────
-   CATEGORY CIRCLES (responsive grid)
+   CATEGORY CIRCLES (responsive grid) - UPDATED with 7 categories
 ───────────────────────────────────────────── */
 const TopCategories = () => {
   const cats = [
-    { name: "Men's Sunglass", img: './cat1.jpeg', link: '/products?category=men&type=sunglasses&gender=Men' },
-    { name: "Men's Eyeglass", img: './cat2.jpeg', link: '/products?category=men&type=eyeglasses&gender=Men' },
-    { name: "Women's Eyeglass", img: './cat3.jpeg', link: '/products?category=women&type=eyeglasses&gender=Women' },
-    { name: "Women's Sunglass", img: './cat4.jpeg', link: '/products?category=women&type=sunglasses&gender=Women' },
-    { name: "Kids' Sunglass", img: './cat5.jpeg', link: '/products?category=kids&type=sunglasses&gender=Kids' },
-    { name: "Kids' Eyeglass", img: './cat6.jpeg', link: '/products?category=kids&type=eyeglasses&gender=Kids' },
-    { name: "Contact Lens", img: './cat7.jpeg', link: '/products?category=contactlens&type=contactlens' },
+    { name: "Men's Sunglass", img: './cat1.jpeg', link: '/products?category=men%20sunglass' },
+    { name: "Men's Eyeglass", img: './cat2.jpeg', link: '/products?category=men%20eyeglass' },
+    { name: "Women's Eyeglass", img: './cat3.jpeg', link: '/products?category=women%20eyeglass' },
+    { name: "Women's Sunglass", img: './cat4.jpeg', link: '/products?category=woman%20sunglass' },
+    { name: "Kids' Sunglass", img: './cat5.jpeg', link: '/products?category=kid%20sunglass' },
+    { name: "Kids' Eyeglass", img: './cat6.jpeg', link: '/products?category=kids%20eyeglass' },
+    { name: "Contact Lens", img: './cat7.jpeg', link: '/products?category=contactless' },
   ];
 
   return (
@@ -623,7 +623,6 @@ const TopCategories = () => {
     </section>
   );
 };
-
 
 /* ─────────────────────────────────────────────
    FEATURE CARDS (responsive grid)
@@ -766,7 +765,7 @@ const ArrowButton = ({ direction, onClick, disabled }) => (
 /* ─────────────────────────────────────────────
    PRODUCT SECTION with Horizontal Scroll (responsive)
 ───────────────────────────────────────────── */
-const ProductSection = ({ title, subtitle, products, tag }) => {
+const ProductSection = ({ title, subtitle, products, tag, onViewAll }) => {
   const navigate = useNavigate();
   const trackRef = useRef(null);
   const [canLeft, setCanLeft] = useState(false);
@@ -801,6 +800,14 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
 
   const handleTryOn = (product) => {
     navigate(`/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}`);
+  };
+
+  const handleViewAll = () => {
+    if (onViewAll) {
+      onViewAll();
+    } else {
+      navigate('/products');
+    }
   };
 
   if (!products?.length) return null;
@@ -929,7 +936,7 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
               )}
             </div>
 
-            <button className="ps-viewall" style={{ alignSelf: 'flex-end' }}>
+            <button className="ps-viewall" onClick={handleViewAll} style={{ alignSelf: 'flex-end' }}>
               View All
               <span className="ps-arrow-icon">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -1151,44 +1158,25 @@ const FloatingWA = () => (
 );
 
 /* ─────────────────────────────────────────────
-   SAMPLE DATA FALLBACK
-───────────────────────────────────────────── */
-const SAMPLE = {
-  contactLenses: [
-    { id: 101, name: 'Premium Daily Contact Lenses', discount: '20%', madeInTaiwan: true, originalPrice: 4999, discountPrice: 3999, reviews: 128, variants: [{ colorName: 'Clear', hex: '#E8F4F8', image: 'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400' }] },
-    { id: 102, name: 'Monthly Bio Lenses', discount: '15%', madeInTaiwan: true, originalPrice: 5999, discountPrice: 5099, reviews: 94, variants: [{ colorName: 'Clear', hex: '#E8F4F8', image: 'https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400' }] },
-  ],
-  men: [
-    { id: 201, name: 'Aviator Classic Gold', discount: '20%', madeInTaiwan: true, originalPrice: 12999, discountPrice: 10399, reviews: 89, variants: [{ colorName: 'Gold', hex: '#FFD700', image: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400' }] },
-    { id: 202, name: 'Wayfarer Classic Black', discount: '15%', madeInTaiwan: false, originalPrice: 9999, discountPrice: 8499, reviews: 156, variants: [{ colorName: 'Black', hex: '#000000', image: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400' }] },
-  ],
-  women: [
-    { id: 301, name: 'Cat Eye Elegance', discount: '20%', madeInTaiwan: true, originalPrice: 13999, discountPrice: 11199, reviews: 178, variants: [{ colorName: 'Rose Gold', hex: '#B76E79', image: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400' }] },
-  ],
-  kids: [
-    { id: 401, name: 'Blue Light Shield Kids', discount: '20%', madeInTaiwan: true, originalPrice: 6999, discountPrice: 5599, reviews: 89, variants: [{ colorName: 'Blue', hex: '#4A90E2', image: 'https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400' }] },
-  ],
-};
-
-/* ─────────────────────────────────────────────
-   MAIN HOME COMPONENT
+   MAIN HOME COMPONENT - UPDATED with 7 categories from JSON
 ───────────────────────────────────────────── */
 const Home = () => {
   useGlobalStyles();
   useScrollReveal();
 
-  const contactLenses = data.products?.filter(p => p.category === 'contact-lenses')?.length > 0
-    ? data.products.filter(p => p.category === 'contact-lenses')
-    : SAMPLE.contactLenses;
-  const men = data.products?.filter(p => p.category === 'men')?.length > 0
-    ? data.products.filter(p => p.category === 'men')
-    : SAMPLE.men;
-  const women = data.products?.filter(p => p.category === 'women')?.length > 0
-    ? data.products.filter(p => p.category === 'women')
-    : SAMPLE.women;
-  const kids = data.products?.filter(p => p.category === 'kids')?.length > 0
-    ? data.products.filter(p => p.category === 'kids')
-    : SAMPLE.kids;
+  // Filter products from your JSON data by the 7 categories
+  const menSunglasses = data.products?.filter(p => p.category === 'men sunglass') || [];
+  const menEyeglasses = data.products?.filter(p => p.category === 'men eyeglass') || [];
+  const womenSunglasses = data.products?.filter(p => p.category === 'woman sunglass') || [];
+  const womenEyeglasses = data.products?.filter(p => p.category === 'women eyeglass') || [];
+  const kidsSunglasses = data.products?.filter(p => p.category === 'kid sunglass') || [];
+  const kidsEyeglasses = data.products?.filter(p => p.category === 'kids eyeglass') || [];
+  const contactLenses = data.products?.filter(p => p.category === 'contactless') || [];
+
+  // Helper for category navigation
+  const handleViewAll = (category) => {
+    window.location.href = `/products?category=${encodeURIComponent(category)}`;
+  };
 
   return (
     <>
@@ -1196,10 +1184,76 @@ const Home = () => {
       <TopCategories />
       <Features />
       
-      <ProductSection title="Contact Lenses" subtitle="Daily & monthly disposables" products={contactLenses} tag="👁️ Vision" />
-      <ProductSection title="Men's Collection" subtitle="Bold, refined frames" products={men} tag="👔 For Him" />
-      <ProductSection title="Women's Collection" subtitle="Elegant designs" products={women} tag="💃 For Her" />
-      <ProductSection title="Kids' Collection" subtitle="Durable & flexible" products={kids} tag="🧸 For Kids" />
+      {/* 7 Product Sections based on your categories */}
+      {contactLenses.length > 0 && (
+        <ProductSection 
+          title="Contact Lenses" 
+          subtitle="Daily & monthly disposables for clear vision" 
+          products={contactLenses} 
+          tag="👁️ Vision Care"
+          onViewAll={() => handleViewAll('contactless')}
+        />
+      )}
+      
+      {menSunglasses.length > 0 && (
+        <ProductSection 
+          title="Men's Sunglasses" 
+          subtitle="Bold, refined frames for the modern gentleman" 
+          products={menSunglasses} 
+          tag="👔 Summer Essentials"
+          onViewAll={() => handleViewAll('men sunglass')}
+        />
+      )}
+      
+      {menEyeglasses.length > 0 && (
+        <ProductSection 
+          title="Men's Eyeglasses" 
+          subtitle="Sophisticated designs for everyday elegance" 
+          products={menEyeglasses} 
+          tag="👓 Optical Collection"
+          onViewAll={() => handleViewAll('men eyeglass')}
+        />
+      )}
+      
+      {womenSunglasses.length > 0 && (
+        <ProductSection 
+          title="Women's Sunglasses" 
+          subtitle="Elegant designs that turn heads" 
+          products={womenSunglasses} 
+          tag="💃 Trending Now"
+          onViewAll={() => handleViewAll('woman sunglass')}
+        />
+      )}
+      
+      {womenEyeglasses.length > 0 && (
+        <ProductSection 
+          title="Women's Eyeglasses" 
+          subtitle="Chic frames that express your personality" 
+          products={womenEyeglasses} 
+          tag="✨ Vision & Style"
+          onViewAll={() => handleViewAll('women eyeglass')}
+        />
+      )}
+      
+      {kidsSunglasses.length > 0 && (
+        <ProductSection 
+          title="Kids' Sunglasses" 
+          subtitle="Fun and durable for little adventurers" 
+          products={kidsSunglasses} 
+          tag="🧸 Junior Collection"
+          onViewAll={() => handleViewAll('kid sunglass')}
+        />
+      )}
+      
+      {kidsEyeglasses.length > 0 && (
+        <ProductSection 
+          title="Kids' Eyeglasses" 
+          subtitle="Comfortable frames for growing minds" 
+          products={kidsEyeglasses} 
+          tag="📚 Smart Kids"
+          onViewAll={() => handleViewAll('kids eyeglass')}
+        />
+      )}
       
       <CTASection />
       <Testimonials />

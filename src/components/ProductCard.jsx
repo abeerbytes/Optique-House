@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product, onTryOn }) => {
   const navigate = useNavigate();
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+  const [selectedVariant, setSelectedVariant] = useState(product.variants?.[0] || null);
   const [hovered, setHovered] = useState(false);
 
   const handleTryOn = (e) => {
@@ -12,8 +12,29 @@ const ProductCard = ({ product, onTryOn }) => {
     if (onTryOn) {
       onTryOn(product);
     } else {
-      navigate(`/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}&image=${encodeURIComponent(selectedVariant.image || '')}`);
+      const firstImage = selectedVariant?.images?.[0] || '';
+      navigate(`/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}&image=${encodeURIComponent(firstImage)}`);
     }
+  };
+
+  // Get display price (discountPrice or originalPrice)
+  const displayPrice = product.discountPrice || product.originalPrice;
+  
+  // Check if discount exists
+  const hasDiscount = product.discount && parseFloat(product.discount) > 0;
+
+  // Get category display name
+  const getCategoryDisplay = (category) => {
+    const categoryMap = {
+      'men sunglass': 'Men Sunglass',
+      'men eyeglass': 'Men Eyeglass',
+      'woman sunglass': 'Women Sunglass',
+      'women eyeglass': 'Women Eyeglass',
+      'kid sunglass': 'Kids Sunglass',
+      'kids eyeglass': 'Kids Eyeglass',
+      'contactless': 'Contactless'
+    };
+    return categoryMap[category] || category;
   };
 
   return (
@@ -50,21 +71,34 @@ const ProductCard = ({ product, onTryOn }) => {
         }}>
           {/* Badges — top left */}
           <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 10, display: 'flex', gap: 6 }}>
-            <span style={{
-              background: '#0a0a0a', color: '#fff',
-              fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase',
-              padding: '3px 10px', borderRadius: 100,
-            }}>
-              New
-            </span>
-            <span style={{
-              background: '#f5f0e8', color: '#92733a',
-              fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase',
-              padding: '3px 10px', borderRadius: 100,
-              border: '1px solid rgba(146,115,58,0.2)',
-            }}>
-              Premium
-            </span>
+            {product.madeInTaiwan && (
+              <span style={{
+                background: '#0a0a0a', color: '#fff',
+                fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase',
+                padding: '3px 10px', borderRadius: 100,
+              }}>
+                Taiwan
+              </span>
+            )}
+            {hasDiscount && (
+              <span style={{
+                background: '#f5f0e8', color: '#92733a',
+                fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase',
+                padding: '3px 10px', borderRadius: 100,
+                border: '1px solid rgba(146,115,58,0.2)',
+              }}>
+                {product.discount}
+              </span>
+            )}
+            {product.reviews > 100 && (
+              <span style={{
+                background: '#e8f0f5', color: '#2c6e9e',
+                fontSize: 9, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase',
+                padding: '3px 10px', borderRadius: 100,
+              }}>
+                Top Rated
+              </span>
+            )}
           </div>
 
           {/* Try On — top right */}
@@ -96,9 +130,9 @@ const ProductCard = ({ product, onTryOn }) => {
             Try On
           </button>
 
-          {/* Product Image */}
+          {/* Product Image - using images array */}
           <img
-            src={selectedVariant.image}
+            src={selectedVariant?.images?.[0] || '/placeholder-image.jpg'}
             alt={product.name}
             style={{
               width: '100%', height: '100%',
@@ -121,29 +155,70 @@ const ProductCard = ({ product, onTryOn }) => {
         {/* ── Card Body ── */}
         <div style={{ padding: '15px 17px 19px', display: 'flex', flexDirection: 'column', flex: 1 }}>
 
-          {/* Variant Swatches */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 }}>
-            {product.variants.map((variant, index) => (
-              <button
-                key={index}
-                onClick={(e) => { e.preventDefault(); setSelectedVariant(variant); }}
-                aria-label={`Select ${variant.colorName}`}
-                style={{
-                  width: 18, height: 18, borderRadius: '50%',
-                  border: selectedVariant.colorName === variant.colorName
-                    ? '2px solid #0a0a0a' : '2px solid transparent',
-                  outline: selectedVariant.colorName === variant.colorName
-                    ? '1.5px solid rgba(0,0,0,0.18)' : 'none',
-                  outlineOffset: 2,
-                  background: variant.hex,
-                  cursor: 'pointer', padding: 0, flexShrink: 0,
-                  transform: selectedVariant.colorName === variant.colorName ? 'scale(1.18)' : 'scale(1)',
-                  transition: 'transform 0.2s ease, border-color 0.2s ease, outline 0.2s ease',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.14)',
-                }}
-              />
-            ))}
+          {/* Category & Type */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: 9, fontWeight: 600,
+              color: '#92733a',
+              background: '#f5f0e8',
+              padding: '2px 8px',
+              borderRadius: 100,
+              letterSpacing: '0.04em',
+            }}>
+              {getCategoryDisplay(product.category)}
+            </span>
+            {product.type && (
+              <span style={{
+                fontSize: 9, fontWeight: 500,
+                color: '#6b7280',
+                background: '#f3f4f6',
+                padding: '2px 8px',
+                borderRadius: 100,
+              }}>
+                {product.type}
+              </span>
+            )}
+            {product.pattern && (
+              <span style={{
+                fontSize: 9, fontWeight: 500,
+                color: '#6b7280',
+                background: '#f3f4f6',
+                padding: '2px 8px',
+                borderRadius: 100,
+              }}>
+                {product.pattern}
+              </span>
+            )}
           </div>
+
+          {/* Variant Swatches */}
+          {product.variants && product.variants.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 }}>
+              {product.variants.map((variant, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => { e.preventDefault(); setSelectedVariant(variant); }}
+                  aria-label={`Select ${variant.colorName}`}
+                  style={{
+                    width: 22, height: 22, borderRadius: '50%',
+                    border: selectedVariant?.colorName === variant.colorName
+                      ? '2px solid #0a0a0a' : '2px solid transparent',
+                    outline: selectedVariant?.colorName === variant.colorName
+                      ? '1.5px solid rgba(0,0,0,0.18)' : 'none',
+                    outlineOffset: 2,
+                    background: variant.hex || '#cccccc',
+                    cursor: 'pointer', padding: 0, flexShrink: 0,
+                    transform: selectedVariant?.colorName === variant.colorName ? 'scale(1.18)' : 'scale(1)',
+                    transition: 'transform 0.2s ease, border-color 0.2s ease, outline 0.2s ease',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.14)',
+                  }}
+                />
+              ))}
+              <span style={{ fontSize: 9, color: '#9ca3af', marginLeft: 4 }}>
+                {product.variants.length} colors
+              </span>
+            </div>
+          )}
 
           {/* Product Name */}
           <h3 style={{
@@ -153,19 +228,36 @@ const ProductCard = ({ product, onTryOn }) => {
             margin: '0 0 3px',
             overflow: 'hidden',
             display: '-webkit-box',
-            WebkitLineClamp: 1,
+            WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
           }}>
             {product.name}
           </h3>
 
-          {/* Shape · Gender */}
+          {/* Shape · Gender · Frame Color */}
           <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 400, margin: '0 0 11px', letterSpacing: '0.02em' }}>
-            {product.shape}
+            {product.shape && product.shape !== 'Other' ? product.shape : 'Contemporary'}
             {product.gender && (
               <span style={{ color: '#C9A227', fontWeight: 500, marginLeft: 5 }}>· {product.gender}</span>
             )}
+            {product.color && (
+              <span style={{ marginLeft: 5 }}>· {product.color}</span>
+            )}
           </p>
+
+          {/* Detail Description - preview */}
+          {product.detailDescription && (
+            <p style={{
+              fontSize: 10, color: '#6b7280', lineHeight: 1.35,
+              margin: '0 0 10px',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+            }}>
+              {product.detailDescription}
+            </p>
+          )}
 
           {/* Divider */}
           <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 11 }} />
@@ -178,28 +270,37 @@ const ProductCard = ({ product, onTryOn }) => {
                 fontSize: 20, fontWeight: 700,
                 color: '#0e0e0e', lineHeight: 1, letterSpacing: '-0.02em',
               }}>
-                Rs {product.discountPrice}
+                Rs {displayPrice}
               </span>
-              <span style={{ fontSize: 11, color: '#C0C0C0', textDecoration: 'line-through', fontWeight: 400 }}>
-                Rs {product.originalPrice}
-              </span>
+              {product.discountPrice && product.originalPrice && (
+                <span style={{ fontSize: 11, color: '#C0C0C0', textDecoration: 'line-through', fontWeight: 400 }}>
+                  Rs {product.originalPrice}
+                </span>
+              )}
             </div>
 
-            {product.discount && (
-              <span style={{
-                fontSize: 10, fontWeight: 700,
-                color: '#b91c1c',
-                background: 'rgba(185,28,28,0.07)',
-                border: '1px solid rgba(185,28,28,0.12)',
-                borderRadius: 100,
-                padding: '3px 9px',
-                letterSpacing: '0.04em',
-                whiteSpace: 'nowrap',
-              }}>
-                Save {product.discount}
-              </span>
+            {/* Reviews Count */}
+            {product.reviews > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#fbbf24" stroke="#fbbf24" strokeWidth="1">
+                  <polygon points="12 17.27 18.18 21 16.54 13.97 22 9.24 14.81 8.63 12 2 9.19 8.63 2 9.24 7.46 13.97 5.82 21 12 17.27" />
+                </svg>
+                <span style={{ fontSize: 10, fontWeight: 500, color: '#6b7280' }}>
+                  {product.reviews} reviews
+                </span>
+              </div>
             )}
           </div>
+
+          {/* Code */}
+          {product.code && (
+            <p style={{
+              fontSize: 9, color: '#cbd5e1', marginTop: 10,
+              letterSpacing: '0.03em', textAlign: 'right',
+            }}>
+              SKU: {product.code}
+            </p>
+          )}
         </div>
       </Link>
     </div>

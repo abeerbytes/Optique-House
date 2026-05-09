@@ -21,19 +21,20 @@ const Products = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const shapeOptions = ['Circle', 'Square', 'Rectangle', 'Oval', 'Cat-eye', 'Aviator', 'Wayfarer', 'Round', 'Geometric'];
-  const genderOptions = ['Men', 'Women', 'Unisex'];
+  // Updated shape options based on your data
+  const shapeOptions = ['Square', 'Oval', 'Round', 'Geometric', 'Wayfarer', 'Vaffer', 'Eye', 'Other'];
+  const genderOptions = ['Men', 'Women', 'Unisex', 'Kids'];
 
-  // Define all categories with their filters
+  // Define all categories with their filters - MATCHING YOUR JSON CATEGORIES
   const categories = [
-    { id: 'all', name: 'All Products', gender: null, type: null, category: null },
-    { id: 'men-sunglass', name: "Men's Sunglass", gender: 'Men', type: 'sunglasses', category: 'men' },
-    { id: 'men-eyeglass', name: "Men's Eyeglass", gender: 'Men', type: 'eyeglasses', category: 'men' },
-    { id: 'women-eyeglass', name: "Women's Eyeglass", gender: 'Women', type: 'eyeglasses', category: 'women' },
-    { id: 'women-sunglass', name: "Women's Sunglass", gender: 'Women', type: 'sunglasses', category: 'women' },
-    { id: 'kids-sunglass', name: "Kids' Sunglass", gender: 'Kids', type: 'sunglasses', category: 'kids' },
-    { id: 'kids-eyeglass', name: "Kids' Eyeglass", gender: 'Kids', type: 'eyeglasses', category: 'kids' },
-    { id: 'contact-lens', name: 'Contact Lens', gender: null, type: 'contactlens', category: 'contactlens' }
+    { id: 'all', name: 'All Products', categoryMatch: null },
+    { id: 'men-sunglass', name: "Men's Sunglass", categoryMatch: 'men sunglass' },
+    { id: 'men-eyeglass', name: "Men's Eyeglass", categoryMatch: 'men eyeglass' },
+    { id: 'women-sunglass', name: "Women's Sunglass", categoryMatch: 'woman sunglass' },
+    { id: 'women-eyeglass', name: "Women's Eyeglass", categoryMatch: 'women eyeglass' },
+    { id: 'kids-sunglass', name: "Kids' Sunglass", categoryMatch: 'kid sunglass' },
+    { id: 'kids-eyeglass', name: "Kids' Eyeglass", categoryMatch: 'kids eyeglass' },
+    { id: 'contact-lens', name: 'Contact Lens', categoryMatch: 'contactless' }
   ];
 
   // Load products
@@ -47,26 +48,14 @@ const Products = () => {
   // Handle URL parameters on page load
   useEffect(() => {
     const categoryParam = searchParams.get('category');
-    const typeParam = searchParams.get('type');
-    const genderParam = searchParams.get('gender');
     
-    if (categoryParam || typeParam || genderParam) {
-      // Find matching category
+    if (categoryParam) {
       const matchedCategory = categories.find(cat => 
-        (genderParam && cat.gender === genderParam) ||
-        (typeParam && cat.type === typeParam) ||
-        (categoryParam && cat.category === categoryParam)
+        cat.categoryMatch === categoryParam || cat.id === categoryParam
       );
       
       if (matchedCategory && matchedCategory.id !== 'all') {
         setActiveCategory(matchedCategory.id);
-        
-        // Set gender filter
-        if (matchedCategory.gender) {
-          setSelectedGenders([matchedCategory.gender]);
-        } else if (matchedCategory.id === 'contact-lens') {
-          setSelectedGenders([]);
-        }
       }
     }
   }, [searchParams]);
@@ -80,74 +69,77 @@ const Products = () => {
     }
   }, [location.state]);
 
+  // Helper function to get display price (handle string numbers)
+  const getDisplayPrice = (product) => {
+    const price = product.discountPrice || product.originalPrice;
+    if (!price) return 0;
+    // Remove commas if present and convert to number
+    return parseFloat(String(price).replace(/,/g, ''));
+  };
+
   // Filtering logic
   useEffect(() => {
     let result = [...products];
 
+    // Search filter
     if (searchTerm.trim() !== '') {
       result = result.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.code?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Handle active category filtering
+    // Handle active category filtering - using your actual category values
     if (activeCategory !== 'all') {
       const selectedCat = categories.find(cat => cat.id === activeCategory);
       
-      if (selectedCat) {
-        if (selectedCat.category) {
-          result = result.filter(product =>
-            product.category?.toLowerCase() === selectedCat.category.toLowerCase()
-          );
-        }
-        
-        if (selectedCat.type) {
-          result = result.filter(product =>
-            product.type?.toLowerCase() === selectedCat.type.toLowerCase()
-          );
-        }
-        
-        if (selectedCat.gender) {
-          result = result.filter(product =>
-            product.gender === selectedCat.gender
-          );
-        }
+      if (selectedCat && selectedCat.categoryMatch) {
+        result = result.filter(product =>
+          product.category?.toLowerCase() === selectedCat.categoryMatch.toLowerCase()
+        );
       }
     }
 
+    // Gender filter (only when 'all' is selected)
     if (selectedGenders.length > 0 && activeCategory === 'all') {
-      result = result.filter(product =>
-        selectedGenders.includes(product.gender)
-      );
+      result = result.filter(product => {
+        const productGender = product.gender?.toLowerCase();
+        return selectedGenders.some(gender => 
+          productGender?.includes(gender.toLowerCase())
+        );
+      });
     }
 
+    // Price range filter
     if (priceRange.min) {
       result = result.filter(product => {
-        const price = parseFloat(product.discountPrice?.replace(/,/g, '')) || 0;
+        const price = getDisplayPrice(product);
         return price >= parseFloat(priceRange.min);
       });
     }
     if (priceRange.max) {
       result = result.filter(product => {
-        const price = parseFloat(product.discountPrice?.replace(/,/g, '')) || 0;
+        const price = getDisplayPrice(product);
         return price <= parseFloat(priceRange.max);
       });
     }
 
+    // Shape filter
     if (selectedShapes.length > 0 && activeCategory === 'all') {
       result = result.filter(product =>
         product.shape && selectedShapes.includes(product.shape)
       );
     }
 
+    // Sorting
     if (sortBy === 'priceLowHigh') {
-      result.sort((a, b) => (parseFloat(a.discountPrice?.replace(/,/g, '')) || 0) - (parseFloat(b.discountPrice?.replace(/,/g, '')) || 0));
+      result.sort((a, b) => getDisplayPrice(a) - getDisplayPrice(b));
     } else if (sortBy === 'priceHighLow') {
-      result.sort((a, b) => (parseFloat(b.discountPrice?.replace(/,/g, '')) || 0) - (parseFloat(a.discountPrice?.replace(/,/g, '')) || 0));
+      result.sort((a, b) => getDisplayPrice(b) - getDisplayPrice(a));
     } else if (sortBy === 'nameAZ') {
-      result.sort((a, b) => a.name.localeCompare(b.name));
+      result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     } else if (sortBy === 'nameZA') {
-      result.sort((a, b) => b.name.localeCompare(a.name));
+      result.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
     }
 
     setFilteredProducts(result);
@@ -183,12 +175,7 @@ const Products = () => {
     setActiveCategory(categoryId);
     // Clear gender filters when selecting a specific category
     if (categoryId !== 'all') {
-      const selectedCat = categories.find(cat => cat.id === categoryId);
-      if (selectedCat && selectedCat.gender) {
-        setSelectedGenders([selectedCat.gender]);
-      } else {
-        setSelectedGenders([]);
-      }
+      setSelectedGenders([]);
     }
   };
 
@@ -309,12 +296,12 @@ const Products = () => {
         <main className="products-main">
           <div className="search-row">
             <input 
-               type="text" 
-               ref={searchInputRef}
-               className="minimal-search" 
-               placeholder="Search style..." 
-               value={searchTerm} 
-               onChange={(e) => setSearchTerm(e.target.value)} 
+              type="text" 
+              ref={searchInputRef}
+              className="minimal-search" 
+              placeholder="Search by name or code..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
             />
             <p className="count-text">{filteredProducts.length} items found</p>
           </div>
@@ -328,7 +315,7 @@ const Products = () => {
             <div className="products-grid">
               {filteredProducts.map(product => (
                 <div key={product.id} className="product-card-wrapper">
-                  <ProductCard product={product} addToCart={addToCart} />
+                  <ProductCard product={product} onTryOn={() => {}} />
                 </div>
               ))}
             </div>
@@ -353,7 +340,7 @@ const Products = () => {
           display: flex; 
           justify-content: center; 
           gap: 12px; 
- margin-bottom: 30px; 
+          margin-bottom: 30px; 
           flex-wrap: wrap;
           position: sticky;
           top: 70px;
@@ -483,6 +470,14 @@ const Products = () => {
           display: grid; 
           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
           gap: 30px; 
+        }
+
+        .product-card-wrapper {
+          transition: transform 0.3s ease;
+        }
+
+        .product-card-wrapper:hover {
+          transform: translateY(-5px);
         }
 
         .notification {

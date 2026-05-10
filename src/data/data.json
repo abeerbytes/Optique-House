@@ -770,7 +770,7 @@
         {
           "colorName": "Purple",
           "hex": "#ff69b4",
-          "images": ["./p83", "./p84.jpeg"]
+          "images": ["./p83.jpeg", "./p84.jpeg"]
         }
       ]
     },

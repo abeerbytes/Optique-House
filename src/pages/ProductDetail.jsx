@@ -657,6 +657,16 @@ const ProductDetail = () => {
 
       if (!foundProduct) throw new Error('Product not found');
 
+      // Extract images from variants
+      const allImages = [];
+      if (foundProduct.variants && foundProduct.variants.length > 0) {
+        foundProduct.variants.forEach(variant => {
+          if (variant.images && Array.isArray(variant.images)) {
+            allImages.push(...variant.images);
+          }
+        });
+      }
+
       const transformedProduct = {
         id: foundProduct.id,
         name: foundProduct.name,
@@ -665,10 +675,8 @@ const ProductDetail = () => {
         originalPrice: parseFloat(foundProduct.originalPrice.toString().replace(/,/g, '')),
         discountPrice: parseFloat(foundProduct.discountPrice.toString().replace(/,/g, '')),
         reviews: foundProduct.reviews || 0,
-        rating: foundProduct.rating || 4.5,
-        description:
-          foundProduct.description ||
-          `Experience style and comfort with our ${foundProduct.name}. Crafted with premium materials.`,
+        rating: 4.5,
+        description: foundProduct.detailDescription || foundProduct.description || `Experience style and comfort with our ${foundProduct.name}. Crafted with premium materials.`,
         features: foundProduct.features || [
           'Premium quality material',
           'UV protection coating',
@@ -677,25 +685,32 @@ const ProductDetail = () => {
           'Comfort fit',
         ],
         specifications: foundProduct.specifications || {
-          Material: 'Premium Plastic/Metal',
+          Material: foundProduct.type || 'Premium Plastic/Metal',
           'Frame Type': foundProduct.shape || 'Standard',
           Gender: foundProduct.gender || 'Unisex',
+          Color: foundProduct.color || 'Standard',
           Warranty: '1 Year Manufacturing Warranty',
         },
         variants: foundProduct.variants || [],
-        images: [...new Map((foundProduct.variants || []).map((v) => [v.image, v.image])).values()],
+        images: allImages.length > 0 ? allImages : [],
         category: foundProduct.category || 'eyeglasses',
         inStock: foundProduct.inStock !== undefined ? foundProduct.inStock : true,
         freeShipping: foundProduct.freeShipping !== undefined ? foundProduct.freeShipping : true,
         warranty: foundProduct.warranty || '30-day satisfaction guarantee',
         shape: foundProduct.shape || 'Standard',
         gender: foundProduct.gender || 'Unisex',
+        code: foundProduct.code,
+        color: foundProduct.color,
+        pattern: foundProduct.pattern,
       };
 
       setProduct(transformedProduct);
       if (transformedProduct.variants && transformedProduct.variants.length > 0) {
         setSelectedVariant(transformedProduct.variants[0]);
-        setCurrentImage(transformedProduct.variants[0].image);
+        // Set first image from first variant
+        if (transformedProduct.variants[0].images && transformedProduct.variants[0].images[0]) {
+          setCurrentImage(transformedProduct.variants[0].images[0]);
+        }
       } else if (transformedProduct.images && transformedProduct.images.length > 0) {
         setCurrentImage(transformedProduct.images[0]);
       }
@@ -708,8 +723,8 @@ const ProductDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    if (selectedVariant && selectedVariant.image) {
-      setCurrentImage(selectedVariant.image);
+    if (selectedVariant && selectedVariant.images && selectedVariant.images[0]) {
+      setCurrentImage(selectedVariant.images[0]);
       setActiveImageIndex(-1);
     } else if (product && product.images && product.images[0]) {
       setCurrentImage(product.images[0]);
@@ -749,7 +764,7 @@ const ProductDetail = () => {
       totalPrice: getTotalItemPrice(),
       quantity: quantity,
       selectedVariant: selectedVariant,
-      image: selectedVariant?.image || product.images[0],
+      image: currentImage,
       prescription: prescriptionData || null,
     };
 
@@ -847,7 +862,7 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-square rounded-3xl overflow-hidden bg-gray-100 shadow-lg">
               <img
-                src={currentImage}
+                src={`.${currentImage}`}
                 alt={product.name}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
@@ -862,7 +877,7 @@ const ProductDetail = () => {
                       activeImageIndex === idx ? 'border-black shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={`.${img}`} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

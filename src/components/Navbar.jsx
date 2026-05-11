@@ -319,7 +319,7 @@ const Navbar = () => {
 
       {/* Promotional Bar */}
       <div className="promo-bar">
-        🎁 Limited Time: Buy One Frame, Get the Second<span>50% Off</span>+ Free Shipping
+        🎁 Limited Time: Buy All Items And Get upto<span>70% Off</span>+ Free Shipping On 5000+Pkr order
       </div>
 
       {/* Main Navigation */}

@@ -181,7 +181,9 @@ export default function About() {
   const [hoveredProduct, setHoveredProduct] = useState(null);
 
   const grad = `linear-gradient(135deg, ${PURPLE}, ${TEAL})`;
-
+ useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div style={{ fontFamily: "Georgia, serif", background: "#FAFAF8", color: "#2C2C2C", minHeight: "100vh", overflowX: "hidden", position: "relative" }}>
       <AnimatedGradientBg />

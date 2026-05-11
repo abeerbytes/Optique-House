@@ -6,7 +6,9 @@ const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+ useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Load cart from localStorage
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];

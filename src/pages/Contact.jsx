@@ -157,7 +157,9 @@ export default function Contact() {
     if (!form.name || !form.email || !form.message) return;
     setSubmitted(true);
   };
-
+ useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div style={{ fontFamily: "Georgia,serif", background: "#FAFAF8", color: "#2C2C2C", minHeight: "100vh", overflowX: "hidden" }}>
 

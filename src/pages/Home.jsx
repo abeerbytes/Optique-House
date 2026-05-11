@@ -1163,6 +1163,9 @@ const FloatingWA = () => (
 const Home = () => {
   useGlobalStyles();
   useScrollReveal();
+   useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   // Filter products from your JSON data by the 7 categories
   const menSunglasses = data.products?.filter(p => p.category === 'men sunglass') || [];

@@ -36,7 +36,9 @@ const Products = () => {
     { id: 'kids-eyeglass', name: "Kids' Eyeglass", categoryMatch: 'kids eyeglass' },
     { id: 'contact-lens', name: 'Contact Lens', categoryMatch: 'contactless' }
   ];
-
+ useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Load products
   useEffect(() => {
     if (productsData && productsData.products) {

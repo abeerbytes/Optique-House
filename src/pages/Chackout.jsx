@@ -15,7 +15,9 @@ const Checkout = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const navigate = useNavigate();
-
+ useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // ✅ YOUR GOOGLE SHEETS WEBHOOK URL
   const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbypumtAXRdstYULB-36zGuwuOnu9c-TUP2JfKQvnIySCCXDo8Srai7Lc7boBLG4XRyYXA/exec";
 

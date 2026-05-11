@@ -484,9 +484,9 @@ const Footer = () => {
                 Redefining vision through luxury eyewear<br />and precision eye care since 2010.
               </p>
               <div className="footer-socials">
-                <a href="#" className="social-btn" aria-label="Facebook"><IconFacebook /></a>
-                <a href="#" className="social-btn" aria-label="Instagram"><IconInstagram /></a>
-                <a href="#" className="social-btn" aria-label="Twitter/X"><IconTwitter /></a>
+                <a href="https://www.facebook.com/optiquehouse.official/" target="blank" className="social-btn" aria-label="Facebook"><IconFacebook /></a>
+                <a href="https://www.instagram.com/optiquehouse.official/" target="blank" className="social-btn" aria-label="Instagram"><IconInstagram /></a>
+               
               </div>
             </div>
 

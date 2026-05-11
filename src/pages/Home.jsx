@@ -813,7 +813,7 @@ const ProductSection = ({ title, subtitle, products, tag, onViewAll }) => {
   if (!products?.length) return null;
 
   const videoConfig = {
-    'Contact Lenses': { src: 'Web1.MOV', title: '' },
+    'Contact Lenses': { src: 'Web1.mp4', title: '' },
   };
   const shouldShowVideo = videoConfig[title];
 

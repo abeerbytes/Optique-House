@@ -8,55 +8,90 @@ const AVIATOR_ADJ = { scaleW: 1, scaleH: 1.18, offsetX: 0, offsetY: 10, rotate: 
 const ROUND_ADJ = { scaleW: 1, scaleH: 0.85, offsetX: 0, offsetY: 4, rotate: 0 };
 
 const GLASS_OPTIONS = [
-  { id: "/glass1.png", name: "Classic", price: "PKR 4,500", emoji: "👓", sizes: [{ label: "XL", scale: 1.10, mobileScale: 0.65 }] },
-  { id: "/glass2.png", name: "Aviator", price: "PKR 5,200", emoji: "🕶️", sizes: [{ label: "L", scale: 1.15, mobileScale: 1.00 }] },
-  { id: "/glass3.png", name: "Sport", price: "PKR 3,800", emoji: "🥽", sizes: [{ label: "L", scale: 1.15, mobileScale: 1.00 }] },
-  { id: "/glass4.png", name: "Round", price: "PKR 4,900", emoji: "⭕", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass5.png", name: "Wayfarer", price: "PKR 4,900", emoji: "🕶️", sizes: [{ label: "L", scale: 1.25, mobileScale: 0.98 }] },
-  { id: "/glass6.png", name: "Vintage", price: "PKR 4,900", emoji: "🪩", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass7.png", name: "Clubmaster", price: "PKR 4,900", emoji: "🔲", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
-  { id: "/glass8.png", name: "Cat Eye", price: "PKR 4,900", emoji: "😼", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
-  { id: "/glass9.png", name: "Shield", price: "PKR 4,900", emoji: "🛡️", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
-  { id: "/glass10.png", name: "Oval", price: "PKR 4,900", emoji: "🥚", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass11.png", name: "Square", price: "PKR 4,900", emoji: "⬛", sizes: [{ label: "S", scale: 0.75, mobileScale: 0.50 }] },
-  { id: "/glass12.png", name: "Hexagonal", price: "PKR 4,900", emoji: "⬡", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass13.png", name: "Geometric", price: "PKR 4,900", emoji: "🔷", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
-  { id: "/glass14.png", name: "Steampunk", price: "PKR 4,900", emoji: "⚙️", sizes: [{ label: "S", scale: 0.95, mobileScale: 0.50 }] },
-  { id: "/glass15.png", name: "Sports Pro", price: "PKR 4,900", emoji: "🏃", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass16.png", name: "Retro", price: "PKR 4,900", emoji: "🎞️", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass17.png", name: "Modern", price: "PKR 4,900", emoji: "✨", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass18.png", name: "Luxury", price: "PKR 4,900", emoji: "💎", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass19.png", name: "Designer", price: "PKR 4,900", emoji: "🎨", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass20.png", name: "Classic II", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass21.png", name: "Classic III", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
-  { id: "/glass22.png", name: "Classic IV", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.05, mobileScale: 0.95 }] },
-  { id: "/glass23.png", name: "Classic V", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass24.png", name: "Classic VI", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "S", scale: 0.85, mobileScale: 0.50 }] },
-  { id: "/glass25.png", name: "Classic VII", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass26.png", name: "Classic VIII", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass27.png", name: "Classic IX", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass28.png", name: "Classic X", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
-  { id: "/glass29.png", name: "Classic XI", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.25, mobileScale: 0.95 }] },
-  { id: "/glass30.png", name: "Classic XII", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass31.png", name: "Classic 31", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass32.png", name: "Classic 32", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass33.png", name: "Classic 33", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass34.png", name: "Classic 34", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass35.png", name: "Classic 35", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "M", scale: 1.10, mobileScale: 0.75 }] },
-  { id: "/glass36.png", name: "Classic 36", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass37.png", name: "Classic 37", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass38.png", name: "Classic 38", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
-  { id: "/glass39.png", name: "Classic 39", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass40.png", name: "Classic 40", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
-  { id: "/glass41.png", name: "Classic 41", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass42.png", name: "Classic 42", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "S", scale: 0.95, mobileScale: 0.50 }] },
-  { id: "/glass43.png", name: "Classic 43", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass44.png", name: "Classic 44", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
-  { id: "/glass45.png", name: "Classic 45", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
-  { id: "/glass46.png", name: "Classic 46", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "XL", scale: 1.40, mobileScale: 1.10 }] },
-  { id: "/glass47.png", name: "Classic 47", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "XL", scale: 1.20, mobileScale: 1.10 }] },
-  { id: "/glass48.png", name: "Classic 48", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
-  { id: "/glass49.png", name: "Classic 49", price: "PKR 4,900", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass1.png", name: "Square Plastic Sunglass Luxury Style", price: "PKR 2,999", emoji: "👓", sizes: [{ label: "XL", scale: 1.10, mobileScale: 0.65 }] },
+
+  { id: "/glass2.png", name: "Oval Plastic Sunglass", price: "PKR 800", emoji: "🕶️", sizes: [{ label: "L", scale: 1.15, mobileScale: 1.00 }] },
+
+  { id: "/glass3.png", name: "Square Plastic Sunglass", price: "PKR 2,400", emoji: "🥽", sizes: [{ label: "L", scale: 1.15, mobileScale: 1.00 }] },
+
+  { id: "/glass4.png", name: "Square Shape Plastic Sunglass", price: "PKR 800", emoji: "⭕", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass5.png", name: "Square Plastic Sunglass", price: "PKR 2,500", emoji: "🕶️", sizes: [{ label: "L", scale: 1.25, mobileScale: 0.98 }] },
+
+  { id: "/glass6.png", name: "Square Plastic Shape Sunglass", price: "PKR 2,400", emoji: "🪩", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass7.png", name: "Square Plastic Sunglass", price: "PKR 1,899", emoji: "🔲", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
+
+  { id: "/glass8.png", name: "Plastic Eye Sunglass", price: "PKR 1,600", emoji: "😼", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
+
+  { id: "/glass9.png", name: "Square Plastic Sunglass", price: "PKR 2,899", emoji: "🛡️", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
+
+  { id: "/glass10.png", name: "Eye Plastic Sunglass", price: "PKR 4,200", emoji: "🥚", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass11.png", name: "Square Plastic Sunglass", price: "PKR 2,400", emoji: "⬛", sizes: [{ label: "S", scale: 0.75, mobileScale: 0.50 }] },
+
+  { id: "/glass12.png", name: "Eye Plastic Sunglass", price: "PKR 3,200", emoji: "⬡", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass13.png", name: "One Piece Sunglass", price: "PKR 800", emoji: "🔷", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
+
+  { id: "/glass14.png", name: "Plastic Square Men Sunglass", price: "PKR 4,600", emoji: "⚙️", sizes: [{ label: "S", scale: 0.95, mobileScale: 0.50 }] },
+
+  { id: "/glass15.png", name: "Square Plastic Sunglass", price: "PKR 3,200", emoji: "🏃", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass16.png", name: "Box Plastic Sunglass", price: "PKR 4,800", emoji: "🎞️", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass17.png", name: "Box Plastic Sunglass", price: "PKR 4,600", emoji: "✨", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass18.png", name: "9702 Metal Oval", price: "PKR 1,499", emoji: "💎", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass19.png", name: "JV5816 - Plastic Curve Square Shape", price: "PKR 1,399", emoji: "🎨", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass20.png", name: "D8822 - Plastic Square Shape", price: "PKR 1,199", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass21.png", name: "PS8035 - Plastic Square Shape", price: "PKR 1,399", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
+
+  { id: "/glass22.png", name: "D8815 - Plastic Vaffer Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "L", scale: 1.05, mobileScale: 0.95 }] },
+
+  { id: "/glass23.png", name: "9362 - Plastic Square Shape", price: "PKR 1,199", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass24.png", name: "D8953 - Plastic Square Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "S", scale: 0.85, mobileScale: 0.50 }] },
+
+  { id: "/glass25.png", name: "TR1020 Plastic Eye Shape", price: "PKR 1,199", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass26.png", name: "BV6522 Plastic Eye Shape", price: "PKR 1,799", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass27.png", name: "D9108 Plastic Square Shape", price: "PKR 1,199", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass28.png", name: "9368 - Plastic Square Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
+
+  { id: "/glass29.png", name: "K88212 - Metal Eye Shape", price: "PKR 1,899", emoji: "Glasses", sizes: [{ label: "L", scale: 1.25, mobileScale: 0.95 }] },
+
+  { id: "/glass30.png", name: "B7195 - Plastic Eye Shape", price: "PKR 1,999", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass31.png", name: "D1256 - Plastic Oval Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass32.png", name: "P3002 - Plastic Square Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass33.png", name: "2011 - Plastic Oval Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass34.png", name: "AR2005 - Plastic Oval Shape", price: "PKR 2,299", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass35.png", name: "P210 - Plastic Square Shape", price: "PKR 1,499", emoji: "Glasses", sizes: [{ label: "M", scale: 1.10, mobileScale: 0.75 }] },
+
+  { id: "/glass36.png", name: "D8954 - Plastic Round Shape", price: "PKR 1,799", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass37.png", name: "K58083 - Plastic & Metal Round shape", price: "PKR 2,899", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass38.png", name: "LFL228 - Plastic & Metal Round Shape", price: "PKR 1,999", emoji: "Glasses", sizes: [{ label: "XL", scale: 1.30, mobileScale: 1.10 }] },
+
+  { id: "/glass39.png", name: "OF8651 - Plastic & metal Round Shape", price: "PKR 1,999", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass40.png", name: "OF8506 - Plastic & Metal Round Shape", price: "PKR 2,899", emoji: "Glasses", sizes: [{ label: "M", scale: 1.00, mobileScale: 0.75 }] },
+
+  { id: "/glass41.png", name: "1122 - Plastic & Metal Round Shape", price: "PKR 2,299", emoji: "Glasses", sizes: [{ label: "L", scale: 1.15, mobileScale: 0.95 }] },
+
+  { id: "/glass42.png", name: "R1013 - RimLess Eye Shape", price: "PKR 1,999", emoji: "Glasses", sizes: [{ label: "S", scale: 0.95, mobileScale: 0.50 }] },
 ];
 
 // ─── Device helpers ────────────────────────────────────────────────────────────

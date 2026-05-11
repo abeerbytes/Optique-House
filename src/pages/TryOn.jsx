@@ -9,7 +9,7 @@ const ROUND_ADJ = { scaleW: 1, scaleH: 0.85, offsetX: 0, offsetY: 4, rotate: 0 }
 
 const GLASS_OPTIONS = [
 
-  { id: "/glass1.png", name: "Square Plastic Sunglass Luxury Style", price: "PKR 2,999", emoji: "👓", sizes: [{ label: "XL", scale: 1.10, mobileScale: 0.65 }] },
+  { id: "/glass1.png", name: "Square Plastic Sunglass Luxury Style", price: "PKR 2,999", emoji: "👓", sizes: [{ label: "XL", scale: 1.10, mobileScale: 1.00 }] },
 
   { id: "/glass2.png", name: "Oval Plastic Sunglass", price: "PKR 800", emoji: "🕶️", sizes: [{ label: "L", scale: 1.15, mobileScale: 1.00 }] },
 

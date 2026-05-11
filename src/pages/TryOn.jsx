@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 // ─── Per-frame defaults ────────────────────────────────────────────────────────
 const DEFAULT_ADJ = { scaleW: 1, scaleH: 1, offsetX: 0, offsetY: 0, rotate: 0 };
@@ -799,6 +801,8 @@ const TryOn = () => {
     };
 
     return (
+      <> 
+      <Navbar/> 
       <div
         style={{ position: "fixed", inset: 0, background: "#000", fontFamily: "'Space Grotesk',sans-serif", color: "#fff", overflow: "hidden", touchAction: "pan-y" }}
         onTouchStart={onTouchStart}
@@ -939,6 +943,7 @@ const TryOn = () => {
           </div>
         )}
       </div>
+            </>
     );
   }
 
@@ -946,6 +951,8 @@ const TryOn = () => {
   // DESKTOP LAYOUT
   // ══════════════════════════════════════════════════════════════
   return (
+    <>
+    <Navbar/>
     <div style={{ fontFamily: "'Space Grotesk', sans-serif", background: C.gradBg, color: C.text, height: "100vh", display: "flex", overflow: "hidden" }}>
       <style>{css}</style>
 
@@ -1082,7 +1089,7 @@ const TryOn = () => {
                   transition: "all 0.22s cubic-bezier(0.22,1,0.36,1)",
                   backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                 }}
-              >
+                >
                 <div style={{
                   width: "100%", height: 48,
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -1142,6 +1149,8 @@ const TryOn = () => {
         </Section>
       </div>
     </div>
+    <Footer/>
+              </>
   );
 };
 

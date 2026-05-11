@@ -416,7 +416,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
                     {lens.name}
                   </span>
                   <span className={`font-bold text-sm ${lensType === lens.id ? 'text-black' : 'text-gray-700'}`}>
-                    +₹{lens.price}
+                    +Pkr {lens.price}
                   </span>
                 </div>
                 <p className="text-[10px] text-gray-500">{lens.description}</p>
@@ -608,7 +608,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
         <div className="bg-gray-100 rounded-lg p-3 mb-5">
           <div className="flex justify-between items-center">
             <span className="text-sm font-semibold text-gray-700">Lens Extra Charge:</span>
-            <span className="font-bold text-xl text-black">+₹{selectedLens.price}</span>
+            <span className="font-bold text-xl text-black">+Pkr {selectedLens.price}</span>
           </div>
         </div>
 
@@ -928,10 +928,10 @@ const ProductDetail = () => {
             {/* Price Breakdown */}
             <div>
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-gray-900">₹{finalFramePrice.toLocaleString()}</span>
+                <span className="text-3xl font-bold text-gray-900">Pkr {finalFramePrice.toLocaleString()}</span>
                 {product.originalPrice !== finalFramePrice && (
                   <>
-                    <span className="text-lg text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                    <span className="text-lg text-gray-400 line-through">Pkr {product.originalPrice.toLocaleString()}</span>
                     <span className="text-green-600 font-semibold">{product.discount} off</span>
                   </>
                 )}
@@ -939,13 +939,13 @@ const ProductDetail = () => {
               {prescriptionData && (
                 <div className="mt-2 text-sm">
                   <span className="text-gray-600">+ Lens extra: </span>
-                  <span className="font-semibold text-blue-600">₹{lensCharge.toLocaleString()}</span>
+                  <span className="font-semibold text-blue-600">Pkr {lensCharge.toLocaleString()}</span>
                   <span className="text-gray-500 ml-2">({prescriptionData.lensName})</span>
                 </div>
               )}
               {prescriptionData && (
                 <div className="mt-1 text-md font-bold">
-                  Total: <span className="text-black">₹{totalItemPrice.toLocaleString()}</span>
+                  Total: <span className="text-black">Pkr {totalItemPrice.toLocaleString()}</span>
                 </div>
               )}
             </div>
@@ -981,7 +981,7 @@ const ProductDetail = () => {
                   </button>
                   {prescriptionData && (
                     <div className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded-lg">
-                      <p>✓ {prescriptionData.lensName} added (+₹{prescriptionData.lensPrice})</p>
+                      <p>✓ {prescriptionData.lensName} added (+Pkr {prescriptionData.lensPrice})</p>
                       <p className="text-gray-600 mt-1">
                         {prescriptionData.rightEye.sphere && prescriptionData.rightEye.sphere !== '' 
                           ? `Right: ${prescriptionData.rightEye.sphere > 0 ? '+' : ''}${prescriptionData.rightEye.sphere}D` 
@@ -1102,7 +1102,7 @@ const ProductDetail = () => {
                   <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400"></div>
                 </div>
                 <h4 className="font-semibold">Style Collection #{item}</h4>
-                <p className="text-sm text-gray-500">From ₹2,999</p>
+                <p className="text-sm text-gray-500">From Pkr 2,999</p>
               </div>
             ))}
           </div>

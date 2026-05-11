@@ -4,24 +4,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 import productsData from '../data/data.json';
 
 // ==================== Helper Components ====================
-
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
-
+  
   return (
     <div className="flex items-center gap-1">
       {[...Array(5)].map((_, i) => (
         <svg
-          key={i}
-          className={`w-5 h-5 ${
-            i < fullStars
-              ? 'text-yellow-400 fill-current'
-              : i === fullStars && hasHalfStar
-              ? 'text-yellow-400 fill-current opacity-50'
-              : 'text-gray-300 fill-current'
-          }`}
-          viewBox="0 0 20 20"
+        key={i}
+        className={`w-5 h-5 ${
+          i < fullStars
+          ? 'text-yellow-400 fill-current'
+          : i === fullStars && hasHalfStar
+          ? 'text-yellow-400 fill-current opacity-50'
+          : 'text-gray-300 fill-current'
+        }`}
+        viewBox="0 0 20 20"
         >
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
@@ -34,14 +33,14 @@ const StarRating = ({ rating }) => {
 const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
   const decrease = () => setQuantity((prev) => Math.max(1, prev - 1));
   const increase = () => setQuantity((prev) => Math.min(maxStock, prev + 1));
-
+  
   return (
     <div className="flex items-center border border-gray-200 rounded-full overflow-hidden">
       <button
         onClick={decrease}
         className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600"
         aria-label="Decrease quantity"
-      >
+        >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
         </svg>
@@ -51,7 +50,7 @@ const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
         onClick={increase}
         className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600"
         aria-label="Increase quantity"
-      >
+        >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
         </svg>
@@ -63,7 +62,7 @@ const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
 const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant }) => {
   if (!variants || variants.length === 0) return null;
   const totalColors = variants.length;
-
+  
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -85,8 +84,8 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
                   ? 'border-black bg-black text-white shadow-md'
                   : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:shadow-sm'
                 }
-              `}
-            >
+                `}
+                >
               <input
                 type="radio"
                 name="productColor"
@@ -94,11 +93,11 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
                 checked={isSelected}
                 onChange={() => setSelectedVariant(variant)}
                 className="sr-only"
-              />
+                />
               <div
                 className="w-5 h-5 rounded-full border border-white/30 shadow-sm"
                 style={{ backgroundColor: variant.hex || '#E8F4F8' }}
-              />
+                />
               <span className="text-sm font-medium">{variant.colorName}</span>
               {isSelected && (
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +153,7 @@ const ScrollNumberInput = ({
       onChange(newValue);
     }
   };
-
+  
   const handleDecrement = () => {
     let currentValue = typeof value === 'number' ? value : 0;
     let newValue = currentValue - step;
@@ -163,7 +162,7 @@ const ScrollNumberInput = ({
       onChange(newValue);
     }
   };
-
+  
   const handleInputChange = (e) => {
     let rawValue = e.target.value;
     // Remove any + sign from input
@@ -180,7 +179,7 @@ const ScrollNumberInput = ({
       onChange(rounded);
     }
   };
-
+  
   const preventScroll = (e) => {
     e.preventDefault();
   };
@@ -189,7 +188,7 @@ const ScrollNumberInput = ({
     if (!required) return true;
     return value !== '' && value !== undefined && value !== null && value !== '-';
   };
-
+  
   // Get color class based on value
   const getValueColorClass = () => {
     if (displayValue === '' || displayValue === '-') return 'text-gray-800';
@@ -199,7 +198,7 @@ const ScrollNumberInput = ({
     if (num < 0) return 'text-red-600';
     return 'text-gray-800';
   };
-
+  
   return (
     <div className="w-full h-full flex flex-col">
       <label className="block text-xs font-semibold text-gray-700 mb-1.5">
@@ -294,9 +293,9 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
     { id: 'blueCut', name: 'Blue Cut Lenses', price: 1800, description: 'Protects against harmful blue light' },
     { id: 'photochromic', name: 'Photochromic Lenses', price: 2500, description: 'Automatically darken in sunlight' },
   ];
-
+  
   const selectedLens = lensOptions.find((l) => l.id === lensType) || lensOptions[0];
-
+  
   const isAxisRequired = (eye) => {
     return eye.cylinder !== '' && eye.cylinder !== undefined && eye.cylinder !== null && eye.cylinder !== 0;
   };
@@ -315,7 +314,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  
   const handleRightChange = (field, value) => {
     setRightEye((prev) => ({ ...prev, [field]: value }));
     if (field === 'cylinder' && (!value || value === 0)) {
@@ -325,7 +324,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
       setErrors((prev) => ({ ...prev, right_axis: '' }));
     }
   };
-
+  
   const handleLeftChange = (field, value) => {
     setLeftEye((prev) => ({ ...prev, [field]: value }));
     if (field === 'cylinder' && (!value || value === 0)) {
@@ -335,7 +334,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
       setErrors((prev) => ({ ...prev, left_axis: '' }));
     }
   };
-
+  
   const handleSave = () => {
     if (!validateForm()) {
       return;
@@ -351,9 +350,9 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
     onSave(prescriptionData);
     onClose();
   };
-
+  
   if (!show) return null;
-
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in overflow-y-auto">
       <div className="bg-white rounded-2xl max-w-6xl w-full p-6 transform animate-slide-up max-h-[90vh] overflow-y-auto shadow-xl">
@@ -366,7 +365,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
           <button 
             onClick={onClose} 
             className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 rounded-full"
-          >
+            >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -396,12 +395,12 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {lensOptions.map((lens) => (
               <label
-                key={lens.id}
-                className={`relative p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                  lensType === lens.id
-                    ? 'border-black bg-gray-50'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
-                }`}
+              key={lens.id}
+              className={`relative p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                lensType === lens.id
+                ? 'border-black bg-gray-50'
+                : 'border-gray-200 bg-white hover:border-gray-300'
+              }`}
               >
                 <input
                   type="radio"
@@ -410,7 +409,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
                   checked={lensType === lens.id}
                   onChange={() => setLensType(lens.id)}
                   className="sr-only"
-                />
+                  />
                 <div className="flex justify-between items-start mb-1">
                   <span className={`font-semibold text-sm ${lensType === lens.id ? 'text-black' : 'text-gray-800'}`}>
                     {lens.name}
@@ -459,7 +458,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
               description="Distance correction (±)"
               showSign={true}
               allowNegative={true}
-            />
+              />
             
             <ScrollNumberInput
               label="Cylinder"
@@ -474,7 +473,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
               description="Astigmatism (±)"
               showSign={true}
               allowNegative={true}
-            />
+              />
             
             <div>
               <ScrollNumberInput
@@ -490,7 +489,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
                 description="0-180 degrees"
                 showSign={false}
                 allowNegative={false}
-              />
+                />
               {errors.right_axis && (
                 <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -514,7 +513,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
               description="Reading/Multifocal (+ only)"
               showSign={true}
               allowNegative={false}
-            />
+              />
           </div>
         </div>
 
@@ -560,7 +559,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
               description="Astigmatism (±)"
               showSign={true}
               allowNegative={true}
-            />
+              />
             
             <div>
               <ScrollNumberInput
@@ -576,7 +575,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
                 description="0-180 degrees"
                 showSign={false}
                 allowNegative={false}
-              />
+                />
               {errors.left_axis && (
                 <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -600,7 +599,7 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
               description="Reading/Multifocal (+ only)"
               showSign={true}
               allowNegative={false}
-            />
+              />
           </div>
         </div>
 
@@ -617,13 +616,13 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
           <button
             onClick={onClose}
             className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-200 transition-colors"
-          >
+            >
             Cancel
           </button>
           <button
             onClick={handleSave}
             className="flex-1 bg-black text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-800 transition-colors"
-          >
+            >
             Save Prescription
           </button>
         </div>
@@ -646,7 +645,33 @@ const ProductDetail = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [currentImage, setCurrentImage] = useState('');
   const [showAddedToCart, setShowAddedToCart] = useState(false);
-
+  
+  // Force page reload on every navigation to this component
+  useEffect(() => {
+    // Check if this is a navigation/render and reload if needed
+    const hasReloaded = sessionStorage.getItem('productDetailReloaded');
+    
+    if (!hasReloaded) {
+      // Set flag to prevent infinite reload loop
+      sessionStorage.setItem('productDetailReloaded', 'true');
+      window.location.reload();
+      return;
+    }
+    
+    // Clean up the flag after component unmounts or after a delay
+    // This ensures that if user navigates away and comes back, it reloads again
+    const cleanupTimer = setTimeout(() => {
+      sessionStorage.removeItem('productDetailReloaded');
+    }, 500);
+    
+    return () => clearTimeout(cleanupTimer);
+  }, [id]); // Re-run when id changes (different product)
+  
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Load product from imported JSON
   useEffect(() => {
     try {
@@ -1085,28 +1110,6 @@ const ProductDetail = () => {
         </div>
 
         {/* Related Products Section */}
-        <section className="py-16 mt-8 border-t border-gray-100">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-3xl font-bold">You May Also Like</h2>
-              <p className="text-gray-500 mt-1">Complete your look with these favorites</p>
-            </div>
-          </div>
-          <div className="flex overflow-x-auto gap-6 pb-6 scrollbar-hide">
-            {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className="min-w-[260px] flex-shrink-0 bg-gray-50 rounded-2xl p-4 cursor-pointer hover:shadow-lg transition-shadow"
-              >
-                <div className="aspect-square bg-gray-200 rounded-xl mb-4 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400"></div>
-                </div>
-                <h4 className="font-semibold">Style Collection #{item}</h4>
-                <p className="text-sm text-gray-500">From Pkr 2,999</p>
-              </div>
-            ))}
-          </div>
-        </section>
       </div>
 
       {/* Prescription Modal */}
